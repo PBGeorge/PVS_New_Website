@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Read(//usr/local/bin/**)",
+      "Read(//Users/georgepindaru/.pyenv/**)",
+      "Bash(mkdir -p /tmp/pvs-website)",
+      "Bash(cp /Users/georgepindaru/Documents/GitHub/PVS_New_Website/index.html /Users/georgepindaru/Documents/GitHub/PVS_New_Website/style.css /Users/georgepindaru/Documents/GitHub/PVS_New_Website/script.js /tmp/pvs-website/)"
+    ]
+  }
+}
