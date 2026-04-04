@@ -8,7 +8,13 @@
       "Bash(cp /Users/georgepindaru/Documents/GitHub/PVS_New_Website/index.html /Users/georgepindaru/Documents/GitHub/PVS_New_Website/style.css /Users/georgepindaru/Documents/GitHub/PVS_New_Website/script.js /tmp/pvs-website/)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "WebSearch",
+      "Bash(gh api:*)",
+      "Bash(python3 -c \"import sys,json; [print\\(x[''''name''''], x.get\\(''''download_url'''',''''''''\\)\\) for x in json.load\\(sys.stdin\\) if ''''icon'''' in x[''''name''''].lower\\(\\) or ''''svg'''' in x[''''name''''].lower\\(\\)]\")",
+      "Read(//private/tmp/**)",
+      "Bash(unzip -l power-platform-icons.zip)",
+      "Bash(unzip -o power-platform-icons.zip \"CopilotStudio_scalable.svg\" \"Power Platform/AIBuilder_scalable.svg\" \"Power Platform/PowerApps_scalable.svg\" \"Power Platform/PowerAutomate_scalable.svg\" -d power-platform-icons/)"
     ]
   }
 }

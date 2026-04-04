@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=2" />
+  <link rel="stylesheet" href="style.css?v=3" />
 </head>
 <body>
 
@@ -19,18 +19,30 @@
         <span class="logo-text">Power Vantage Solutions</span>
       </a>
       <ul class="nav-links">
-        <li><a href="#services">Services</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact" class="btn btn-sm">Contact</a></li>
+        <li><a href="#services" data-i18n="nav.services">Services</a></li>
+        <li><a href="#about" data-i18n="nav.about">About</a></li>
+        <li><a href="#contact" class="btn btn-sm" data-i18n="nav.contact">Contact</a></li>
+        <li>
+          <button class="lang-toggle" id="langToggle" onclick="toggleLang()" aria-label="Switch language">
+            <span class="lang-active" id="langLabel">EN</span>
+            <span class="lang-sep">/</span>
+            <span class="lang-other" id="langOther">RO</span>
+          </button>
+        </li>
       </ul>
-      <button class="nav-toggle" aria-label="Toggle menu" onclick="toggleMenu()">
-        <span></span><span></span><span></span>
-      </button>
+      <div class="nav-right-mobile">
+        <button class="lang-toggle lang-toggle--mobile" onclick="toggleLang()" aria-label="Switch language">
+          <span id="langLabelMobile">EN</span>
+        </button>
+        <button class="nav-toggle" aria-label="Toggle menu" onclick="toggleMenu()">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
     <div class="nav-mobile" id="navMobile">
-      <a href="#services" onclick="closeMenu()">Services</a>
-      <a href="#about" onclick="closeMenu()">About</a>
-      <a href="#contact" onclick="closeMenu()">Get in Touch</a>
+      <a href="#services" onclick="closeMenu()" data-i18n="nav.services">Services</a>
+      <a href="#about" onclick="closeMenu()" data-i18n="nav.about">About</a>
+      <a href="#contact" onclick="closeMenu()" data-i18n="nav.contactLong">Get in Touch</a>
     </div>
   </nav>
 
@@ -43,38 +55,38 @@
       <div class="grid-overlay"></div>
     </div>
     <div class="container hero-content">
-      <div class="hero-badge">Microsoft Power Platform Specialists</div>
+      <div class="hero-badge" data-i18n="hero.badge">Microsoft Power Platform Specialists</div>
       <h1 class="hero-title">
-        Unlock the Power of<br />
-        <span class="gradient-text" aria-hidden="true">Intelligent Automation</span><span class="sr-only">Intelligent Automation</span>
+        <span data-i18n="hero.title1">Unlock the Power of</span><br />
+        <span class="gradient-text" aria-hidden="true" data-i18n="hero.title2">Intelligent Automation</span><span class="sr-only" data-i18n="hero.title2">Intelligent Automation</span>
       </h1>
-      <p class="hero-sub">
+      <p class="hero-sub" data-i18n="hero.sub">
         We design and deliver cutting-edge Power Platform solutions — from custom apps and automated workflows
         to AI-powered Copilot Agents — transforming how your business operates.
       </p>
       <div class="hero-cta">
-        <a href="#services" class="btn btn-primary">Explore Our Services</a>
-        <a href="#contact" class="btn btn-outline">Start a Project</a>
+        <a href="#services" class="btn btn-primary" data-i18n="hero.cta1">Explore Our Services</a>
+        <a href="#contact" class="btn btn-outline" data-i18n="hero.cta2">Start a Project</a>
       </div>
       <div class="hero-stats">
         <div class="stat">
           <span class="stat-num">Power Apps</span>
-          <span class="stat-label">Custom Solutions</span>
+          <span class="stat-label" data-i18n="hero.stat1">Custom Solutions</span>
         </div>
         <div class="stat-divider"></div>
         <div class="stat">
           <span class="stat-num">Power Automate</span>
-          <span class="stat-label">Workflow Automation</span>
+          <span class="stat-label" data-i18n="hero.stat2">Workflow Automation</span>
         </div>
         <div class="stat-divider"></div>
         <div class="stat">
           <span class="stat-num">Copilot AI</span>
-          <span class="stat-label">Intelligent Agents</span>
+          <span class="stat-label" data-i18n="hero.stat3">Intelligent Agents</span>
         </div>
       </div>
     </div>
     <div class="hero-scroll-hint">
-      <span>Scroll to explore</span>
+      <span data-i18n="hero.scroll">Scroll to explore</span>
       <div class="scroll-arrow"></div>
     </div>
   </section>
@@ -83,79 +95,61 @@
   <section class="services" id="services">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">What We Do</span>
-        <h2 class="section-title">Services Built for Modern Business</h2>
-        <p class="section-sub">From rapid prototyping to full-scale enterprise deployments, we deliver end-to-end Power Platform expertise.</p>
+        <span class="section-tag" data-i18n="services.tag">What We Do</span>
+        <h2 class="section-title" data-i18n="services.title">Services Built for Modern Business</h2>
+        <p class="section-sub" data-i18n="services.sub">From rapid prototyping to full-scale enterprise deployments, we deliver end-to-end Power Platform expertise.</p>
       </div>
       <div class="services-grid">
 
         <div class="service-card" data-color="purple">
-          <div class="card-icon">
-            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="6" y="6" width="16" height="16" rx="3" fill="currentColor" opacity="0.9"/>
-              <rect x="26" y="6" width="16" height="16" rx="3" fill="currentColor" opacity="0.6"/>
-              <rect x="6" y="26" width="16" height="16" rx="3" fill="currentColor" opacity="0.6"/>
-              <rect x="26" y="26" width="16" height="16" rx="3" fill="currentColor" opacity="0.3"/>
-            </svg>
+          <div class="card-icon card-icon--ms">
+            <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#cp0_pa)"><g clip-path="url(#cp1_pa)"><path d="M44.1553 9.77196L62.9254 42.6196C64.8305 45.9536 64.8305 50.0464 62.9254 53.3804L44.1553 86.228C38.7808 95.6334 25.219 95.6335 19.8445 86.228L2.2525 55.4421C-0.382637 50.8306 -0.382645 45.1694 2.25249 40.5579L19.8445 9.77196C25.219 0.366551 38.7808 0.366549 44.1553 9.77196Z" fill="url(#pg0_pa)"/><path d="M44.1553 9.77196L62.9254 42.6196C64.8305 45.9536 64.8305 50.0464 62.9254 53.3804L44.1553 86.228C38.7808 95.6334 25.219 95.6335 19.8445 86.228L2.2525 55.4421C-0.382637 50.8306 -0.382645 45.1694 2.25249 40.5579L19.8445 9.77196C25.219 0.366551 38.7808 0.366549 44.1553 9.77196Z" fill="url(#pg1_pa)"/><path d="M65.9999 48L44.1553 86.228C38.7808 95.6334 25.219 95.6334 19.8445 86.228L1.99988 55C7.30568 64.2852 20.6941 64.2852 25.9999 55L47.9999 16.5L65.9999 48Z" fill="url(#pg2_pa)"/><path d="M65.9999 48L44.1553 86.228C38.7808 95.6334 25.219 95.6334 19.8445 86.228L1.99988 55C7.30568 64.2852 20.6941 64.2852 25.9999 55L47.9999 16.5L65.9999 48Z" fill="url(#pg3_pa)"/><path d="M54.9458 28.6554L81.9999 76L93.3881 56.0705C96.2458 51.0696 96.2458 44.9304 93.3881 39.9295L76.1553 9.77196C70.7808 0.366554 57.219 0.366554 51.8445 9.77197L41.0539 28.6554C44.1251 23.2809 51.8747 23.2809 54.9458 28.6554Z" fill="url(#pg4_pa)"/><path d="M54.9458 28.6554L81.9999 76L93.3881 56.0705C96.2458 51.0696 96.2458 44.9304 93.3881 39.9295L76.1553 9.77196C70.7808 0.366554 57.219 0.366554 51.8445 9.77197L41.0539 28.6554C44.1251 23.2809 51.8747 23.2809 54.9458 28.6554Z" fill="url(#pg5_pa)"/><path d="M79.7318 23.9691L47.9999 79.5L51.8445 86.228C57.219 95.6334 70.7808 95.6335 76.1553 86.228L94.0308 54.9459C96.4902 50.6419 96.4902 45.3581 94.0308 41.0541L79.7318 16.0309C81.1372 18.4903 81.1372 21.5096 79.7318 23.9691Z" fill="url(#pg6_pa)"/><path d="M51.8445 86.228L47.9999 79.5L65.9999 48L81.9999 76L76.1553 86.228C70.7808 95.6334 57.219 95.6334 51.8445 86.228Z" fill="url(#pg7_pa)"/></g></g><defs><linearGradient id="pg0_pa" x1="15.9999" y1="60.5" x2="27.9994" y2="5.00001" gradientUnits="userSpaceOnUse"><stop stop-color="#520B56"/><stop offset="1" stop-color="#742774"/></linearGradient><radialGradient id="pg1_pa" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(31.4999 8.00002) rotate(123.811) scale(65.5935 20.3157)"><stop offset="0.512391" stop-color="#4C1E4C" stop-opacity="0"/><stop offset="1" stop-color="#4C1E4C"/></radialGradient><linearGradient id="pg2_pa" x1="11.9999" y1="71" x2="59.4999" y2="41.5" gradientUnits="userSpaceOnUse"><stop stop-color="#D467B9"/><stop offset="0.308079" stop-color="#982F90"/><stop offset="1" stop-color="#742774"/></linearGradient><linearGradient id="pg3_pa" x1="43.9999" y1="53.4998" x2="67.5" y2="50.9998" gradientUnits="userSpaceOnUse"><stop stop-color="#742774" stop-opacity="0"/><stop offset="1" stop-color="#520B56"/></linearGradient><linearGradient id="pg4_pa" x1="42.9999" y1="29" x2="82.4999" y2="56" gradientUnits="userSpaceOnUse"><stop stop-color="#E9A1CB"/><stop offset="0.40829" stop-color="#D467B9"/><stop offset="1" stop-color="#BB35A4"/></linearGradient><linearGradient id="pg5_pa" x1="67.4999" y1="23.5" x2="80.9999" y2="26.5" gradientUnits="userSpaceOnUse"><stop stop-color="#E48CC7" stop-opacity="0"/><stop offset="1" stop-color="#BB35A4"/></linearGradient><linearGradient id="pg6_pa" x1="89.2565" y1="77.1621" x2="76.4515" y2="41.3836" gradientUnits="userSpaceOnUse"><stop stop-color="#E48CC7"/><stop offset="1" stop-color="#F7C4E2"/></linearGradient><linearGradient id="pg7_pa" x1="75.1999" y1="77.5801" x2="54.869" y2="32.0777" gradientUnits="userSpaceOnUse"><stop stop-color="#E48CC7" stop-opacity="0"/><stop offset="0.67724" stop-color="#D467B9" stop-opacity="0.5"/><stop offset="1" stop-color="#BB35A4"/></linearGradient><clipPath id="cp0_pa"><rect width="96" height="96" fill="white"/></clipPath><clipPath id="cp1_pa"><rect width="96" height="96" fill="white"/></clipPath></defs></svg>
           </div>
           <h3>Power Apps</h3>
-          <p>Custom low-code and pro-code applications tailored to your business processes. Mobile-ready, integrated, and scalable from day one.</p>
+          <p data-i18n="services.apps.desc">Custom low-code and pro-code applications tailored to your business processes. Mobile-ready, integrated, and scalable from day one.</p>
           <ul class="card-features">
-            <li>Canvas &amp; Model-Driven Apps</li>
-            <li>Custom connectors &amp; data sources</li>
-            <li>Responsive mobile experiences</li>
+            <li data-i18n="services.apps.f1">Canvas &amp; Model-Driven Apps</li>
+            <li data-i18n="services.apps.f2">Custom connectors &amp; data sources</li>
+            <li data-i18n="services.apps.f3">Responsive mobile experiences</li>
           </ul>
         </div>
 
         <div class="service-card" data-color="blue">
-          <div class="card-icon">
-            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 24C8 24 12 12 24 12C36 12 40 24 40 24" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-              <path d="M8 24C8 24 12 36 24 36C36 36 40 24 40 24" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
-              <circle cx="24" cy="24" r="5" fill="currentColor"/>
-              <path d="M32 16L40 8M40 8H34M40 8V14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+          <div class="card-icon card-icon--ms">
+            <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#cp0_paut)"><g clip-path="url(#cp1_paut)"><path d="M52.5093 3C55.3657 3 58.0858 4.22148 59.9834 6.35636L82.6577 31.8649C88.9106 38.8995 85.0005 50.0661 75.7251 51.6632L21.5 61L28.2997 53.3134C30.9819 50.2813 30.9765 45.7235 28.287 42.6979L7.79435 19.6436C2.06189 13.1946 6.63995 3 15.2684 3H52.5093Z" fill="url(#pg0_paut)"/><path d="M15.2684 93C6.63995 93 2.0619 82.8054 7.79436 76.3563L59.0945 18.6436C62.4624 14.8548 62.4624 9.14522 59.0945 5.35636L57 3L91.0945 41.3564C94.4624 45.1453 94.4624 50.8548 91.0945 54.6437L59.9834 89.6436C58.0858 91.7785 55.3657 93 52.5093 93H15.2684Z" fill="url(#pg1_paut)"/><path d="M15.2684 93C6.63995 93 2.0619 82.8054 7.79436 76.3563L59.0945 18.6436C62.4624 14.8548 62.4624 9.14522 59.0945 5.35636L57 3L91.0945 41.3564C94.4624 45.1453 94.4624 50.8548 91.0945 54.6437L59.9834 89.6436C58.0858 91.7785 55.3657 93 52.5093 93H15.2684Z" fill="url(#pg2_paut)"/><path d="M38.3611 93C33.184 93 30.4371 86.8833 33.8766 83.0139L75.0945 36.6436C78.4624 32.8548 78.4624 27.1452 75.0945 23.3563L71 18.75L91.0945 41.3563C94.4624 45.1452 94.4624 50.8547 91.0946 54.6436L59.9834 89.6437C58.0858 91.7785 55.3657 93 52.5093 93H38.3611Z" fill="url(#pg3_paut)"/></g></g><defs><linearGradient id="pg0_paut" x1="48" y1="31.5" x2="14" y2="-2.50001" gradientUnits="userSpaceOnUse"><stop stop-color="#102784"/><stop offset="0.274053" stop-color="#1B44B1"/><stop offset="1" stop-color="#2764E7"/></linearGradient><linearGradient id="pg1_paut" x1="76.5" y1="25" x2="11.5" y2="91.5" gradientUnits="userSpaceOnUse"><stop stop-color="#0FAFFF"/><stop offset="0.177827" stop-color="#4894FE"/><stop offset="1" stop-color="#2764E7"/></linearGradient><linearGradient id="pg2_paut" x1="28.5" y1="72" x2="38.5" y2="83.5" gradientUnits="userSpaceOnUse"><stop stop-color="#2764E7" stop-opacity="0"/><stop offset="1" stop-color="#2052CB"/></linearGradient><linearGradient id="pg3_paut" x1="89" y1="38.5" x2="43" y2="90.5" gradientUnits="userSpaceOnUse"><stop stop-color="#6CE0FF"/><stop offset="0.211723" stop-color="#66C0FF"/><stop offset="1" stop-color="#58AAFE"/></linearGradient><clipPath id="cp0_paut"><rect width="96" height="96" fill="white"/></clipPath><clipPath id="cp1_paut"><rect width="96" height="96" fill="white"/></clipPath></defs></svg>
           </div>
           <h3>Power Automate</h3>
-          <p>Intelligent workflow automation that eliminates repetitive tasks, reduces errors, and frees your team to focus on high-value work.</p>
+          <p data-i18n="services.automate.desc">Intelligent workflow automation that eliminates repetitive tasks, reduces errors, and frees your team to focus on high-value work.</p>
           <ul class="card-features">
-            <li>Cloud &amp; desktop flows</li>
-            <li>Approval workflows &amp; notifications</li>
-            <li>Cross-platform integrations</li>
+            <li data-i18n="services.automate.f1">Cloud &amp; desktop flows</li>
+            <li data-i18n="services.automate.f2">Approval workflows &amp; notifications</li>
+            <li data-i18n="services.automate.f3">Cross-platform integrations</li>
           </ul>
         </div>
 
         <div class="service-card" data-color="teal">
-          <div class="card-icon">
-            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="24" cy="20" r="10" stroke="currentColor" stroke-width="3"/>
-              <path d="M17 30L10 42H38L31 30" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
-              <path d="M20 20H28M24 16V24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-            </svg>
+          <div class="card-icon card-icon--ms">
+            <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M64.3242 4.77449C52.3121 0.77044 46.3052-1.23042 42.1523 1.76277C38.0001 4.75619 38 11.0874 38 23.7491V33.9991L28.3242 30.7745C16.3121 26.7705 10.3052 24.7696 6.15234 27.7628C1.99998 30.7562 2 37.0874 2 49.7491V67.585C2 74.5417 1.9996 78.0209 3.88672 80.6397C5.7743 83.2586 9.07559 84.3596 15.6758 86.5596L20.002 87.9991L20 88.0011L33.8906 92.63C41.0527 95.0173 44.634 96.2117 48.2168 95.6612C51.7998 95.1105 54.8577 92.8959 60.9727 88.4678L79.5957 74.9835C84.6242 71.3421 87.5709 69.2032 89.3691 66.7569C89.551 66.5194 89.7213 66.2697 89.8789 66.005C90.0501 65.7303 90.212 65.4518 90.3594 65.1632C91.9996 61.9502 92 58.1948 92 50.6846V28.4151C92 21.4583 92.0007 17.9792 90.1133 15.3604C88.2257 12.7416 84.9244 11.6425 78.3242 9.44246L64.3242 4.77449Z" fill="url(#pg0_cs)"/><path d="M64.3242 4.77449C52.3121 0.77044 46.3052-1.23042 42.1523 1.76277C38.0001 4.75619 38 11.0874 38 23.7491V33.9991L28.3242 30.7745C16.3121 26.7705 10.3052 24.7696 6.15234 27.7628C1.99998 30.7562 2 37.0874 2 49.7491V67.585C2 74.5417 1.9996 78.0209 3.88672 80.6397C5.7743 83.2586 9.07559 84.3596 15.6758 86.5596L20.002 87.9991L20 88.0011L33.8906 92.63C41.0527 95.0173 44.634 96.2117 48.2168 95.6612C51.7998 95.1105 54.8577 92.8959 60.9727 88.4678L79.5957 74.9835C84.6242 71.3421 87.5709 69.2032 89.3691 66.7569C89.551 66.5194 89.7213 66.2697 89.8789 66.005C90.0501 65.7303 90.212 65.4518 90.3594 65.1632C91.9996 61.9502 92 58.1948 92 50.6846V28.4151C92 21.4583 92.0007 17.9792 90.1133 15.3604C88.2257 12.7416 84.9244 11.6425 78.3242 9.44246L64.3242 4.77449Z" fill="url(#pg1_cs)"/><path d="M64.3242 4.77449C52.3121 0.77044 46.3052-1.23042 42.1523 1.76277C38.0001 4.75619 38 11.0874 38 23.7491V33.9991L28.3242 30.7745C16.3121 26.7705 10.3052 24.7696 6.15234 27.7628C1.99998 30.7562 2 37.0874 2 49.7491V67.585C2 74.5417 1.9996 78.0209 3.88672 80.6397C5.7743 83.2586 9.07559 84.3596 15.6758 86.5596L20.002 87.9991L20 88.0011L33.8906 92.63C41.0527 95.0173 44.634 96.2117 48.2168 95.6612C51.7998 95.1105 54.8577 92.8959 60.9727 88.4678L79.5957 74.9835C84.6242 71.3421 87.5709 69.2032 89.3691 66.7569C89.551 66.5194 89.7213 66.2697 89.8789 66.005C90.0501 65.7303 90.212 65.4518 90.3594 65.1632C91.9996 61.9502 92 58.1948 92 50.6846V28.4151C92 21.4583 92.0007 17.9792 90.1133 15.3604C88.2257 12.7416 84.9244 11.6425 78.3242 9.44246L64.3242 4.77449Z" fill="url(#pg2_cs)"/><path d="M56 54.4151C56 47.4579 56 43.9793 54.1124 41.3604C52.2248 38.7415 48.9247 37.6415 42.3246 35.4414L28.3246 30.7748C16.312 26.7706 10.3058 24.7685 6.1529 27.7617C2 30.755 2 37.0861 2 49.7484V67.5847C2 74.5419 2 78.0206 3.88758 80.6394C5.77516 83.2583 9.07525 84.3583 15.6754 86.5584L29.6754 91.2251C41.688 95.2292 47.6942 97.2313 51.8471 94.2381C56 91.2448 56 84.9137 56 72.2514V54.4151Z" fill="url(#pg3_cs)"/><path d="M56 54.4151C56 47.4579 56 43.9793 54.1124 41.3604C52.2248 38.7415 48.9247 37.6415 42.3246 35.4414L28.3246 30.7748C16.312 26.7706 10.3058 24.7685 6.1529 27.7617C2 30.755 2 37.0861 2 49.7484V67.5847C2 74.5419 2 78.0206 3.88758 80.6394C5.77516 83.2583 9.07525 84.3583 15.6754 86.5584L29.6754 91.2251C41.688 95.2292 47.6942 97.2313 51.8471 94.2381C56 91.2448 56 84.9137 56 72.2514V54.4151Z" fill="url(#pg4_cs)"/><path d="M92 50.6846C92 58.1947 91.9996 61.9501 90.3594 65.1631C90.212 65.4517 90.0501 65.7302 89.8789 66.0049C89.7213 66.2696 89.551 66.5193 89.3691 66.7568C87.5709 69.2031 84.6242 71.3421 79.5957 74.9834L60.9727 88.4678C54.8577 92.8959 51.7998 95.1105 48.2168 95.6611C44.634 96.2116 41.0527 95.0172 33.8906 92.6299L25.2158 89.7393L20 88L20.002 87.999L16.7822 86.9277L15.2217 86.4072C8.92337 84.3067 5.73047 83.1977 3.88672 80.6396C1.99964 78.0208 2 74.5416 2 67.585V49.749C2 48.4323 2.00119 47.1841 2.00586 46.001L56 61.501L92 35.001V50.6846Z" fill="url(#pg5_cs)"/><path d="M38.0742 15.1036C31.3033 13.0668 27.2217 12.5497 24.1523 14.7618C21.0793 16.9767 20.281 21.0195 20.0732 28.1026C22.4635 28.8216 25.1889 29.7306 28.3232 30.7754L37.999 34V23.7491C37.999 20.4569 38.0012 17.5925 38.0742 15.1036Z" fill="url(#pg6_cs)"/><path d="M38.0742 15.1036C31.3033 13.0668 27.2217 12.5497 24.1523 14.7618C21.0793 16.9767 20.281 21.0195 20.0732 28.1026C22.4635 28.8216 25.1889 29.7306 28.3232 30.7754L37.999 34V23.7491C37.999 20.4569 38.0012 17.5925 38.0742 15.1036Z" fill="url(#pg7_cs)" fill-opacity="0.7"/><path d="M38.0742 15.1035C38.0012 17.5922 38 20.4561 38 23.748V41.585C38 48.5419 38.0002 52.0208 39.8877 54.6396C41.7753 57.2583 45.0758 58.3586 51.6758 60.5586L56 62C64.0027 64.6676 68.0041 66.0014 70.84 64.1408C71.0112 64.0284 71.1774 63.9086 71.3381 63.7817C74 61.6798 74 57.462 74 49.0263V41.415C74 34.4579 73.9999 30.9792 72.1123 28.3604C70.2247 25.7416 66.9243 24.6414 60.3242 22.4414L46.3242 17.7744C43.1901 16.7297 40.4644 15.8225 38.0742 15.1035Z" fill="url(#pg8_cs)"/><path d="M38.0742 15.1035C38.0012 17.5922 38 20.4561 38 23.748V41.585C38 48.5419 38.0002 52.0208 39.8877 54.6396C41.7753 57.2583 45.0758 58.3586 51.6758 60.5586L56 62C64.0027 64.6676 68.0041 66.0014 70.84 64.1408C71.0112 64.0284 71.1774 63.9086 71.3381 63.7817C74 61.6798 74 57.462 74 49.0263V41.415C74 34.4579 73.9999 30.9792 72.1123 28.3604C70.2247 25.7416 66.9243 24.6414 60.3242 22.4414L46.3242 17.7744C43.1901 16.7297 40.4644 15.8225 38.0742 15.1035Z" fill="url(#pg9_cs)"/><path d="M20.0742 28.1035C20.0012 30.5922 20 33.4561 20 36.748V54.585C20 61.5421 20.0001 65.0208 21.8877 67.6396C23.7753 70.2584 27.0757 71.3586 33.6758 73.5586L37.975 74.9917C46.0014 77.6671 50.0146 79.0049 52.855 77.1309C53.0159 77.0247 53.1724 76.9119 53.324 76.7928C56 74.6909 56 70.4606 56 62V54.415C56 47.4579 55.9999 43.9792 54.1123 41.3604C52.2247 38.7416 48.9243 37.6414 42.3242 35.4414L28.3242 30.7744C25.1901 29.7297 22.4644 28.8225 20.0742 28.1035Z" fill="url(#pg10_cs)"/><path d="M38 41.585C38 48.5422 38.0001 52.0208 39.8877 54.6397C41.7753 57.2585 45.0756 58.3585 51.6758 60.5586L56 62V54.415C56 47.4581 55.9998 43.9792 54.1123 41.3604C52.2247 38.7417 48.9242 37.6414 42.3242 35.4414L38 34V41.585Z" fill="url(#pg11_cs)"/><defs><linearGradient id="pg0_cs" x1="53.5" y1="77" x2="80.9999" y2="9.99998" gradientUnits="userSpaceOnUse"><stop stop-color="#2764E7"/><stop offset="0.307475" stop-color="#8B52F4"/><stop offset="0.544627" stop-color="#BB45EA"/><stop offset="0.803866" stop-color="#DB56C6"/><stop offset="1" stop-color="#F462AB"/></linearGradient><radialGradient id="pg1_cs" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(52.5 45) rotate(43.8065) scale(33.9485 21.4653)"><stop offset="0.549399" stop-color="#5B2AB5"/><stop offset="1" stop-color="#A931D8" stop-opacity="0"/></radialGradient><radialGradient id="pg2_cs" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(44 34) rotate(17.7004) scale(49.3356 24.5964)"><stop offset="0.527929" stop-color="#9529C2"/><stop offset="1" stop-color="#DD3CE2" stop-opacity="0"/></radialGradient><radialGradient id="pg3_cs" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(61.3922 89.3373) rotate(-124.89) scale(82.0935 82.0935)"><stop stop-color="#2764E7"/><stop offset="0.225228" stop-color="#0094F0"/><stop offset="0.443437" stop-color="#19B2CE"/><stop offset="0.6999" stop-color="#52D17C"/><stop offset="1" stop-color="#FFD638"/></radialGradient><linearGradient id="pg4_cs" x1="19.5444" y1="82.7096" x2="53.8452" y2="82.7096" gradientUnits="userSpaceOnUse"><stop stop-color="#16BBDA" stop-opacity="0"/><stop offset="0.535279" stop-color="#0094F0"/><stop offset="1" stop-color="#2764E7"/></linearGradient><radialGradient id="pg5_cs" cx="0" cy="0" r="1" gradientTransform="matrix(23 12.9998 8.90874 -13.0499 43 67.9995)" gradientUnits="userSpaceOnUse"><stop stop-color="#1B44B1"/><stop offset="1" stop-color="#367AF2" stop-opacity="0"/></radialGradient><linearGradient id="pg6_cs" x1="33.5" y1="32.5" x2="34" y2="13" gradientUnits="userSpaceOnUse"><stop stop-color="#FF9C70"/><stop offset="1" stop-color="#FFD394"/></linearGradient><linearGradient id="pg7_cs" x1="28.5" y1="24.5" x2="26.5" y2="33" gradientUnits="userSpaceOnUse"><stop stop-color="#FFB357" stop-opacity="0"/><stop offset="1" stop-color="#F24A9D"/></linearGradient><linearGradient id="pg8_cs" x1="58" y1="20" x2="58.5" y2="64.5" gradientUnits="userSpaceOnUse"><stop stop-color="#FFB357"/><stop offset="0.380259" stop-color="#FB6F7B"/><stop offset="0.659779" stop-color="#F24A9D"/><stop offset="1" stop-color="#DD3CE2"/></linearGradient><radialGradient id="pg9_cs" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(40 54) rotate(12.702) scale(24.0895 24.0895)"><stop offset="0.567938" stop-color="#D7257D"/><stop offset="1" stop-color="#F462AB" stop-opacity="0"/></radialGradient><linearGradient id="pg10_cs" x1="50.03" y1="77.3707" x2="20" y2="25.6869" gradientUnits="userSpaceOnUse"><stop stop-color="#0FAFFF"/><stop offset="0.54828" stop-color="#2BDABE"/><stop offset="0.765945" stop-color="#88E06C"/><stop offset="1" stop-color="#FFD638"/></linearGradient><linearGradient id="pg11_cs" x1="36" y1="44.5" x2="53" y2="50.5" gradientUnits="userSpaceOnUse"><stop stop-color="#76EB95"/><stop offset="1" stop-color="#3BD5FF" stop-opacity="0"/></linearGradient></defs></svg>
           </div>
           <h3>Copilot Agents</h3>
-          <p>Purpose-built AI agents using Microsoft Copilot Studio that handle customer queries, internal support, and complex decision flows autonomously.</p>
+          <p data-i18n="services.copilot.desc">Purpose-built AI agents using Microsoft Copilot Studio that handle customer queries, internal support, and complex decision flows autonomously.</p>
           <ul class="card-features">
-            <li>Conversational AI bots</li>
-            <li>Knowledge base integration</li>
-            <li>Multi-channel deployment</li>
+            <li data-i18n="services.copilot.f1">Conversational AI bots</li>
+            <li data-i18n="services.copilot.f2">Knowledge base integration</li>
+            <li data-i18n="services.copilot.f3">Multi-channel deployment</li>
           </ul>
         </div>
 
         <div class="service-card" data-color="violet">
-          <div class="card-icon">
-            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6 36L16 26L22 32L32 18L42 28" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="38" cy="14" r="6" fill="currentColor" opacity="0.4"/>
-              <path d="M36 14L38 16L42 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+          <div class="card-icon card-icon--ms">
+            <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#cp0_ai)"><g clip-path="url(#cp1_ai)"><path d="M45.164 4.67694C42.2697 3.01874 38.7133 3.01874 35.819 4.67694L13.0004 17.7501C11.1342 18.8193 9.98304 20.8055 9.98304 22.9562V28.168C9.98304 30.3188 8.83188 32.305 6.96572 33.3741L5.01732 34.4904C3.15116 35.5596 2 37.5458 2 39.6965V60.0815C2 62.2399 3.15931 64.2319 5.03595 65.2982L36.049 82.9192C41.3822 85.9494 48.0011 82.0973 48.001 75.9634L48 9.57021C48 7.54871 46.918 5.68185 45.164 4.67694Z" fill="url(#pg0_ai)"/><path d="M45.164 4.67694C42.2697 3.01874 38.7133 3.01874 35.819 4.67694L13.0004 17.7501C11.1342 18.8193 9.98304 20.8055 9.98304 22.9562V28.168C9.98304 30.3188 8.83188 32.305 6.96572 33.3741L5.01732 34.4904C3.15116 35.5596 2 37.5458 2 39.6965V60.0815C2 62.2399 3.15931 64.2319 5.03595 65.2982L36.049 82.9192C41.3822 85.9494 48.0011 82.0973 48.001 75.9634L48 9.57021C48 7.54871 46.918 5.68185 45.164 4.67694Z" fill="url(#pg1_ai)"/><path d="M45.164 4.67694C42.2697 3.01874 38.7133 3.01874 35.819 4.67694L13.0004 17.7501C11.1342 18.8193 9.98304 20.8055 9.98304 22.9562V28.168C9.98304 30.3188 8.83188 32.305 6.96572 33.3741L5.01732 34.4904C3.15116 35.5596 2 37.5458 2 39.6965V60.0815C2 62.2399 3.15931 64.2319 5.03595 65.2982L36.049 82.9192C41.3822 85.9494 48.0011 82.0973 48.001 75.9634L48 9.57021C48 7.54871 46.918 5.68185 45.164 4.67694Z" fill="url(#pg2_ai)"/><path d="M48.0001 39.7234C48.0001 41.8824 46.8401 43.8749 44.9626 44.941L21.0447 58.5213C19.1634 59.5895 18.0028 61.5877 18.0072 63.7511L18.0353 77.6583C18.0396 79.8047 19.1902 81.7853 21.0526 82.8523L35.8498 91.3299C38.7364 92.9837 42.2832 92.9841 45.1701 91.3308C46.9204 90.3285 48.0001 88.4659 48.0001 86.449V30V39.7234Z" fill="url(#pg3_ai)"/><path d="M48.0001 39.7234C48.0001 41.8824 46.8401 43.8749 44.9626 44.941L21.0447 58.5213C19.1634 59.5895 18.0028 61.5877 18.0072 63.7511L18.0353 77.6583C18.0396 79.8047 19.1902 81.7853 21.0526 82.8523L35.8498 91.3299C38.7364 92.9837 42.2832 92.9841 45.1701 91.3308C46.9204 90.3285 48.0001 88.4659 48.0001 86.449V30V39.7234Z" fill="url(#pg4_ai)"/><path d="M86.0171 22.9562C86.0171 20.8055 84.8659 18.8193 82.9998 17.7501L60.181 4.67692C57.2868 3.01873 53.7304 3.01874 50.8362 4.67692C49.0821 5.68184 48.0001 7.54872 48.0001 9.57024V72.6983L52.5259 75.2912C54.3735 76.3497 56.6437 76.3497 58.4913 75.2912L82.9998 61.2499C84.8659 60.1807 86.0171 58.1945 86.0171 56.0438V22.9562Z" fill="url(#pg5_ai)"/><path d="M86.0171 22.9562C86.0171 20.8055 84.8659 18.8193 82.9998 17.7501L60.181 4.67692C57.2868 3.01873 53.7304 3.01874 50.8362 4.67692C49.0821 5.68184 48.0001 7.54872 48.0001 9.57024V72.6983L52.5259 75.2912C54.3735 76.3497 56.6437 76.3497 58.4913 75.2912L82.9998 61.2499C84.8659 60.1807 86.0171 58.1945 86.0171 56.0438V22.9562Z" fill="url(#pg6_ai)"/><path d="M68.0175 24.7503C69.865 23.6918 72.1352 23.6918 73.9828 24.7503L90.9828 34.4899C92.849 35.5591 94.0001 37.5453 94.0001 39.696V60.0953C94.0001 62.2461 92.849 64.2323 90.9828 65.3014L71.0001 76.7498L48.0001 63.5728V39.696C48.0001 37.5453 49.1513 35.5591 51.0174 34.4899L68.0175 24.7503Z" fill="url(#pg7_ai)"/><path d="M68.0175 24.7503C69.865 23.6918 72.1352 23.6918 73.9828 24.7503L90.9828 34.4899C92.849 35.5591 94.0001 37.5453 94.0001 39.696V60.0953C94.0001 62.2461 92.849 64.2323 90.9828 65.3014L71.0001 76.7498L48.0001 63.5728V39.696C48.0001 37.5453 49.1513 35.5591 51.0174 34.4899L68.0175 24.7503Z" fill="url(#pg8_ai)"/><path d="M47.9987 39.723C47.9987 41.8821 49.1587 43.8747 51.0362 44.9407L74.9551 58.521C76.8365 59.5892 77.9971 61.5876 77.9926 63.7511L77.9637 77.6583C77.9593 79.8046 76.8087 81.785 74.9464 82.852L60.1489 91.3297C57.2623 92.9835 53.7156 92.9838 50.8286 91.3306C49.0784 90.3283 47.9987 88.4657 47.9987 86.4488V33V39.723Z" fill="url(#pg9_ai)"/><path d="M47.9987 39.723C47.9987 41.8821 49.1587 43.8747 51.0362 44.9407L74.9551 58.521C76.8365 59.5892 77.9971 61.5876 77.9926 63.7511L77.9637 77.6583C77.9593 79.8046 76.8087 81.785 74.9464 82.852L60.1489 91.3297C57.2623 92.9835 53.7156 92.9838 50.8286 91.3306C49.0784 90.3283 47.9987 88.4657 47.9987 86.4488V33V39.723Z" fill="url(#pg10_ai)"/><path d="M47.9987 39.723C47.9987 41.8821 49.1587 43.8747 51.0362 44.9407L74.9551 58.521C76.8365 59.5892 77.9971 61.5876 77.9926 63.7511L77.9637 77.6583C77.9593 79.8046 76.8087 81.785 74.9464 82.852L60.1489 91.3297C57.2623 92.9835 53.7156 92.9838 50.8286 91.3306C49.0784 90.3283 47.9987 88.4657 47.9987 86.4488V33V39.723Z" fill="url(#pg11_ai)"/></g></g><defs><linearGradient id="pg0_ai" x1="37" y1="78" x2="31" y2="1.99999" gradientUnits="userSpaceOnUse"><stop stop-color="#3D35B1"/><stop offset="0.635285" stop-color="#2052CB"/><stop offset="1" stop-color="#0094F0"/></linearGradient><linearGradient id="pg1_ai" x1="33.5" y1="29.5" x2="48" y2="33" gradientUnits="userSpaceOnUse"><stop stop-color="#2052CB" stop-opacity="0"/><stop offset="1" stop-color="#3D35B1"/></linearGradient><radialGradient id="pg2_ai" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(43 59.5) rotate(147.995) scale(56.6039 33.2324)"><stop offset="0.357677" stop-color="#312A9A"/><stop offset="1" stop-color="#2052CB" stop-opacity="0"/></radialGradient><linearGradient id="pg3_ai" x1="41.5001" y1="94" x2="35.3404" y2="50.0224" gradientUnits="userSpaceOnUse"><stop stop-color="#5750E2"/><stop offset="1" stop-color="#367AF2"/></linearGradient><linearGradient id="pg4_ai" x1="38.5001" y1="73" x2="48.0001" y2="73" gradientUnits="userSpaceOnUse"><stop stop-color="#2764E7" stop-opacity="0"/><stop offset="1" stop-color="#4A43CB"/></linearGradient><linearGradient id="pg5_ai" x1="69.0001" y1="2" x2="61.5001" y2="41" gradientUnits="userSpaceOnUse"><stop stop-color="#29C3FF"/><stop offset="1" stop-color="#4894FE"/></linearGradient><radialGradient id="pg6_ai" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(72.5001 39) rotate(-90) scale(25.5 51.9104)"><stop offset="0.293088" stop-color="#2764E7"/><stop offset="1" stop-color="#0FAFFF" stop-opacity="0"/></radialGradient><linearGradient id="pg7_ai" x1="74.0001" y1="25.4996" x2="66.0001" y2="71.4996" gradientUnits="userSpaceOnUse"><stop stop-color="#3BD5FF"/><stop offset="1" stop-color="#4894FE"/></linearGradient><radialGradient id="pg8_ai" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(56.0001 54.4996) rotate(-58.2986) scale(19.9812 82.6434)"><stop stop-color="#367AF2"/><stop offset="1" stop-color="#29C3FF" stop-opacity="0"/></radialGradient><linearGradient id="pg9_ai" x1="60.0001" y1="47.5" x2="58.3868" y2="94.1345" gradientUnits="userSpaceOnUse"><stop stop-color="#6CE0FF"/><stop offset="1" stop-color="#58AAFE"/></linearGradient><linearGradient id="pg10_ai" x1="59.0001" y1="63" x2="52.0001" y2="94" gradientUnits="userSpaceOnUse"><stop stop-color="#66C0FF" stop-opacity="0"/><stop offset="1" stop-color="#A3A3FF"/></linearGradient><linearGradient id="pg11_ai" x1="56.5001" y1="71" x2="48.0001" y2="71" gradientUnits="userSpaceOnUse"><stop stop-color="#66C0FF" stop-opacity="0"/><stop offset="1" stop-color="#BABAFF"/></linearGradient><clipPath id="cp0_ai"><rect width="96" height="96" fill="white"/></clipPath><clipPath id="cp1_ai"><rect width="96" height="96" fill="white"/></clipPath></defs></svg>
           </div>
-          <h3>AI Integrations</h3>
-          <p>Embed generative AI and machine learning capabilities directly into your existing systems using Azure OpenAI and the Power Platform AI Builder.</p>
+          <h3 data-i18n="services.ai.title">AI Integrations</h3>
+          <p data-i18n="services.ai.desc">Embed generative AI and machine learning capabilities directly into your existing systems using Azure OpenAI and the Power Platform AI Builder.</p>
           <ul class="card-features">
-            <li>Azure OpenAI &amp; GPT integration</li>
-            <li>AI Builder models &amp; forms</li>
-            <li>Intelligent document processing</li>
+            <li data-i18n="services.ai.f1">Azure OpenAI &amp; GPT integration</li>
+            <li data-i18n="services.ai.f2">AI Builder models &amp; forms</li>
+            <li data-i18n="services.ai.f3">Intelligent document processing</li>
           </ul>
         </div>
 
@@ -166,20 +160,20 @@
               <path d="M16 24H32M16 18H24M16 30H28" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
             </svg>
           </div>
-          <h3>Power Platform Strategy</h3>
-          <p>From governance frameworks to Centre of Excellence (CoE) setups, we help you build a sustainable, scalable Power Platform practice.</p>
+          <h3 data-i18n="services.strategy.title">Power Platform Strategy</h3>
+          <p data-i18n="services.strategy.desc">From governance frameworks to Centre of Excellence (CoE) setups, we help you build a sustainable, scalable Power Platform practice.</p>
           <ul class="card-features">
-            <li>CoE Starter Kit implementation</li>
-            <li>Governance &amp; ALM setup</li>
-            <li>Training &amp; enablement</li>
+            <li data-i18n="services.strategy.f1">CoE Starter Kit implementation</li>
+            <li data-i18n="services.strategy.f2">Governance &amp; ALM setup</li>
+            <li data-i18n="services.strategy.f3">Training &amp; enablement</li>
           </ul>
         </div>
 
         <div class="service-card service-card--cta" data-color="gradient">
           <div class="card-cta-content">
-            <h3>Not sure where to start?</h3>
-            <p>We'll assess your current processes and identify the highest-impact automation opportunities — at no cost.</p>
-            <a href="#contact" class="btn btn-primary">Book a Free Discovery Call</a>
+            <h3 data-i18n="services.cta.title">Not sure where to start?</h3>
+            <p data-i18n="services.cta.desc">We'll assess your current processes and identify the highest-impact automation opportunities — at no cost.</p>
+            <a href="#contact" class="btn btn-primary" data-i18n="services.cta.btn">Book a Free Discovery Call</a>
           </div>
         </div>
 
@@ -191,46 +185,46 @@
   <section class="about" id="about">
     <div class="container">
       <div class="about-header">
-        <span class="section-tag">Who We Are</span>
-        <h2 class="section-title">Your Trusted Power Platform Partner</h2>
-        <p class="about-lead">Power Vantage Solutions is a specialist consultancy dedicated to the Microsoft Power Platform ecosystem. We partner with organisations of all sizes to design, build, and scale intelligent solutions that drive real business outcomes. Our team combines deep technical expertise with a business-first mindset — we don't just deliver technology, we deliver transformation.</p>
+        <span class="section-tag" data-i18n="about.tag">Who We Are</span>
+        <h2 class="section-title" data-i18n="about.title">Your Trusted Power Platform Partner</h2>
+        <p class="about-lead" data-i18n="about.lead">Power Vantage Solutions is a specialist consultancy dedicated to the Microsoft Power Platform ecosystem. We partner with organisations of all sizes to design, build, and scale intelligent solutions that drive real business outcomes. Our team combines deep technical expertise with a business-first mindset — we don't just deliver technology, we deliver transformation.</p>
       </div>
       <div class="about-stats">
         <div class="about-stat">
           <span class="about-stat-num">50+</span>
-          <span class="about-stat-label">Projects Delivered</span>
+          <span class="about-stat-label" data-i18n="about.stat1">Projects Delivered</span>
         </div>
         <div class="about-stat-divider"></div>
         <div class="about-stat">
           <span class="about-stat-num">Power Platform</span>
-          <span class="about-stat-label">Specialists</span>
+          <span class="about-stat-label" data-i18n="about.stat2">Specialists</span>
         </div>
         <div class="about-stat-divider"></div>
         <div class="about-stat">
-          <span class="about-stat-num">End-to-End</span>
-          <span class="about-stat-label">Delivery Approach</span>
+          <span class="about-stat-num" data-i18n="about.stat3num">End-to-End</span>
+          <span class="about-stat-label" data-i18n="about.stat3">Delivery Approach</span>
         </div>
         <div class="about-stat-divider"></div>
         <div class="about-stat">
-          <span class="about-stat-num">Europe &amp; Remote</span>
-          <span class="about-stat-label">Available Globally</span>
+          <span class="about-stat-num" data-i18n="about.stat4num">Europe &amp; Remote</span>
+          <span class="about-stat-label" data-i18n="about.stat4">Available Globally</span>
         </div>
       </div>
       <div class="about-pillars">
         <div class="pillar">
           <div class="pillar-icon">⚡</div>
-          <strong>Fast Delivery</strong>
-          <span>Rapid prototyping and iterative deployments that get value into your hands quickly.</span>
+          <strong data-i18n="about.p1.title">Fast Delivery</strong>
+          <span data-i18n="about.p1.desc">Rapid prototyping and iterative deployments that get value into your hands quickly.</span>
         </div>
         <div class="pillar">
           <div class="pillar-icon">🔒</div>
-          <strong>Enterprise Grade</strong>
-          <span>Security, governance, and scalability built in from the start — not bolted on later.</span>
+          <strong data-i18n="about.p2.title">Enterprise Grade</strong>
+          <span data-i18n="about.p2.desc">Security, governance, and scalability built in from the start — not bolted on later.</span>
         </div>
         <div class="pillar">
           <div class="pillar-icon">🤝</div>
-          <strong>True Partnership</strong>
-          <span>We work alongside your team, transfer knowledge, and set you up for long-term success.</span>
+          <strong data-i18n="about.p3.title">True Partnership</strong>
+          <span data-i18n="about.p3.desc">We work alongside your team, transfer knowledge, and set you up for long-term success.</span>
         </div>
       </div>
     </div>
@@ -244,9 +238,11 @@
     </div>
     <div class="container contact-inner">
       <div class="contact-info">
-        <span class="section-tag">Get In Touch</span>
-        <h2 class="section-title">Let's Build Something <span class="gradient-text" aria-hidden="true">Powerful</span><span class="sr-only">Powerful</span></h2>
-        <p>Ready to automate, innovate, and accelerate? Drop us a message and we'll get back to you within one business day.</p>
+        <span class="section-tag" data-i18n="contact.tag">Get In Touch</span>
+        <h2 class="section-title">
+          <span data-i18n="contact.title">Let's Build Something </span><span class="gradient-text" aria-hidden="true" data-i18n="contact.titleGrad">Powerful</span><span class="sr-only" data-i18n="contact.titleGrad">Powerful</span>
+        </h2>
+        <p data-i18n="contact.sub">Ready to automate, innovate, and accelerate? Drop us a message and we'll get back to you within one business day.</p>
         <div class="contact-details">
           <div class="contact-item">
             <div class="contact-icon">
@@ -258,47 +254,47 @@
             <div class="contact-icon">
               <svg viewBox="0 0 24 24" fill="none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/></svg>
             </div>
-            <span>United Kingdom &amp; Remote</span>
+            <span data-i18n="contact.location">United Kingdom &amp; Remote</span>
           </div>
         </div>
       </div>
       <form class="contact-form" id="contactForm" onsubmit="handleSubmit(event)">
         <div class="form-row">
           <div class="form-group">
-            <label for="name">Your Name</label>
+            <label for="name" data-i18n="contact.form.name">Your Name</label>
             <input type="text" id="name" name="name" placeholder="Jane Smith" required />
           </div>
           <div class="form-group">
-            <label for="company">Company</label>
+            <label for="company" data-i18n="contact.form.company">Company</label>
             <input type="text" id="company" name="company" placeholder="Acme Corp" />
           </div>
         </div>
         <div class="form-group">
-          <label for="email">Email Address</label>
+          <label for="email" data-i18n="contact.form.email">Email Address</label>
           <input type="email" id="email" name="email" placeholder="jane@acme.com" required />
         </div>
         <div class="form-group">
-          <label for="service">Service of Interest</label>
+          <label for="service" data-i18n="contact.form.service">Service of Interest</label>
           <select id="service" name="service">
-            <option value="">Select a service...</option>
+            <option value="" data-i18n="contact.form.selectDefault">Select a service...</option>
             <option>Power Apps</option>
             <option>Power Automate</option>
             <option>Copilot Agents</option>
-            <option>AI Integrations</option>
-            <option>Power Platform Strategy</option>
-            <option>Not sure yet</option>
+            <option data-i18n="services.ai.title">AI Integrations</option>
+            <option data-i18n="services.strategy.title">Power Platform Strategy</option>
+            <option data-i18n="contact.form.notSure">Not sure yet</option>
           </select>
         </div>
         <div class="form-group">
-          <label for="message">Message</label>
+          <label for="message" data-i18n="contact.form.message">Message</label>
           <textarea id="message" name="message" rows="4" placeholder="Tell us about your project or challenge..." required></textarea>
         </div>
         <button type="submit" class="btn btn-primary btn-full">
-          <span class="btn-text">Send Message</span>
+          <span class="btn-text" data-i18n="contact.form.send">Send Message</span>
           <span class="btn-icon">→</span>
         </button>
         <div class="form-success" id="formSuccess">
-          <span>✓</span> Thanks! We'll be in touch within one business day.
+          <span>✓</span> <span data-i18n="contact.form.success">Thanks! We'll be in touch within one business day.</span>
         </div>
       </form>
     </div>
@@ -311,15 +307,16 @@
         <img src="logo.png" alt="Power Vantage Solutions logo" class="nav-logo-img" />
         <span>Power Vantage Solutions</span>
       </div>
-      <p class="footer-copy">© 2026 Power Vantage Solutions. All rights reserved.</p>
+      <p class="footer-copy" data-i18n="footer.copy">© 2026 Power Vantage Solutions. All rights reserved.</p>
       <div class="footer-links">
-        <a href="#services">Services</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
+        <a href="#services" data-i18n="nav.services">Services</a>
+        <a href="#about" data-i18n="nav.about">About</a>
+        <a href="#contact" data-i18n="nav.contact">Contact</a>
       </div>
     </div>
   </footer>
 
+  <script src="translations.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
