@@ -41,16 +41,34 @@ document.querySelectorAll('.service-card').forEach((card, i) => {
 // ---- CONTACT FORM ----
 function handleSubmit(e) {
   e.preventDefault();
-  const btn = e.target.querySelector('.btn-text');
+  const form    = e.target;
+  const btn     = form.querySelector('.btn-text');
+  const success = document.getElementById('formSuccess');
+
   btn.textContent = 'Sending…';
-  setTimeout(() => {
-    document.getElementById('contactForm').reset();
-    btn.textContent = 'Send Message';
-    document.getElementById('formSuccess').classList.add('visible');
-    setTimeout(() => {
-      document.getElementById('formSuccess').classList.remove('visible');
-    }, 5000);
-  }, 1200);
+  form.querySelector('button[type=submit]').disabled = true;
+
+  fetch('submit.php', {
+    method: 'POST',
+    body: new FormData(form),
+  })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) {
+        form.reset();
+        success.classList.add('visible');
+        setTimeout(() => success.classList.remove('visible'), 6000);
+      } else {
+        alert(data.error || 'Something went wrong. Please try again.');
+      }
+    })
+    .catch(() => {
+      alert('Network error. Please check your connection and try again.');
+    })
+    .finally(() => {
+      btn.textContent = 'Send Message';
+      form.querySelector('button[type=submit]').disabled = false;
+    });
 }
 
 // ---- SMOOTH ACTIVE NAV LINKS ----

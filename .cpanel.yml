@@ -7,3 +7,7 @@ deployment:
     - /bin/cp script.js $DEPLOYPATH
     - /bin/cp server.py $DEPLOYPATH
     - /bin/cp translations.js $DEPLOYPATH
+    - /bin/cp db_config.php $DEPLOYPATH
+    - /bin/cp submit.php $DEPLOYPATH
+    
+    
