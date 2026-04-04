@@ -179,6 +179,12 @@ body {
   letter-spacing: 0.05em;
 }
 
+.nav-logo-img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
 .logo-text {
   font-weight: 700;
   font-size: 15px;

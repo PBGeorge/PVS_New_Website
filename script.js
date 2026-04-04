@@ -1,3 +1,7 @@
+// ---- FORCE SCROLL TO TOP ON LOAD ----
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+window.scrollTo(0, 0);
+
 // ---- NAV SCROLL EFFECT ----
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
