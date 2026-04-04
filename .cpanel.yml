@@ -6,3 +6,4 @@ deployment:
     - /bin/cp style.css $DEPLOYPATH
     - /bin/cp script.js $DEPLOYPATH
     - /bin/cp server.py $DEPLOYPATH
+    - /bin/cp translations.js $DEPLOYPATH
