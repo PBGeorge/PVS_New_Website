@@ -71,23 +71,110 @@ try {
     exit;
 }
 
-// ---- Send email notification ----
+// ---- Send email notification via SMTP ----
 $subject  = 'New contact form submission – ' . SITE_NAME;
-$bodyText = "You have a new enquiry from the " . SITE_NAME . " website.\n\n"
-          . "Name:    {$name}\n"
-          . "Company: {$company}\n"
-          . "Email:   {$email}\n"
-          . "Service: {$service}\n\n"
-          . "Message:\n{$message}\n\n"
-          . "---\nSubmitted: " . date('Y-m-d H:i:s') . "\nIP: {$ip}";
+$bodyText = "You have a new enquiry from the " . SITE_NAME . " website.\r\n\r\n"
+          . "Name:    {$name}\r\n"
+          . "Company: {$company}\r\n"
+          . "Email:   {$email}\r\n"
+          . "Service: {$service}\r\n\r\n"
+          . "Message:\r\n{$message}\r\n\r\n"
+          . "---\r\nSubmitted: " . date('Y-m-d H:i:s') . "\r\nIP: {$ip}";
 
-$headers  = "From: no-reply@powervantagesolutions.com\r\n"
-          . "Reply-To: {$email}\r\n"
-          . "MIME-Version: 1.0\r\n"
-          . "Content-Type: text/plain; charset=UTF-8\r\n"
-          . "X-Mailer: PHP/" . phpversion();
+smtp_send(NOTIFY_EMAIL, $subject, $bodyText, $email);
 
-mail(NOTIFY_EMAIL, $subject, $bodyText, $headers);
+/**
+ * Send an email via SMTP without any external libraries.
+ * Works with cPanel / most shared hosting SMTP servers.
+ */
+function smtp_send(string $to, string $subject, string $body, string $replyTo = ''): void
+{
+    $host     = SMTP_HOST;
+    $port     = SMTP_PORT;
+    $user     = SMTP_USER;
+    $pass     = SMTP_PASS;
+    $from     = SMTP_FROM;
+    $fromName = SMTP_FROM_NAME;
+
+    // Build the raw email
+    $msgId   = '<' . time() . '.pvs@' . $host . '>';
+    $headers = "Date: " . date('r') . "\r\n"
+             . "Message-ID: {$msgId}\r\n"
+             . "From: {$fromName} <{$from}>\r\n"
+             . "To: {$to}\r\n"
+             . ($replyTo ? "Reply-To: {$replyTo}\r\n" : '')
+             . "Subject: {$subject}\r\n"
+             . "MIME-Version: 1.0\r\n"
+             . "Content-Type: text/plain; charset=UTF-8\r\n"
+             . "Content-Transfer-Encoding: 8bit\r\n";
+    $message = $headers . "\r\n" . $body;
+
+    $errNo  = 0;
+    $errStr = '';
+
+    // Connect (TLS on 587, SSL on 465)
+    $prefix = ($port === 465) ? 'ssl://' : '';
+    $socket = @fsockopen($prefix . $host, $port, $errNo, $errStr, 10);
+    if (!$socket) {
+        error_log("PVS SMTP connect failed: {$errStr} ({$errNo})");
+        return;
+    }
+
+    $read = function() use ($socket): string {
+        $res = '';
+        while ($line = fgets($socket, 515)) {
+            $res .= $line;
+            if (substr($line, 3, 1) === ' ') break;
+        }
+        return $res;
+    };
+    $write = function(string $cmd) use ($socket): void {
+        fwrite($socket, $cmd . "\r\n");
+    };
+
+    $read(); // 220 greeting
+
+    // EHLO
+    $write("EHLO {$host}");
+    $ehlo = $read();
+
+    // STARTTLS upgrade (port 587)
+    if ($port === 587 && strpos($ehlo, 'STARTTLS') !== false) {
+        $write('STARTTLS');
+        $read();
+        stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
+        $write("EHLO {$host}");
+        $read();
+    }
+
+    // Auth
+    $write('AUTH LOGIN');
+    $read();
+    $write(base64_encode($user));
+    $read();
+    $write(base64_encode($pass));
+    $authResp = $read();
+    if (strpos($authResp, '235') === false) {
+        error_log("PVS SMTP auth failed: {$authResp}");
+        fclose($socket);
+        return;
+    }
+
+    // Envelope
+    $write("MAIL FROM:<{$from}>");
+    $read();
+    $write("RCPT TO:<{$to}>");
+    $read();
+
+    // Data
+    $write('DATA');
+    $read();
+    $write($message . "\r\n.");
+    $read();
+
+    $write('QUIT');
+    fclose($socket);
+}
 
 // ---- Success ----
 echo json_encode(['success' => true]);
