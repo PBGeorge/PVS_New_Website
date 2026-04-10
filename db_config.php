@@ -9,7 +9,7 @@ define('DB_USER', 'powervan_admin');  // e.g. myuser_pvs
 define('DB_PASS', 'w$.d^1K(#xAWLcVg');
 
 // Email address to receive submission notifications
-define('NOTIFY_EMAIL', 'hello@powervantagesolutions.com');
+define('NOTIFY_EMAIL', 'hello@powervantagesolutions.com;pindaru.george94@gmail.com');
 define('SITE_NAME',    'Power Vantage Solutions');
 
 // -----------------------------------------------
