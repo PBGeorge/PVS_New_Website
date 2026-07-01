@@ -1,0 +1,5 @@
+# Canonical host + protocol: force https://powervantagesolutions.com (no www)
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^www\.powervantagesolutions\.com$ [NC,OR]
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://powervantagesolutions.com/$1 [L,R=301]

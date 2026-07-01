@@ -9,5 +9,7 @@ deployment:
     - /bin/cp translations.js $DEPLOYPATH
     - /bin/cp db_config.php $DEPLOYPATH
     - /bin/cp submit.php $DEPLOYPATH
-    
-    
+    - /bin/cp logo.png $DEPLOYPATH
+    - /bin/cp favicon.ico $DEPLOYPATH
+    - /bin/cp apple-touch-icon.png $DEPLOYPATH
+    - /bin/cp .htaccess $DEPLOYPATH
