@@ -462,6 +462,14 @@ body {
   gap: 24px;
 }
 
+/* Lead with AI: Copilot Agents and AI Integrations first, regardless of DOM order */
+.services-grid > :nth-child(1) { order: 4; } /* Power Apps */
+.services-grid > :nth-child(2) { order: 3; } /* Power Automate */
+.services-grid > :nth-child(3) { order: 1; } /* Copilot Agents */
+.services-grid > :nth-child(4) { order: 2; } /* AI Integrations */
+.services-grid > :nth-child(5) { order: 5; } /* Power Platform Strategy */
+.services-grid > :nth-child(6) { order: 6; } /* CTA card */
+
 .service-card {
   background: var(--dark-3);
   border: 1px solid var(--border);
@@ -575,6 +583,59 @@ body {
 .card-cta-content { text-align: center; }
 .card-cta-content h3 { font-size: 22px; margin-bottom: 12px; }
 .card-cta-content p { margin-bottom: 24px; }
+
+/* ---- USE CASES ---- */
+.usecases {
+  padding: 120px 0;
+  background: var(--dark);
+}
+
+.usecases-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* ---- HOW IT WORKS ---- */
+.process {
+  padding: 120px 0;
+  background: var(--dark-2);
+}
+
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.process-step {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 28px;
+  background: var(--dark-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.process-step:hover {
+  border-color: rgba(124,58,237,0.25);
+  box-shadow: 0 4px 24px rgba(124,58,237,0.08);
+}
+
+.process-step-num {
+  font-size: 28px;
+  font-weight: 800;
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+}
+
+.process-step strong { font-size: 16px; font-weight: 700; color: var(--text); }
+.process-step span { font-size: 14px; color: var(--muted); line-height: 1.65; }
 
 /* ---- ABOUT ---- */
 .about {
@@ -865,7 +926,8 @@ body {
 
 /* ---- RESPONSIVE ---- */
 @media (max-width: 1024px) {
-  .services-grid { grid-template-columns: repeat(2, 1fr); }
+  .services-grid, .usecases-grid { grid-template-columns: repeat(2, 1fr); }
+  .process-steps { grid-template-columns: repeat(2, 1fr); }
   .contact-inner { gap: 48px; }
   .about-stat-divider { display: none; }
   .about-stats { gap: 8px; padding: 32px 24px; }
@@ -877,7 +939,8 @@ body {
   .nav-toggle { display: flex; }
   .lang-toggle--mobile { display: flex; }
 
-  .services-grid { grid-template-columns: 1fr; }
+  .services-grid, .usecases-grid { grid-template-columns: 1fr; }
+  .process-steps { grid-template-columns: 1fr; }
 
   .about-pillars { grid-template-columns: 1fr; }
   .about-stats { flex-direction: column; gap: 20px; }

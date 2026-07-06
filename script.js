@@ -18,7 +18,7 @@ function closeMenu() {
 
 // ---- SCROLL REVEAL ----
 const revealEls = document.querySelectorAll(
-  '.service-card, .pillar, .about-content, .contact-form, .contact-info, .section-header'
+  '.service-card, .pillar, .process-step, .about-content, .contact-form, .contact-info, .section-header'
 );
 revealEls.forEach(el => el.classList.add('reveal'));
 
@@ -34,8 +34,13 @@ const observer = new IntersectionObserver(
 revealEls.forEach(el => observer.observe(el));
 
 // ---- STAGGER SERVICE CARDS ----
-document.querySelectorAll('.service-card').forEach((card, i) => {
+document.querySelectorAll('.services-grid .service-card, .usecases-grid .service-card').forEach((card, i) => {
   card.style.transitionDelay = `${i * 0.08}s`;
+});
+
+// ---- STAGGER PROCESS STEPS ----
+document.querySelectorAll('.process-step').forEach((step, i) => {
+  step.style.transitionDelay = `${i * 0.08}s`;
 });
 
 // ---- CONTACT FORM ----
