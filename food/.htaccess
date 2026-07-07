@@ -1,0 +1,12 @@
+# Don't list directory contents
+Options -Indexes
+
+# Block direct web access to sensitive PHP includes
+<FilesMatch "^(config|bootstrap|header|footer)\.php$">
+  Require all denied
+</FilesMatch>
+
+# Block this file and any markdown
+<FilesMatch "\.(md|sql|htaccess)$">
+  Require all denied
+</FilesMatch>
