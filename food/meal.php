@@ -10,8 +10,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'delete') {
         $id = (int)($_POST['id'] ?? 0);
-        $st = $pdo->prepare('DELETE FROM meals WHERE id = ?'); // ingredients cascade
-        $st->execute([$id]);
+        // Only the meal's owner can delete it. ingredients cascade.
+        $st = $pdo->prepare('DELETE FROM meals WHERE id = ? AND created_by = ?');
+        $st->execute([$id, $me['id']]);
         redirect('index.php');
     }
 
@@ -29,6 +30,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $qtys  = $_POST['ing_qty']  ?? [];
     $preps = $_POST['ing_prep'] ?? [];
 
+    // For edits, confirm the meal belongs to this user before touching
+    // anything (guards the meal row and its ingredients from a crafted id).
+    if ($id > 0) {
+        $own = $pdo->prepare('SELECT id FROM meals WHERE id = ? AND created_by = ?');
+        $own->execute([$id, $me['id']]);
+        if (!$own->fetch()) redirect('index.php');
+    }
+
     $errors = [];
     if ($dish === '') $errors[] = 'Give the dish a name.';
 
@@ -36,8 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo->beginTransaction();
         try {
             if ($id > 0) {
-                $st = $pdo->prepare('UPDATE meals SET dish_name=?, location=?, place=?, eaten_at=?, notes=? WHERE id=?');
-                $st->execute([$dish, $location, ($place ?: null), $eatenAt, ($notes ?: null), $id]);
+                // Only the owner can update; a non-owning id changes nothing.
+                $st = $pdo->prepare('UPDATE meals SET dish_name=?, location=?, place=?, eaten_at=?, notes=? WHERE id=? AND created_by=?');
+                $st->execute([$dish, $location, ($place ?: null), $eatenAt, ($notes ?: null), $id, $me['id']]);
                 $pdo->prepare('DELETE FROM ingredients WHERE meal_id = ?')->execute([$id]);
             } else {
                 $st = $pdo->prepare('INSERT INTO meals (dish_name, location, place, eaten_at, notes, created_by) VALUES (?,?,?,?,?,?)');
@@ -79,8 +89,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $errors = [];
     $id = (int)($_GET['id'] ?? 0);
     if ($id > 0) {
-        $st = $pdo->prepare('SELECT * FROM meals WHERE id = ?');
-        $st->execute([$id]);
+        // Only load the meal if it belongs to the current user.
+        $st = $pdo->prepare('SELECT * FROM meals WHERE id = ? AND created_by = ?');
+        $st->execute([$id, $me['id']]);
         $meal = $st->fetch();
         if (!$meal) redirect('index.php');
         $st = $pdo->prepare('SELECT * FROM ingredients WHERE meal_id = ? ORDER BY position, id');

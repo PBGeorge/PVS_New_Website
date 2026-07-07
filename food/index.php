@@ -1,14 +1,17 @@
 <?php
 require __DIR__ . '/bootstrap.php';
 require_login();
+$me = current_user();
 
-// Load all meals with their ingredients, newest first.
-$meals = $pdo->query("
-    SELECT m.*, u.display_name AS author
+// Load this user's meals with their ingredients, newest first.
+$st = $pdo->prepare("
+    SELECT m.*
     FROM meals m
-    LEFT JOIN users u ON u.id = m.created_by
+    WHERE m.created_by = ?
     ORDER BY m.eaten_at DESC, m.id DESC
-")->fetchAll();
+");
+$st->execute([$me['id']]);
+$meals = $st->fetchAll();
 
 $ingredientsByMeal = [];
 if ($meals) {
@@ -89,10 +92,6 @@ require __DIR__ . '/header.php';
 
       <?php if (!empty($m['notes'])): ?>
         <p class="notes"><?= nl2br(e($m['notes'])) ?></p>
-      <?php endif; ?>
-
-      <?php if (!empty($m['author'])): ?>
-        <div class="byline">Added by <?= e($m['author']) ?></div>
       <?php endif; ?>
     </article>
   <?php endforeach; ?>

@@ -22,6 +22,7 @@ $me         = $SHOW_NAV ? current_user() : null;
   <a class="brand" href="index.php"><?= e(APP_NAME) ?></a>
   <nav class="topnav">
     <button type="button" class="btn-ghost" id="exportBtn">Export</button>
+    <a class="btn-ghost" href="password.php">Password</a>
     <a class="btn-ghost" href="logout.php">Sign out</a>
   </nav>
 </header>

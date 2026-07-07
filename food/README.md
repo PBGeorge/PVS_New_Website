@@ -61,12 +61,13 @@ Go to `https://yourdomain/food/` and sign in.
 
 - **Add meal** → dish, time, location (Home/Restaurant), optional place,
   an ingredient list (quantity + how it was prepared), and notes.
-- Tap **Edit** / **Delete** on any meal.
-- **Export** (top right) downloads an `.xlsx` of everything — one row per
+- Tap **Edit** / **Delete** on any of your meals.
+- **Export** (top right) downloads an `.xlsx` of your meals — one row per
   ingredient, with the dish, time, location and notes alongside.
+- **Password** (top right) → change your own password any time.
 
-Both accounts see the same shared diary; each meal is tagged with who
-added it.
+Each account keeps its **own private diary** — you only see, edit, and
+export the meals you added.
 
 ---
 
@@ -74,9 +75,7 @@ added it.
 
 - **Backups:** your food data lives in the MySQL database. cPanel's
   backups cover it, or use phpMyAdmin → Export now and then.
-- **Changing a password later:** the simplest route is phpMyAdmin — but
-  passwords are hashed, so you'd update the `password_hash` value with a
-  new `password_hash()` output. Ask me and I'll give you a one-line
-  snippet, or I can add a small "change password" screen.
-- **Want per-person diaries instead of a shared one?** It's a small
-  change — say the word.
+- **Changing a password:** sign in and use **Password** in the top bar —
+  enter your current password and a new one (8+ characters).
+- **Want a shared diary instead of per-person?** It's a small change —
+  say the word.

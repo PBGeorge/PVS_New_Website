@@ -1,18 +1,21 @@
 <?php
 require __DIR__ . '/bootstrap.php';
 require_login();
+$me = current_user();
 
 // One row per ingredient (meal columns repeated); meals with no
 // ingredients still produce a single row. This denormalized shape is
 // the easiest to read, filter, and share for nutrition review.
 $rows = [];
 
-$meals = $pdo->query("
-    SELECT m.*, u.display_name AS author
+$meals = $pdo->prepare("
+    SELECT m.*
     FROM meals m
-    LEFT JOIN users u ON u.id = m.created_by
+    WHERE m.created_by = ?
     ORDER BY m.eaten_at ASC, m.id ASC
-")->fetchAll();
+");
+$meals->execute([$me['id']]);
+$meals = $meals->fetchAll();
 
 $ingByMeal = [];
 if ($meals) {
@@ -34,7 +37,6 @@ foreach ($meals as $m) {
         'Quantity'    => '',
         'Preparation' => '',
         'Notes'       => $m['notes'] ?? '',
-        'Added by'    => $m['author'] ?? '',
     ];
     $ings = $ingByMeal[$m['id']] ?? [];
     if (!$ings) {

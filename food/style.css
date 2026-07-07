@@ -378,6 +378,17 @@ body {
   margin-bottom: 12px;
 }
 
+/* Success notice (e.g. password changed) */
+.ok {
+  background: var(--green-bg);
+  color: var(--primary-d);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
 code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   background: var(--paper);
