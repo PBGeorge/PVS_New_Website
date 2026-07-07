@@ -24,6 +24,6 @@ define('FORCE_HTTPS', true);
 define('SMTP_HOST',      'cl83.namebox.ro');                       // your mail server hostname
 define('SMTP_PORT',      465);                                     // 465 = SSL, 587 = STARTTLS
 define('SMTP_USER',      'noreply@powervantagesolutions.com');     // full email address
-define('SMTP_PASS',      'CHANGE_ME');                             // that mailbox's password
+define('SMTP_PASS',      'qju_TKV.fxz5fya.eph');                             // that mailbox's password
 define('SMTP_FROM',      'noreply@powervantagesolutions.com');     // "from" address
 define('SMTP_FROM_NAME', 'Food Log');                             // "from" display name
