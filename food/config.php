@@ -7,9 +7,9 @@
 
 // --- Database (cPanel → MySQL Databases) ---
 define('DB_HOST', 'localhost');        // almost always 'localhost' on cPanel
-define('DB_NAME', 'yourusr_foodlog');  // the database you created
-define('DB_USER', 'yourusr_food');     // the database user you created
-define('DB_PASS', 'CHANGE_ME');        // that user's password
+define('DB_NAME', 'powervan_foodlog');  // the database you created
+define('DB_USER', 'powervan_gp');     // the database user you created
+define('DB_PASS', '6P1F&#c?,tW0L&{h');        // that user's password
 
 // --- App ---
 define('APP_NAME',     'Food Log');
