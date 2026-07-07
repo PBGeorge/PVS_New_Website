@@ -16,3 +16,5 @@ deployment:
     - /bin/cp sitemap.xml $DEPLOYPATH
     - /bin/cp robots.txt $DEPLOYPATH
     - /bin/cp .htaccess $DEPLOYPATH
+    - /bin/mkdir -p ${DEPLOYPATH}food
+    - /bin/cp -R food/. ${DEPLOYPATH}food/
