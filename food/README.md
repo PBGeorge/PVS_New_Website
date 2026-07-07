@@ -31,6 +31,11 @@ define('DB_PASS', 'the-password-you-set');
 define('APP_TIMEZONE', 'Europe/Bucharest'); // adjust if needed
 ```
 
+Optionally, fill in the **SMTP** block too. It's only needed for the
+"forgot password" reset emails — use the same mailbox as your main site
+(e.g. `noreply@yourdomain`) and set `SMTP_PASS`. Without it, everything
+else works; only the emailed reset link won't send.
+
 ## 3. Upload the files (cPanel → File Manager)
 
 1. Go into `public_html`.
@@ -64,10 +69,16 @@ Go to `https://yourdomain/food/` and sign in.
 - Tap **Edit** / **Delete** on any of your meals.
 - **Export** (top right) downloads an `.xlsx` of your meals — one row per
   ingredient, with the dish, time, location and notes alongside.
-- **Password** (top right) → change your own password any time.
+- **Account** (top right) → set a **recovery email** and change your
+  password any time.
 
 Each account keeps its **own private diary** — you only see, edit, and
 export the meals you added.
+
+**Locked out?** On the sign-in screen, use **Forgot password?** → enter
+your recovery email → follow the emailed link (valid 1 hour) to set a new
+password. This only works if you set a recovery email on the **Account**
+page beforehand, so do that for both people right after installing.
 
 ---
 
@@ -75,7 +86,10 @@ export the meals you added.
 
 - **Backups:** your food data lives in the MySQL database. cPanel's
   backups cover it, or use phpMyAdmin → Export now and then.
-- **Changing a password:** sign in and use **Password** in the top bar —
+- **Changing a password:** sign in and use **Account** in the top bar —
   enter your current password and a new one (8+ characters).
+- **Recovery email:** set one per person on the **Account** page so the
+  "forgot password" reset can reach you. Reset links are single-use and
+  expire after 1 hour.
 - **Want a shared diary instead of per-person?** It's a small change —
   say the word.

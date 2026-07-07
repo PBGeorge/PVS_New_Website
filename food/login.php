@@ -32,6 +32,7 @@ require __DIR__ . '/header.php';
   <h1 class="auth-title"><?= e(APP_NAME) ?></h1>
   <p class="auth-sub">Sign in to log and review meals.</p>
 
+  <?php if (!empty($_GET['reset'])): ?><div class="ok">Your password has been reset. Sign in with your new password.</div><?php endif; ?>
   <?php if ($error): ?><div class="alert"><?= e($error) ?></div><?php endif; ?>
 
   <form method="post" class="card form" autocomplete="on">
@@ -44,5 +45,6 @@ require __DIR__ . '/header.php';
     </label>
     <button class="btn" type="submit">Sign in</button>
   </form>
+  <p class="auth-alt"><a href="forgot.php">Forgot password?</a></p>
 </div>
 <?php require __DIR__ . '/footer.php'; ?>

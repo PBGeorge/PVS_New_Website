@@ -17,3 +17,13 @@ define('APP_TIMEZONE', 'Europe/Bucharest'); // your timezone
 
 // Force HTTPS. Your host has SSL, so leave this true.
 define('FORCE_HTTPS', true);
+
+// --- Email (for password-reset links) ---
+// Use the same cPanel SMTP account as the main site (see db_config.php).
+// Reset emails will not send until SMTP_PASS is filled in.
+define('SMTP_HOST',      'cl83.namebox.ro');                       // your mail server hostname
+define('SMTP_PORT',      465);                                     // 465 = SSL, 587 = STARTTLS
+define('SMTP_USER',      'noreply@powervantagesolutions.com');     // full email address
+define('SMTP_PASS',      'CHANGE_ME');                             // that mailbox's password
+define('SMTP_FROM',      'noreply@powervantagesolutions.com');     // "from" address
+define('SMTP_FROM_NAME', 'Food Log');                             // "from" display name
