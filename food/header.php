@@ -21,8 +21,7 @@ $me         = $SHOW_NAV ? current_user() : null;
 <header class="topbar">
   <a class="brand" href="index.php"><?= e(APP_NAME) ?></a>
   <nav class="topnav">
-    <button type="button" class="btn-ghost" id="exportBtn">Excel</button>
-    <a class="btn-ghost" href="word.php">Word</a>
+    <a class="btn-ghost" href="exports.php">Export</a>
     <a class="btn-ghost" href="password.php">Account</a>
     <a class="btn-ghost" href="logout.php">Sign out</a>
   </nav>

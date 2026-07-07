@@ -8,13 +8,22 @@ $me = current_user();
 // the easiest to read, filter, and share for nutrition review.
 $rows = [];
 
+[$from, $to] = export_bounds();
+$where  = 'm.created_by = ?';
+$params = [$me['id']];
+if ($from !== null && $to !== null) {
+    $where   .= ' AND m.eaten_at BETWEEN ? AND ?';
+    $params[] = $from;
+    $params[] = $to;
+}
+
 $meals = $pdo->prepare("
     SELECT m.*
     FROM meals m
-    WHERE m.created_by = ?
-    ORDER BY m.eaten_at ASC, m.id ASC
+    WHERE $where
+    ORDER BY m.eaten_at DESC, m.id DESC
 ");
-$meals->execute([$me['id']]);
+$meals->execute($params);
 $meals = $meals->fetchAll();
 
 $ingByMeal = [];

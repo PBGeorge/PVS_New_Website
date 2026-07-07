@@ -132,3 +132,32 @@ function users_exist(): bool {
     global $pdo;
     return (int)$pdo->query('SELECT COUNT(*) FROM users')->fetchColumn() > 0;
 }
+
+/**
+ * Resolve an export date range from the request into
+ * [$from, $to] as 'Y-m-d H:i:s' strings, or [null, null] for "all time".
+ * Reads ?range=7|30|90|all|custom plus ?from=&to= (YYYY-MM-DD) for custom.
+ * Uses APP_TIMEZONE (already set in this file).
+ */
+function export_bounds(): array {
+    $range = $_GET['range'] ?? 'all';
+
+    if (in_array($range, ['7', '30', '90'], true)) {
+        $days = (int)$range;
+        $from = date('Y-m-d 00:00:00', strtotime('-' . ($days - 1) . ' days'));
+        $to   = date('Y-m-d 23:59:59');
+        return [$from, $to];
+    }
+
+    if ($range === 'custom') {
+        $f = trim($_GET['from'] ?? '');
+        $t = trim($_GET['to'] ?? '');
+        $ok = preg_match('/^\d{4}-\d{2}-\d{2}$/', $f) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $t);
+        if ($ok) {
+            if ($f > $t) { [$f, $t] = [$t, $f]; } // tolerate reversed dates
+            return [$f . ' 00:00:00', $t . ' 23:59:59'];
+        }
+    }
+
+    return [null, null]; // all time / unrecognised
+}

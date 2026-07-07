@@ -422,6 +422,27 @@ body {
 .auth-alt a { color: var(--primary); text-decoration: none; }
 .auth-alt a:hover { text-decoration: underline; }
 
+/* ---------- Export page ---------- */
+.range-opts { display: grid; gap: 10px; }
+.range-opts .opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.range-opts .opt input { width: auto; margin: 0; }
+.custom-dates { transition: opacity .15s ease; }
+.export-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.export-actions .btn { flex: 1; min-width: 150px; }
+.btn-word { background: var(--clay); }
+.btn-word:hover { background: #a15630; }
+
 code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   background: var(--paper);

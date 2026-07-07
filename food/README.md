@@ -67,10 +67,12 @@ Go to `https://yourdomain/food/` and sign in.
 - **Add meal** → dish, time, location (Home/Restaurant), optional place,
   an ingredient list (quantity + how it was prepared), and notes.
 - Tap **Edit** / **Delete** on any of your meals.
-- **Excel** (top right) downloads an `.xlsx` of your meals — one row per
-  ingredient, with the dish, time, location and notes alongside.
-- **Word** (top right) downloads a `.doc` of your meals grouped by day,
-  with each meal laid out underneath (opens in Word or Google Docs).
+- **Export** (top right) opens a page where you pick a range — last 7 / 30
+  / 90 days, all time, or a custom start/end — and download it as:
+  - **Excel** — an `.xlsx`, one row per ingredient, with the dish, time,
+    location and notes alongside.
+  - **Word** — a `.doc` grouped by day with each meal laid out underneath
+    (opens in Word or Google Docs).
 - **Account** (top right) → set a **recovery email** and change your
   password any time.
 

@@ -6,13 +6,22 @@ require __DIR__ . '/bootstrap.php';
 require_login();
 $me = current_user();
 
+[$from, $to] = export_bounds();
+$where  = 'm.created_by = ?';
+$params = [$me['id']];
+if ($from !== null && $to !== null) {
+    $where   .= ' AND m.eaten_at BETWEEN ? AND ?';
+    $params[] = $from;
+    $params[] = $to;
+}
+
 $st = $pdo->prepare("
     SELECT m.*
     FROM meals m
-    WHERE m.created_by = ?
+    WHERE $where
     ORDER BY m.eaten_at DESC, m.id DESC
 ");
-$st->execute([$me['id']]);
+$st->execute($params);
 $meals = $st->fetchAll();
 
 $ingredientsByMeal = [];
