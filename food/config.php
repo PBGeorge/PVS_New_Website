@@ -30,7 +30,10 @@ define('SMTP_FROM_NAME', 'Food Log');                             // "from" disp
 
 
 // --- Gemini (calorie estimation) ---
-define('GEMINI_MODEL', 'gemini-flash-latest');
+// gemini-2.0-flash is fast and non-"thinking", so estimates come back in
+// ~1s and on the first save. (gemini-flash-latest points at a slower
+// thinking model whose responses were intermittently unparseable.)
+define('GEMINI_MODEL', 'gemini-2.0-flash');
 
 // The API key is kept OUT of this repo so it never lands on GitHub.
 // Create food/secrets.php on the server (cPanel File Manager) containing:
