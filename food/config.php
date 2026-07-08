@@ -30,10 +30,11 @@ define('SMTP_FROM_NAME', 'Food Log');                             // "from" disp
 
 
 // --- Gemini (calorie estimation) ---
-// gemini-2.0-flash is fast and non-"thinking", so estimates come back in
-// ~1s and on the first save. (gemini-flash-latest points at a slower
-// thinking model whose responses were intermittently unparseable.)
-define('GEMINI_MODEL', 'gemini-2.0-flash');
+// gemini-2.5-flash-lite: current, fast and cheap, good enough for kcal
+// estimates. (gemini-2.0-flash was retired; gemini-flash-latest points at a
+// slower "thinking" model.) If Google retires this one too, the error will
+// read "model ... no longer available" — swap in the next flash-lite here.
+define('GEMINI_MODEL', 'gemini-2.5-flash-lite');
 
 // The API key is kept OUT of this repo so it never lands on GitHub.
 // Create food/secrets.php on the server (cPanel File Manager) containing:
