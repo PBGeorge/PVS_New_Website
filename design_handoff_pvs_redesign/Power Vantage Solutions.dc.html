@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#FAF8F4;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#1A1D24;-webkit-font-smoothing:antialiased;line-height:1.6;overflow-x:hidden}
+  a{color:#1B8DD1;text-decoration:none}
+  a:hover{color:#22B39A}
+  input,select,textarea,button{font-family:inherit}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-13px)}}
+  @keyframes floaty2{0%,100%{transform:translateY(0)}50%{transform:translateY(11px)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+  @keyframes orbitSpin{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+  @keyframes orbitSpinR{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(-360deg)}}
+  @keyframes orbitAnti{from{transform:rotate(0)}to{transform:rotate(-360deg)}}
+  @keyframes orbitAntiR{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+  @keyframes pulseNode{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.06)}}
+  @keyframes halo{0%{transform:translate(-50%,-50%) scale(.85);opacity:.5}70%{opacity:0}100%{transform:translate(-50%,-50%) scale(1.7);opacity:0}}
+  @keyframes scrollPulse{0%,100%{opacity:1;transform:scaleY(1)}50%{opacity:.35;transform:scaleY(.6)}}
+</style>
+</helmet>
+
+<div style="width:100%;overflow:hidden;">
+
+<!-- ================= NAV ================= -->
+<nav id="pvsNav" style="position:fixed;top:0;left:0;right:0;z-index:100;transition:background .3s,box-shadow .3s,border-color .3s;border-bottom:1px solid transparent;">
+  <div style="max-width:1180px;margin:0 auto;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="#hero" style="display:flex;align-items:center;gap:10px;color:inherit;">
+      <img src="assets/logo.png" alt="Power Vantage Solutions" style="width:36px;height:36px;object-fit:contain;">
+      <span style="font-weight:700;font-size:15px;color:#1A1D24;">Power Vantage Solutions</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:30px;">
+      <a href="#services" style="font-size:14px;color:#5C6270;font-weight:500;">Services</a>
+      <a href="#use-cases" style="font-size:14px;color:#5C6270;font-weight:500;">Use Cases</a>
+      <a href="#process" style="font-size:14px;color:#5C6270;font-weight:500;">How It Works</a>
+      <a href="#about" style="font-size:14px;color:#5C6270;font-weight:500;">About</a>
+      <a href="#contact" style="font-size:13.5px;font-weight:600;color:#fff;background:linear-gradient(120deg,#1B8DD1,#22B39A);padding:9px 22px;border-radius:100px;box-shadow:0 6px 18px rgba(27,141,209,.28);">Contact</a>
+      <span style="font-size:12px;font-weight:700;color:#1B8DD1;background:rgba(27,141,209,.09);border:1.5px solid rgba(27,141,209,.2);padding:6px 12px;border-radius:100px;cursor:pointer;">EN <span style="opacity:.4;">/ RO</span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<section id="hero" style="position:relative;padding:150px 40px 96px;">
+  <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:center;">
+    <div>
+      <div style="display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:#1B8DD1;background:rgba(27,141,209,.08);border:1px solid rgba(27,141,209,.16);padding:7px 16px;border-radius:100px;margin-bottom:26px;animation:fadeUp .6s both;"><span style="width:7px;height:7px;border-radius:50%;background:#22B39A;"></span> AI Agents &amp; Copilot Studio Specialists</div>
+      <h1 style="font-size:56px;line-height:1.06;letter-spacing:-.025em;font-weight:800;margin:0 0 22px;color:#1A1D24;animation:fadeUp .6s .08s both;">Bring the Power of <span style="background:linear-gradient(120deg,#1B8DD1,#22B39A 55%,#F3C64B);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">AI into your business</span></h1>
+      <p style="font-size:18px;line-height:1.7;color:#5C6270;max-width:480px;margin:0 0 32px;animation:fadeUp .6s .16s both;">We build AI agents with Microsoft Copilot Studio and integrate generative AI directly into your workflows — backed by Power Apps and Power Automate — so your business runs smarter, not just faster.</p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:48px;animation:fadeUp .6s .24s both;">
+        <a href="#use-cases" style="display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:#fff;background:linear-gradient(120deg,#1B8DD1,#22B39A);padding:15px 28px;border-radius:100px;box-shadow:0 12px 28px rgba(27,141,209,.3);">See AI in Action →</a>
+        <a href="#contact" style="display:inline-flex;align-items:center;font-size:15px;font-weight:600;color:#1B8DD1;background:#fff;border:1.5px solid rgba(27,141,209,.28);padding:15px 28px;border-radius:100px;">Start a Project</a>
+      </div>
+      <div style="display:flex;align-items:center;gap:26px;animation:fadeUp .6s .32s both;">
+        <div><div style="font-size:15px;font-weight:700;color:#1A1D24;">Copilot Studio</div><div style="font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:#8A909C;margin-top:3px;">Agents &amp; Assistants</div></div>
+        <div style="width:1px;height:36px;background:rgba(26,29,36,.1);"></div>
+        <div><div style="font-size:15px;font-weight:700;color:#1A1D24;">Generative AI</div><div style="font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:#8A909C;margin-top:3px;">Integrations</div></div>
+        <div style="width:1px;height:36px;background:rgba(26,29,36,.1);"></div>
+        <div><div style="font-size:15px;font-weight:700;color:#1A1D24;">Power Platform</div><div style="font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:#8A909C;margin-top:3px;">Apps &amp; Automation</div></div>
+      </div>
+    </div>
+
+    <!-- HERO VISUAL: orbit constellation -->
+    <div style="position:relative;height:500px;display:flex;align-items:center;justify-content:center;">
+      <div style="position:relative;width:480px;height:480px;">
+        <!-- rings -->
+        <div style="position:absolute;top:50%;left:50%;width:380px;height:380px;transform:translate(-50%,-50%);border:1.5px solid rgba(27,141,209,.15);border-radius:50%;"></div>
+        <div style="position:absolute;top:50%;left:50%;width:270px;height:270px;transform:translate(-50%,-50%);border:1.5px solid rgba(34,179,154,.2);border-radius:50%;"></div>
+        <div style="position:absolute;top:50%;left:50%;width:164px;height:164px;transform:translate(-50%,-50%);border:1.5px solid rgba(243,198,75,.38);border-radius:50%;"></div>
+        <!-- orbiting dots on rings -->
+        <div style="position:absolute;top:50%;left:50%;width:380px;height:380px;animation:orbitSpin 22s linear infinite;"><span style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:16px;height:16px;border-radius:50%;background:#1B8DD1;box-shadow:0 4px 14px rgba(27,141,209,.5);"></span></div>
+        <div style="position:absolute;top:50%;left:50%;width:270px;height:270px;animation:orbitSpinR 16s linear infinite;"><span style="position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:14px;height:14px;border-radius:50%;background:#22B39A;box-shadow:0 4px 14px rgba(34,179,154,.5);"></span></div>
+        <div style="position:absolute;top:50%;left:50%;width:164px;height:164px;animation:orbitSpin 11s linear infinite;"><span style="position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;background:#F3C64B;box-shadow:0 4px 12px rgba(243,198,75,.55);"></span></div>
+        <!-- outer orbit carrying labeled pills (incl Power Apps) -->
+        <div style="position:absolute;top:50%;left:50%;width:480px;height:480px;animation:orbitSpin 34s linear infinite;">
+          <div style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);"><div style="animation:orbitAnti 34s linear infinite;"><span style="display:inline-flex;align-items:center;gap:7px;background:#fff;padding:8px 14px;border-radius:100px;box-shadow:0 10px 24px rgba(26,29,36,.12);font-size:12.5px;font-weight:600;color:#1A1D24;white-space:nowrap;"><span style="width:8px;height:8px;border-radius:50%;background:#1B8DD1;"></span>Copilot Studio</span></div></div>
+        </div>
+        <div style="position:absolute;top:50%;left:50%;width:480px;height:480px;animation:orbitSpin 34s linear infinite;animation-delay:-11.3s;">
+          <div style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);"><div style="animation:orbitAnti 34s linear infinite;animation-delay:-11.3s;"><span style="display:inline-flex;align-items:center;gap:7px;background:#fff;padding:8px 14px;border-radius:100px;box-shadow:0 10px 24px rgba(26,29,36,.12);font-size:12.5px;font-weight:600;color:#1A1D24;white-space:nowrap;"><span style="width:8px;height:8px;border-radius:50%;background:#F3C64B;"></span>Power Apps</span></div></div>
+        </div>
+        <div style="position:absolute;top:50%;left:50%;width:480px;height:480px;animation:orbitSpin 34s linear infinite;animation-delay:-22.6s;">
+          <div style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);"><div style="animation:orbitAnti 34s linear infinite;animation-delay:-22.6s;"><span style="display:inline-flex;align-items:center;gap:7px;background:#fff;padding:8px 14px;border-radius:100px;box-shadow:0 10px 24px rgba(26,29,36,.12);font-size:12.5px;font-weight:600;color:#1A1D24;white-space:nowrap;"><span style="width:8px;height:8px;border-radius:50%;background:#22B39A;"></span>Power Automate</span></div></div>
+        </div>
+        <!-- center node -->
+        <div style="position:absolute;top:50%;left:50%;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(27,141,209,.2),transparent 70%);animation:halo 3.4s ease-out infinite;"></div>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:94px;height:94px;border-radius:27px;background:#fff;box-shadow:0 16px 40px rgba(26,29,36,.16);display:flex;align-items:center;justify-content:center;animation:pulseNode 3.4s ease-in-out infinite;"><img src="assets/logo.png" style="width:54px;height:54px;object-fit:contain;" alt=""></div>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:30px;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:8px;color:#8A909C;font-size:11px;letter-spacing:.1em;text-transform:uppercase;animation:fadeUp .6s .7s both;">
+    Scroll to explore
+    <div style="width:1px;height:38px;background:linear-gradient(to bottom,#22B39A,transparent);animation:scrollPulse 2s ease-in-out infinite;transform-origin:top;"></div>
+  </div>
+</section>
+
+<!-- ================= SERVICES ================= -->
+<section id="services" style="background:#fff;padding:110px 40px;border-top:1px solid rgba(26,29,36,.05);">
+  <div style="max-width:1180px;margin:0 auto;">
+    <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);text-align:center;max-width:640px;margin:0 auto 60px;">
+      <span style="display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1B8DD1;background:rgba(27,141,209,.1);padding:5px 15px;border-radius:100px;margin-bottom:16px;">What We Do</span>
+      <h2 style="font-size:40px;line-height:1.15;letter-spacing:-.02em;font-weight:800;margin:0 0 16px;">AI Agents and Integrations Built for Business</h2>
+      <p style="font-size:17px;color:#5C6270;line-height:1.7;margin:0;">From Copilot Studio agents to generative AI embedded in your daily workflows, we deliver end-to-end AI and Power Platform expertise.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px;">
+
+      <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);background:#FBF9F4;border:1px solid rgba(26,29,36,.07);border-radius:22px;padding:30px;">
+        <div style="width:52px;height:52px;border-radius:15px;background:rgba(34,179,154,.12);color:#1a9e88;display:flex;align-items:center;justify-content:center;margin-bottom:20px;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16a1 1 0 011 1v10a1 1 0 01-1 1H9l-5 4v-4H4a1 1 0 01-1-1V6a1 1 0 011-1z"/><path d="M12 8.4l.85 1.75L14.6 11l-1.75.85L12 13.6l-.85-1.75L9.4 11l1.75-.85z"/></svg></div>
+        <h3 style="font-size:19px;font-weight:700;margin:0 0 10px;letter-spacing:-.01em;">Copilot Agents</h3>
+        <p style="font-size:14px;color:#5C6270;line-height:1.7;margin:0 0 18px;">Purpose-built AI agents using Microsoft Copilot Studio that handle customer queries, internal support, and complex decision flows autonomously.</p>
+        <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;">
+          <li style="font-size:13px;color:#5C6270;display:flex;align-items:center;gap:9px;"><span style="width:5px;height:5px;border-radius:50%;background:#22B39A;flex-shrink:0;"></span>Conversational AI bots</li>
+          <li style="font-size:13px;color:#5C6270;display:flex;align-items:center;gap:9px;"><span style="width:5px;height:5px;border-radius:50%;background:#22B39A;flex-shrink:0;"></span>Knowledge base integration</li>
+          <li style="font-size:13px;color:#5C6270;display:flex;align-items:center;gap:9px;"><span style="width:5px;height:5px;border-radius:50%;background:#22B39A;flex-shrink:0;"></span>Multi-channel deployment</li>
+        </ul>
+      </div>
+
+      <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1) .06s,transform .7s cubic-bezier(.2,.7,.2,1) .06s;background:#FBF9F4;border:1px solid rgba(26,29,36,.07);border-radius:22px;padding:30px;">
+        <div style="width:52px;height:52px;border-radius:15px;background:rgba(27,141,209,.12);color:#1B8DD1;display:flex;align-items:center;justify-content:center;margin-bottom:20px;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="2.5"/><path d="M10 3v3M14 3v3M10 18v3M14 18v3M3 10h3M3 14h3M18 10h3M18 14h3"/></svg></div>
+        <h3 style="font-size:19px;font-weight:700;margin:0 0 10px;letter-spacing:-.01em;">AI Integrations</h3>
+        <p style="font-size:14px;color:#5C6270;line-height:1.7;margin:0 0 18px;">Embed generative AI and machine learning capabilities directly into your existing systems using Azure OpenAI and the Power Platform AI Builder.</p>
+        <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;">
+          <li style="font-size:13px;color:#5C6270;display:flex;align-items:center;gap:9px;"><span style="width:5px;height:5px;border-radius:50%;background:#1B8DD1;flex-shrink:0;"></span>Azure OpenAI &amp; GPT integration</li>
+          <li style="font-size:13px;color:#5C6270;display:flex;align-items:center;gap:9px;"><span style="width:5px;height:5px;border-radius:50%;background:#1B8DD1;flex-shrink:0;"></span>AI Builder models &amp; forms</li>
+          <li style="font-size:13px;color:#5C6270;display:flex;align-items:center;gap:9px;"><span style="width:5px;height:5px;border-radius:50%;background:#1B8DD1;flex-shrink:0;"></span>Intelligent document processing</li>
+        </ul>
+      </div>
+
+      <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1) .12s,transform .7s cubic-bezier(.2,.7,.2,1) .12s;background:#FBF9F4;border:1px solid rgba(26,29,36,.07);border-radius:22px;padding:30px;">
+        <div style="width:52px;height:52px;border-radius:15px;background:rgba(243,198,75,.18);color:#C79A17;display:flex;align-items:center;justify-content:center;margin-bottom:20px;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L5 13h6l-1 9 9-12h-6l1-8z"/></svg></div>
+        <h3 style="font-size:19px;font-weight:700;margin:0 0 10px;letter-spacing:-.01em;">Power Automate</h3>
+        <p style="font-size:14px;color:#5C6270;line-height:1.7;margin:0 0 18px;">Intelligent workflow automation that eliminates repetitive tasks, reduces errors, and frees your team to focus on high-value work.</p>
+        <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;">
+          <li style="font-size:13px;color:#5C6270;display:flex;align-items:center;gap:9px;"><span style="width:5px;height:5px;border-radius:50%;background:#F3C64B;flex-shrink:0;"></span>Cloud &amp; desktop flows</li>
+          <li style="font-size:13px;color:#5C6270;display:flex;align-items:center;gap:9px;"><span style="width:5px;height:5px;border-radius:50%;background:#F3C64B;flex-shrink:0;"></span>Approval workflows &amp; notifications</li>
+          <li style="font-size:13px;color:#5C6270;display:flex;align-items:center;gap:9px;"><span style="width:5px;height:5px;border-radius:50%;background:#F3C64B;flex-shrink:0;"></span>Cross-platform integrations</li>
+        </ul>
+      </div>
+
+      <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);background:#FBF9F4;border:1px solid rgba(26,29,36,.07);border-radius:22px;padding:30px;">
+        <div style="width:52px;height:52px;border-radius:15px;background:rgba(27,141,209,.12);color:#1B8DD1;display:flex;align-items:center;justify-content:center;margin-bottom:20px;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg></div>
+        <h3 style="font-size:19px;font-weight:700;margin:0 0 10px;letter-spacing:-.01em;">Power Apps</h3>
+        <p style="font-size:14px;color:#5C6270;line-height:1.7;margin:0 0 18px;">Custom low-code and pro-code applications tailored to your business processes. Mobile-ready, integrated, and scalable from day one.</p>
+        <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;">
+          <li style="font-size:13px;color:#5C6270;display:flex;align-items:center;gap:9px;"><span style="width:5px;height:5px;border-radius:50%;background:#1B8DD1;flex-shrink:0;"></span>Canvas &amp; Model-Driven Apps</li>
+          <li style="font-size:13px;color:#5C6270;display:flex;align-items:center;gap:9px;"><span style="width:5px;height:5px;border-radius:50%;background:#1B8DD1;flex-shrink:0;"></span>Custom connectors &amp; data sources</li>
+          <li style="font-size:13px;color:#5C6270;display:flex;align-items:center;gap:9px;"><span style="width:5px;height:5px;border-radius:50%;background:#1B8DD1;flex-shrink:0;"></span>Responsive mobile experiences</li>
+        </ul>
+      </div>
+
+      <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1) .06s,transform .7s cubic-bezier(.2,.7,.2,1) .06s;background:#FBF9F4;border:1px solid rgba(26,29,36,.07);border-radius:22px;padding:30px;">
+        <div style="width:52px;height:52px;border-radius:15px;background:rgba(34,179,154,.12);color:#1a9e88;display:flex;align-items:center;justify-content:center;margin-bottom:20px;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2.2 4.8-4.8 2.2 2.2-4.8z"/></svg></div>
+        <h3 style="font-size:19px;font-weight:700;margin:0 0 10px;letter-spacing:-.01em;">Power Platform Strategy</h3>
+        <p style="font-size:14px;color:#5C6270;line-height:1.7;margin:0 0 18px;">From governance frameworks to Centre of Excellence (CoE) setups, we help you build a sustainable, scalable Power Platform practice.</p>
+        <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;">
+          <li style="font-size:13px;color:#5C6270;display:flex;align-items:center;gap:9px;"><span style="width:5px;height:5px;border-radius:50%;background:#22B39A;flex-shrink:0;"></span>CoE Starter Kit implementation</li>
+          <li style="font-size:13px;color:#5C6270;display:flex;align-items:center;gap:9px;"><span style="width:5px;height:5px;border-radius:50%;background:#22B39A;flex-shrink:0;"></span>Governance &amp; ALM setup</li>
+          <li style="font-size:13px;color:#5C6270;display:flex;align-items:center;gap:9px;"><span style="width:5px;height:5px;border-radius:50%;background:#22B39A;flex-shrink:0;"></span>Training &amp; enablement</li>
+        </ul>
+      </div>
+
+      <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1) .12s,transform .7s cubic-bezier(.2,.7,.2,1) .12s;background:linear-gradient(135deg,#1B8DD1,#22B39A);border-radius:22px;padding:34px;display:flex;flex-direction:column;justify-content:center;color:#fff;box-shadow:0 20px 46px rgba(27,141,209,.28);">
+        <h3 style="font-size:22px;font-weight:800;margin:0 0 12px;letter-spacing:-.01em;">Not sure where to start?</h3>
+        <p style="font-size:14.5px;line-height:1.65;margin:0 0 22px;color:rgba(255,255,255,.92);">We'll assess your current processes and identify the highest-impact automation opportunities — at no cost.</p>
+        <a href="#contact" style="align-self:flex-start;font-size:14.5px;font-weight:700;color:#1B8DD1;background:#fff;padding:13px 24px;border-radius:100px;">Book a Free Discovery Call →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= USE CASES ================= -->
+<section id="use-cases" style="padding:110px 40px;">
+  <div style="max-width:1180px;margin:0 auto;">
+    <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);text-align:center;max-width:640px;margin:0 auto 60px;">
+      <span style="display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1a9e88;background:rgba(34,179,154,.12);padding:5px 15px;border-radius:100px;margin-bottom:16px;">AI In Practice</span>
+      <h2 style="font-size:40px;line-height:1.15;letter-spacing:-.02em;font-weight:800;margin:0 0 16px;">What AI Integration Looks Like in Your Business</h2>
+      <p style="font-size:17px;color:#5C6270;line-height:1.7;margin:0;">Real ways Copilot Studio agents and generative AI slot into the systems you already use.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px;">
+
+      <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);background:#fff;border:1px solid rgba(26,29,36,.07);border-radius:22px;padding:30px;">
+        <div style="width:50px;height:50px;border-radius:14px;background:rgba(34,179,154,.12);color:#1a9e88;display:flex;align-items:center;justify-content:center;margin-bottom:18px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16a1 1 0 011 1v10a1 1 0 01-1 1H9l-5 4v-4H4a1 1 0 01-1-1V6a1 1 0 011-1z"/><circle cx="8.5" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="11" r="1" fill="currentColor" stroke="none"/></svg></div>
+        <h3 style="font-size:18px;font-weight:700;margin:0 0 10px;">Customer Support Agent</h3>
+        <p style="font-size:14px;color:#5C6270;line-height:1.7;margin:0;">A Copilot Studio agent answers customer questions and resolves common tickets 24/7 on your website, Teams, or WhatsApp — escalating to a human only when it needs to.</p>
+      </div>
+
+      <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1) .06s,transform .7s cubic-bezier(.2,.7,.2,1) .06s;background:#fff;border:1px solid rgba(26,29,36,.07);border-radius:22px;padding:30px;">
+        <div style="width:50px;height:50px;border-radius:14px;background:rgba(27,141,209,.12);color:#1B8DD1;display:flex;align-items:center;justify-content:center;margin-bottom:18px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
+        <h3 style="font-size:18px;font-weight:700;margin:0 0 10px;">Internal Knowledge Assistant</h3>
+        <p style="font-size:14px;color:#5C6270;line-height:1.7;margin:0;">Employees ask HR, IT, and policy questions in Teams and get instant, accurate answers pulled directly from your SharePoint, Dataverse, and internal documents.</p>
+      </div>
+
+      <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1) .12s,transform .7s cubic-bezier(.2,.7,.2,1) .12s;background:#fff;border:1px solid rgba(26,29,36,.07);border-radius:22px;padding:30px;">
+        <div style="width:50px;height:50px;border-radius:14px;background:rgba(243,198,75,.18);color:#C79A17;display:flex;align-items:center;justify-content:center;margin-bottom:18px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 7-8"/><path d="M15 6h5v5"/></svg></div>
+        <h3 style="font-size:18px;font-weight:700;margin:0 0 10px;">Sales &amp; CRM Assistant</h3>
+        <p style="font-size:14px;color:#5C6270;line-height:1.7;margin:0;">AI qualifies inbound leads, drafts personalised follow-ups, and keeps Dynamics 365 or your CRM updated automatically — so your sales team spends time selling, not typing.</p>
+      </div>
+
+      <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);background:#fff;border:1px solid rgba(26,29,36,.07);border-radius:22px;padding:30px;">
+        <div style="width:50px;height:50px;border-radius:14px;background:rgba(27,141,209,.12);color:#1B8DD1;display:flex;align-items:center;justify-content:center;margin-bottom:18px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l4 4v14a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M9 13l2 2 4-4"/></svg></div>
+        <h3 style="font-size:18px;font-weight:700;margin:0 0 10px;">Document &amp; Invoice Processing</h3>
+        <p style="font-size:14px;color:#5C6270;line-height:1.7;margin:0;">AI Builder and generative AI read invoices, contracts, and forms, extract the data you need, and route it into your finance or ERP system automatically.</p>
+      </div>
+
+      <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1) .06s,transform .7s cubic-bezier(.2,.7,.2,1) .06s;background:#fff;border:1px solid rgba(26,29,36,.07);border-radius:22px;padding:30px;">
+        <div style="width:50px;height:50px;border-radius:14px;background:rgba(34,179,154,.12);color:#1a9e88;display:flex;align-items:center;justify-content:center;margin-bottom:18px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 14v-3M12 14V8M17 14v-5"/><path d="M8 21h8"/></svg></div>
+        <h3 style="font-size:18px;font-weight:700;margin:0 0 10px;">Meeting &amp; Reporting Insights</h3>
+        <p style="font-size:14px;color:#5C6270;line-height:1.7;margin:0;">Generative AI summarises meetings and turns raw Power BI data into plain-language reports and dashboards your team can act on without a data analyst.</p>
+      </div>
+
+      <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1) .12s,transform .7s cubic-bezier(.2,.7,.2,1) .12s;background:#fff;border:1px solid rgba(26,29,36,.07);border-radius:22px;padding:30px;">
+        <div style="width:50px;height:50px;border-radius:14px;background:rgba(27,141,209,.12);color:#1B8DD1;display:flex;align-items:center;justify-content:center;margin-bottom:18px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M18 8v6M15 11h6"/></svg></div>
+        <h3 style="font-size:18px;font-weight:700;margin:0 0 10px;">Employee Onboarding Agent</h3>
+        <p style="font-size:14px;color:#5C6270;line-height:1.7;margin:0;">New hires get guided through setup and policy questions by a Copilot agent, while Power Automate quietly provisions accounts, access, and equipment in the background.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= HOW IT WORKS ================= -->
+<section id="process" style="background:#fff;padding:110px 40px;border-top:1px solid rgba(26,29,36,.05);">
+  <div style="max-width:1180px;margin:0 auto;">
+    <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);text-align:center;max-width:640px;margin:0 auto 60px;">
+      <span style="display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#C79A17;background:rgba(243,198,75,.18);padding:5px 15px;border-radius:100px;margin-bottom:16px;">How We Work</span>
+      <h2 style="font-size:40px;line-height:1.15;letter-spacing:-.02em;font-weight:800;margin:0 0 16px;">From Idea to AI Agent in Weeks, Not Months</h2>
+      <p style="font-size:17px;color:#5C6270;line-height:1.7;margin:0;">A clear, low-risk path from first conversation to a live AI agent integrated into your business.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;">
+      <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);background:#FBF9F4;border:1px solid rgba(26,29,36,.07);border-radius:22px;padding:28px;">
+        <div style="font-size:30px;font-weight:800;letter-spacing:-.02em;background:linear-gradient(120deg,#1B8DD1,#22B39A);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px;">01</div>
+        <strong style="display:block;font-size:16px;font-weight:700;margin-bottom:8px;">Discover</strong>
+        <span style="font-size:14px;color:#5C6270;line-height:1.65;">We map your processes, systems, and data to find the highest-impact place for an AI agent to plug in.</span>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1) .06s,transform .7s cubic-bezier(.2,.7,.2,1) .06s;background:#FBF9F4;border:1px solid rgba(26,29,36,.07);border-radius:22px;padding:28px;">
+        <div style="font-size:30px;font-weight:800;letter-spacing:-.02em;background:linear-gradient(120deg,#1B8DD1,#22B39A);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px;">02</div>
+        <strong style="display:block;font-size:16px;font-weight:700;margin-bottom:8px;">Design</strong>
+        <span style="font-size:14px;color:#5C6270;line-height:1.65;">We design the agent's conversation flows, guardrails, and data connections around how your team actually works.</span>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1) .12s,transform .7s cubic-bezier(.2,.7,.2,1) .12s;background:#FBF9F4;border:1px solid rgba(26,29,36,.07);border-radius:22px;padding:28px;">
+        <div style="font-size:30px;font-weight:800;letter-spacing:-.02em;background:linear-gradient(120deg,#1B8DD1,#22B39A);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px;">03</div>
+        <strong style="display:block;font-size:16px;font-weight:700;margin-bottom:8px;">Build &amp; Integrate</strong>
+        <span style="font-size:14px;color:#5C6270;line-height:1.65;">We build the Copilot Studio agent and connect it to your Power Platform, Microsoft 365, and business systems.</span>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1) .18s,transform .7s cubic-bezier(.2,.7,.2,1) .18s;background:#FBF9F4;border:1px solid rgba(26,29,36,.07);border-radius:22px;padding:28px;">
+        <div style="font-size:30px;font-weight:800;letter-spacing:-.02em;background:linear-gradient(120deg,#1B8DD1,#22B39A);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px;">04</div>
+        <strong style="display:block;font-size:16px;font-weight:700;margin-bottom:8px;">Support &amp; Scale</strong>
+        <span style="font-size:14px;color:#5C6270;line-height:1.65;">We monitor performance, refine responses, and extend the agent to new use cases as your business grows.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section id="about" style="padding:110px 40px;">
+  <div style="max-width:1180px;margin:0 auto;">
+    <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);text-align:center;max-width:700px;margin:0 auto 56px;">
+      <span style="display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1B8DD1;background:rgba(27,141,209,.1);padding:5px 15px;border-radius:100px;margin-bottom:16px;">Who We Are</span>
+      <h2 style="font-size:40px;line-height:1.15;letter-spacing:-.02em;font-weight:800;margin:0 0 20px;">Your Trusted AI &amp; Copilot Studio Partner</h2>
+      <p style="font-size:17px;color:#5C6270;line-height:1.8;margin:0;">Power Vantage Solutions is a specialist consultancy focused on building AI agents with Microsoft Copilot Studio and integrating generative AI into real business workflows, backed by the wider Microsoft Power Platform. We partner with organisations of all sizes to design, build, and scale intelligent solutions that drive real business outcomes. Our team combines deep technical expertise with a business-first mindset — we don't just deliver technology, we deliver transformation.</p>
+    </div>
+    <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);display:flex;align-items:center;justify-content:center;gap:8px;background:#fff;border:1px solid rgba(26,29,36,.07);border-radius:22px;padding:40px 48px;margin-bottom:44px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:150px;text-align:center;padding:8px 16px;">
+        <div data-count="50" data-count-suffix="+" style="font-size:30px;font-weight:800;color:#1B8DD1;letter-spacing:-.02em;line-height:1;">0+</div>
+        <div style="font-size:11.5px;font-weight:500;color:#8A909C;text-transform:uppercase;letter-spacing:.08em;margin-top:8px;">Projects Delivered</div>
+      </div>
+      <div style="width:1px;height:48px;background:rgba(26,29,36,.1);"></div>
+      <div style="flex:1;min-width:150px;text-align:center;padding:8px 16px;">
+        <div style="font-size:22px;font-weight:800;color:#1B8DD1;letter-spacing:-.02em;line-height:1.1;">AI &amp; Power Platform</div>
+        <div style="font-size:11.5px;font-weight:500;color:#8A909C;text-transform:uppercase;letter-spacing:.08em;margin-top:8px;">Specialists</div>
+      </div>
+      <div style="width:1px;height:48px;background:rgba(26,29,36,.1);"></div>
+      <div style="flex:1;min-width:150px;text-align:center;padding:8px 16px;">
+        <div style="font-size:22px;font-weight:800;color:#1B8DD1;letter-spacing:-.02em;line-height:1.1;">End-to-End</div>
+        <div style="font-size:11.5px;font-weight:500;color:#8A909C;text-transform:uppercase;letter-spacing:.08em;margin-top:8px;">Delivery Approach</div>
+      </div>
+      <div style="width:1px;height:48px;background:rgba(26,29,36,.1);"></div>
+      <div style="flex:1;min-width:150px;text-align:center;padding:8px 16px;">
+        <div style="font-size:22px;font-weight:800;color:#1B8DD1;letter-spacing:-.02em;line-height:1.1;">Europe &amp; Remote</div>
+        <div style="font-size:11.5px;font-weight:500;color:#8A909C;text-transform:uppercase;letter-spacing:.08em;margin-top:8px;">Available Globally</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+      <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);background:#fff;border:1px solid rgba(26,29,36,.07);border-radius:22px;padding:28px;">
+        <div style="width:46px;height:46px;border-radius:13px;background:rgba(243,198,75,.18);color:#C79A17;display:flex;align-items:center;justify-content:center;margin-bottom:14px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L5 13h6l-1 9 9-12h-6l1-8z"/></svg></div>
+        <strong style="display:block;font-size:16px;font-weight:700;margin-bottom:8px;">Fast Delivery</strong>
+        <span style="font-size:14px;color:#5C6270;line-height:1.65;">Rapid prototyping and iterative deployments that get value into your hands quickly.</span>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1) .06s,transform .7s cubic-bezier(.2,.7,.2,1) .06s;background:#fff;border:1px solid rgba(26,29,36,.07);border-radius:22px;padding:28px;">
+        <div style="width:46px;height:46px;border-radius:13px;background:rgba(27,141,209,.12);color:#1B8DD1;display:flex;align-items:center;justify-content:center;margin-bottom:14px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9.5 12l1.8 1.8L15 10"/></svg></div>
+        <strong style="display:block;font-size:16px;font-weight:700;margin-bottom:8px;">Enterprise Grade</strong>
+        <span style="font-size:14px;color:#5C6270;line-height:1.65;">Security, governance, and scalability built in from the start — not bolted on later.</span>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1) .12s,transform .7s cubic-bezier(.2,.7,.2,1) .12s;background:#fff;border:1px solid rgba(26,29,36,.07);border-radius:22px;padding:28px;">
+        <div style="width:46px;height:46px;border-radius:13px;background:rgba(34,179,154,.12);color:#1a9e88;display:flex;align-items:center;justify-content:center;margin-bottom:14px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2.5 20c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M15 15c2.5 0 5 1.6 5 5"/></svg></div>
+        <strong style="display:block;font-size:16px;font-weight:700;margin-bottom:8px;">True Partnership</strong>
+        <span style="font-size:14px;color:#5C6270;line-height:1.65;">We work alongside your team, transfer knowledge, and set you up for long-term success.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact" style="position:relative;background:#fff;padding:110px 40px;overflow:hidden;border-top:1px solid rgba(26,29,36,.05);">
+  <div style="position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(27,141,209,.1),transparent 70%);top:-120px;right:-80px;pointer-events:none;"></div>
+  <div style="position:absolute;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(34,179,154,.1),transparent 70%);bottom:-120px;left:-80px;pointer-events:none;"></div>
+  <div style="position:relative;max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr 1.2fr;gap:72px;align-items:start;">
+    <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);">
+      <span style="display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1B8DD1;background:rgba(27,141,209,.1);padding:5px 15px;border-radius:100px;margin-bottom:16px;">Get In Touch</span>
+      <h2 style="font-size:40px;line-height:1.15;letter-spacing:-.02em;font-weight:800;margin:0 0 20px;">Let's Build Something <span style="background:linear-gradient(120deg,#1B8DD1,#22B39A 60%,#F3C64B);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">Powerful</span></h2>
+      <p style="font-size:16px;color:#5C6270;line-height:1.75;margin:0 0 36px;">Ready to automate, innovate, and accelerate? Drop us a message and we'll get back to you within one business day.</p>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div style="display:flex;align-items:center;gap:14px;color:#5C6270;font-size:14px;">
+          <div style="width:40px;height:40px;border-radius:12px;background:rgba(27,141,209,.1);color:#1B8DD1;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+          <span>hello@powervantagesolutions.com</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;color:#5C6270;font-size:14px;">
+          <div style="width:40px;height:40px;border-radius:12px;background:rgba(34,179,154,.1);color:#1a9e88;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <span>Europe &amp; Remote</span>
+        </div>
+      </div>
+    </div>
+    <form data-reveal onsubmit="return false" style="opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1) .1s,transform .7s cubic-bezier(.2,.7,.2,1) .1s;background:#FBF9F4;border:1px solid rgba(26,29,36,.07);border-radius:22px;padding:36px;display:flex;flex-direction:column;gap:18px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="font-size:13px;font-weight:500;color:#5C6270;">Your Name</label>
+          <input type="text" placeholder="Jane Smith" style="background:#fff;border:1.5px solid rgba(26,29,36,.12);border-radius:11px;color:#1A1D24;font-size:14px;padding:12px 15px;outline:none;">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="font-size:13px;font-weight:500;color:#5C6270;">Company</label>
+          <input type="text" placeholder="Acme Corp" style="background:#fff;border:1.5px solid rgba(26,29,36,.12);border-radius:11px;color:#1A1D24;font-size:14px;padding:12px 15px;outline:none;">
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <label style="font-size:13px;font-weight:500;color:#5C6270;">Email Address</label>
+        <input type="email" placeholder="jane@acme.com" style="background:#fff;border:1.5px solid rgba(26,29,36,.12);border-radius:11px;color:#1A1D24;font-size:14px;padding:12px 15px;outline:none;">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <label style="font-size:13px;font-weight:500;color:#5C6270;">Service of Interest</label>
+        <select style="background:#fff;border:1.5px solid rgba(26,29,36,.12);border-radius:11px;color:#1A1D24;font-size:14px;padding:12px 15px;outline:none;appearance:none;cursor:pointer;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394A3B8' d='M6 8L1 3h10z'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 14px center;">
+          <option>Select a service...</option>
+          <option>Copilot Agents</option>
+          <option>AI Integrations</option>
+          <option>Power Automate</option>
+          <option>Power Apps</option>
+          <option>Power Platform Strategy</option>
+          <option>Not sure yet</option>
+        </select>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <label style="font-size:13px;font-weight:500;color:#5C6270;">Message</label>
+        <textarea rows="4" placeholder="Tell us about your project or challenge..." style="background:#fff;border:1.5px solid rgba(26,29,36,.12);border-radius:11px;color:#1A1D24;font-size:14px;padding:12px 15px;outline:none;resize:vertical;"></textarea>
+      </div>
+      <button type="submit" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;font-size:15px;font-weight:600;color:#fff;background:linear-gradient(120deg,#1B8DD1,#22B39A);padding:15px 28px;border:none;border-radius:100px;cursor:pointer;box-shadow:0 12px 28px rgba(27,141,209,.3);">Send Message →</button>
+    </form>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer style="background:#FAF8F4;border-top:1px solid rgba(26,29,36,.08);padding:34px 40px;">
+  <div style="max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;color:#5C6270;">
+      <img src="assets/logo.png" alt="" style="width:30px;height:30px;object-fit:contain;">
+      Power Vantage Solutions
+    </div>
+    <p style="font-size:13px;color:#8A909C;margin:0;">© 2026 Power Vantage Solutions. All rights reserved.</p>
+    <div style="display:flex;gap:24px;">
+      <a href="#services" style="font-size:13px;color:#5C6270;">Services</a>
+      <a href="#use-cases" style="font-size:13px;color:#5C6270;">Use Cases</a>
+      <a href="#about" style="font-size:13px;color:#5C6270;">About</a>
+      <a href="#contact" style="font-size:13px;color:#5C6270;">Contact</a>
+    </div>
+  </div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;staticLabels&quot;: {
+    &quot;editor&quot;: &quot;boolean&quot;,
+    &quot;default&quot;: true,
+    &quot;tsType&quot;: &quot;boolean&quot;,
+    &quot;section&quot;: &quot;Hero&quot;,
+    &quot;label&quot;: &quot;Static orbit labels&quot;,
+    &quot;help&quot;: &quot;Freeze the Copilot Studio / Power Apps / Power Automate labels in place (the inner dots keep orbiting).&quot;
+  }
+}">
+class Component extends DCLogic {
+  componentDidMount() {
+    const run = () => {
+      // scroll reveals
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.style.opacity = '1';
+            e.target.style.transform = 'none';
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+      document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+
+      // count-up
+      const cio = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) { this.countUp(e.target); cio.unobserve(e.target); }
+        });
+      }, { threshold: 0.6 });
+      document.querySelectorAll('[data-count]').forEach((el) => cio.observe(el));
+
+      // nav scroll state
+      const nav = document.getElementById('pvsNav');
+      if (nav) {
+        const onScroll = () => {
+          if (window.scrollY > 20) {
+            nav.style.background = 'rgba(250,248,244,.85)';
+            nav.style.backdropFilter = 'blur(20px)';
+            nav.style.webkitBackdropFilter = 'blur(20px)';
+            nav.style.borderColor = 'rgba(26,29,36,.07)';
+            nav.style.boxShadow = '0 1px 22px rgba(26,29,36,.06)';
+          } else {
+            nav.style.background = 'transparent';
+            nav.style.backdropFilter = 'none';
+            nav.style.webkitBackdropFilter = 'none';
+            nav.style.borderColor = 'transparent';
+            nav.style.boxShadow = 'none';
+          }
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+      }
+
+      // input focus styling
+      document.querySelectorAll('#contact input, #contact select, #contact textarea').forEach((el) => {
+        el.addEventListener('focus', () => {
+          el.style.borderColor = '#1B8DD1';
+          el.style.boxShadow = '0 0 0 3px rgba(27,141,209,.14)';
+        });
+        el.addEventListener('blur', () => {
+          el.style.borderColor = 'rgba(26,29,36,.12)';
+          el.style.boxShadow = 'none';
+        });
+      });
+
+      // card hover lift
+      document.querySelectorAll('[data-reveal]').forEach((el) => {
+        const isCard = el.style.borderRadius === '22px' && el.parentElement && el.parentElement.style.display === 'grid';
+        if (isCard) {
+          el.addEventListener('mouseenter', () => {
+            el.style.boxShadow = '0 18px 44px rgba(26,29,36,.1)';
+            el.dataset.lift = '1';
+            el.style.transform = 'translateY(-6px)';
+          });
+          el.addEventListener('mouseleave', () => {
+            el.style.boxShadow = 'none';
+            el.style.transform = 'none';
+          });
+        }
+      });
+    };
+    setTimeout(() => { run(); this.applyLabels(); }, 60);
+  }
+
+  componentDidUpdate() { this.applyLabels(); }
+
+  applyLabels() {
+    const isStatic = this.props.staticLabels ?? true;
+    const labels = ['Copilot Studio', 'Power Apps', 'Power Automate'];
+    const ps = isStatic ? 'paused' : 'running';
+    document.querySelectorAll('#hero span').forEach((s) => {
+      if (labels.includes((s.textContent || '').trim())) {
+        const anti = s.parentElement;
+        const layer = anti && anti.parentElement && anti.parentElement.parentElement;
+        if (anti) anti.style.animationPlayState = ps;
+        if (layer) layer.style.animationPlayState = ps;
+      }
+    });
+  }
+
+  countUp(el) {
+    const target = parseFloat(el.getAttribute('data-count')) || 0;
+    const suffix = el.getAttribute('data-count-suffix') || '';
+    const dur = 1400;
+    const start = performance.now();
+    const step = (now) => {
+      const p = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased) + suffix;
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
