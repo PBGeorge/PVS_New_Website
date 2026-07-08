@@ -309,11 +309,21 @@ function gemini_estimate_calories(array $items): ?array {
 
     if ($resp === false || $code !== 200) return null;
 
-    $data = json_decode($resp, true);
-    $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
-    if ($text === null) return null;
+    // Concatenate the text from every part. Thinking models can return a
+    // "thought" part before the answer, so we can't assume it's parts[0].
+    $data  = json_decode($resp, true);
+    $parts = $data['candidates'][0]['content']['parts'] ?? [];
+    $text  = '';
+    foreach ($parts as $p) {
+        if (isset($p['text'])) $text .= $p['text'];
+    }
+    if ($text === '') return null;
 
     $nums = json_decode($text, true);
+    if (!is_array($nums)) {
+        // Last resort: pull the first [...] array out of the text.
+        if (preg_match('/\[[^\]]*\]/', $text, $m)) $nums = json_decode($m[0], true);
+    }
     if (!is_array($nums)) return null;
 
     return array_map(fn($v) => is_numeric($v) ? (int)$v : null, $nums);
