@@ -1,0 +1,2 @@
+# Secrets — API keys etc. live here, only on the server / local machine.
+secrets.php
