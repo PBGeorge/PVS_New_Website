@@ -27,3 +27,15 @@ define('SMTP_USER',      'noreply@powervantagesolutions.com');     // full email
 define('SMTP_PASS',      'qju_TKV.fxz5fya.eph');                             // that mailbox's password
 define('SMTP_FROM',      'noreply@powervantagesolutions.com');     // "from" address
 define('SMTP_FROM_NAME', 'Food Log');                             // "from" display name
+
+
+// --- Gemini (calorie estimation) ---
+define('GEMINI_MODEL', 'gemini-flash-latest');
+
+// The API key is kept OUT of this repo so it never lands on GitHub.
+// Create food/secrets.php on the server (cPanel File Manager) containing:
+//     <?php define('GEMINI_API_KEY', 'your-key-here');
+// It is gitignored, so deploys/pulls never overwrite or expose it.
+$secretsFile = __DIR__ . '/secrets.php';
+if (is_file($secretsFile)) require $secretsFile;
+if (!defined('GEMINI_API_KEY')) define('GEMINI_API_KEY', ''); // blank = estimation off

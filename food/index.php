@@ -43,6 +43,26 @@ usort($items, function ($x, $y) {
     return $y['ts'] <=> $x['ts'] ?: $y['id'] <=> $x['id'];
 });
 
+// Per-meal kcal total (sum of ingredients that have an estimate), and a
+// running per-day total. Meals with no estimated ingredients stay null so
+// we don't show a misleading "0 kcal".
+$mealKcal = [];
+foreach ($ingredientsByMeal as $mid => $rows) {
+    $sum = 0; $any = false;
+    foreach ($rows as $r) {
+        if ($r['calories'] !== null && $r['calories'] !== '') { $sum += (int)$r['calories']; $any = true; }
+    }
+    $mealKcal[$mid] = $any ? $sum : null;
+}
+$dayKcal = [];
+foreach ($items as $item) {
+    if ($item['kind'] !== 'meal') continue;
+    $mk = $mealKcal[$item['id']] ?? null;
+    if ($mk === null) continue;
+    $dayKey = date('Y-m-d', $item['ts']);
+    $dayKcal[$dayKey] = ($dayKcal[$dayKey] ?? 0) + $mk;
+}
+
 function ingredient_line(array $ing): string {
     $parts = [];
     if ($ing['quantity'] !== null && $ing['quantity'] !== '') $parts[] = $ing['quantity'];
@@ -76,7 +96,10 @@ require __DIR__ . '/header.php';
       if ($day !== $currentDay):
           if ($currentDay !== null) echo '</div>'; // close previous .day-group
           $currentDay = $day;
-          echo '<div class="day-label">' . e($day) . '</div><div class="day-group">';
+          $dayTotal = $dayKcal[date('Y-m-d', $item['ts'])] ?? null;
+          $label = e($day);
+          if ($dayTotal !== null) $label .= ' <span class="day-kcal">~' . number_format($dayTotal) . ' kcal</span>';
+          echo '<div class="day-label">' . $label . '</div><div class="day-group">';
       endif;
 
       if ($item['kind'] === 'meal'):
@@ -102,6 +125,7 @@ require __DIR__ . '/header.php';
         <span class="time"><?= e(date('H:i', strtotime($m['eaten_at']))) ?></span>
         <span class="chip <?= $isRestaurant ? 'chip-out' : 'chip-home' ?>"><?= e($m['location']) ?></span>
         <?php if (!empty($m['place'])): ?><span class="place"><?= e($m['place']) ?></span><?php endif; ?>
+        <?php if (($mealKcal[$m['id']] ?? null) !== null): ?><span class="kcal">~<?= number_format($mealKcal[$m['id']]) ?> kcal</span><?php endif; ?>
       </div>
 
       <?php if ($ings): ?>

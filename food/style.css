@@ -163,6 +163,11 @@ body {
   color: var(--primary);
   margin: 30px 4px 12px;
 }
+.day-kcal {
+  margin-left: 8px;
+  color: var(--muted);
+  letter-spacing: .04em;
+}
 .day-group { display: grid; gap: 14px; }
 
 /* ---------- Cards / meals ---------- */
@@ -229,6 +234,12 @@ body {
 .chip-activity { background: rgba(27,141,209,.12); color: var(--primary-d); }
 .place { font-style: italic; }
 .mins { font-variant-numeric: tabular-nums; font-weight: 600; }
+.kcal {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--primary-d);
+}
 
 .ings {
   list-style: none;
@@ -384,13 +395,15 @@ body {
   margin-top: 2px;
 }
 .ing-list { display: grid; gap: 8px; }
+.ing-hint { margin: -4px 2px 2px; }
 .ing-row {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1.2fr auto;
+  grid-template-columns: 1.4fr 1fr 1.2fr 72px auto;
   gap: 7px;
   align-items: center;
 }
 .ing-row input { padding: 10px 11px; }
+.ing-row .i-kcal { text-align: right; }
 .ing-remove {
   width: 38px;
   height: 38px;
@@ -406,7 +419,8 @@ body {
 .ing-remove:hover { color: var(--danger); border-color: var(--danger); }
 @media (max-width: 520px) {
   .ing-row { grid-template-columns: 1fr 1fr auto; }
-  .ing-row .i-prep { grid-column: 1 / 3; }
+  .ing-row .i-prep { grid-column: 1 / 2; }
+  .ing-row .i-kcal { grid-column: 2 / 3; }
 }
 
 /* ---------- Auth / setup ---------- */
