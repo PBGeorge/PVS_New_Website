@@ -20,6 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id        = (int)($_POST['id'] ?? 0);
     $dish      = trim($_POST['dish_name'] ?? '');
     $location  = ($_POST['location'] ?? 'Home') === 'Restaurant' ? 'Restaurant' : 'Home';
+    $allowedTypes = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
+    $mealType  = in_array(($_POST['meal_type'] ?? ''), $allowedTypes, true) ? $_POST['meal_type'] : null;
     $place     = trim($_POST['place'] ?? '');
     $notes     = trim($_POST['notes'] ?? '');
     $rawWhen   = $_POST['eaten_at'] ?? '';
@@ -30,6 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $qtys  = $_POST['ing_qty']  ?? [];
     $preps = $_POST['ing_prep'] ?? [];
     $kcals = $_POST['ing_kcal'] ?? [];
+    $kcalOrig      = $_POST['ing_kcal_orig']       ?? []; // value the field was loaded with
+    $kcalWasManual = $_POST['ing_kcal_was_manual'] ?? []; // '1' if that value was a manual override
 
     // For edits, confirm the meal belongs to this user before touching
     // anything (guards the meal row and its ingredients from a crafted id).
@@ -43,55 +47,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($dish === '') $errors[] = 'Give the dish a name.';
 
     if (!$errors) {
-        // Build the ingredient rows (skipping blanks), keeping any kcal the
-        // user typed by hand. Estimate the rest in one batched call *before*
-        // opening the transaction, so a slow API never holds a DB lock.
+        // Build the ingredient rows (skipping blanks). Decide, per row, whether
+        // its kcal is a manual override or should be AI-estimated:
+        //   - blank                                   → estimate
+        //   - an AI value left unchanged from load     → estimate (may refresh)
+        //   - a value that was already manual, or that the user edited/added
+        //                                             → manual (kept as-is)
         $rows = [];
         foreach ($names as $i => $n) {
             $n = trim((string)$n);
             if ($n === '') continue;
-            $manualRaw = trim((string)($kcals[$i] ?? ''));
+            $typed     = trim((string)($kcals[$i] ?? ''));
+            $orig      = trim((string)($kcalOrig[$i] ?? ''));
+            $wasManual = (string)($kcalWasManual[$i] ?? '0') === '1';
+            $manualKcal = null;
+            if ($typed !== '' && is_numeric($typed) && ($wasManual || $typed !== $orig)) {
+                $manualKcal = max(0, (int)$typed);
+            }
             $rows[] = [
                 'name'        => $n,
                 'quantity'    => (trim((string)($qtys[$i]  ?? '')) ?: null),
                 'preparation' => (trim((string)($preps[$i] ?? '')) ?: null),
-                'manual_kcal' => ($manualRaw !== '' && is_numeric($manualRaw)) ? max(0, (int)$manualRaw) : null,
+                'manual_kcal' => $manualKcal,
             ];
         }
 
-        $toEstimate = [];
-        foreach ($rows as $idx => $r) {
-            if ($r['manual_kcal'] === null) {
-                $toEstimate[$idx] = ['name' => $r['name'], 'quantity' => $r['quantity'], 'preparation' => $r['preparation']];
-            }
-        }
-        $estByIdx = [];
-        if ($toEstimate) {
-            $estimates = estimate_calories_batch(array_values($toEstimate));
-            foreach (array_keys($toEstimate) as $pos => $idx) {
-                $estByIdx[$idx] = $estimates[$pos] ?? null;
-            }
-        }
+        // Estimate nutrition for every row (protein + fiber are always
+        // AI-estimated; kcal too unless the user set it manually). One
+        // batched, cache-backed call, before the transaction so a slow API
+        // never holds a DB lock.
+        $nutri = $rows ? estimate_nutrition_batch(array_map(fn($r) => [
+            'name' => $r['name'], 'quantity' => $r['quantity'], 'preparation' => $r['preparation'],
+        ], $rows)) : [];
 
         $pdo->beginTransaction();
         try {
             if ($id > 0) {
                 // Only the owner can update; a non-owning id changes nothing.
-                $st = $pdo->prepare('UPDATE meals SET dish_name=?, location=?, place=?, eaten_at=?, notes=? WHERE id=? AND created_by=?');
-                $st->execute([$dish, $location, ($place ?: null), $eatenAt, ($notes ?: null), $id, $me['id']]);
+                $st = $pdo->prepare('UPDATE meals SET dish_name=?, location=?, meal_type=?, place=?, eaten_at=?, notes=? WHERE id=? AND created_by=?');
+                $st->execute([$dish, $location, $mealType, ($place ?: null), $eatenAt, ($notes ?: null), $id, $me['id']]);
                 $pdo->prepare('DELETE FROM ingredients WHERE meal_id = ?')->execute([$id]);
             } else {
-                $st = $pdo->prepare('INSERT INTO meals (dish_name, location, place, eaten_at, notes, created_by) VALUES (?,?,?,?,?,?)');
-                $st->execute([$dish, $location, ($place ?: null), $eatenAt, ($notes ?: null), $me['id']]);
+                $st = $pdo->prepare('INSERT INTO meals (dish_name, location, meal_type, place, eaten_at, notes, created_by) VALUES (?,?,?,?,?,?,?)');
+                $st->execute([$dish, $location, $mealType, ($place ?: null), $eatenAt, ($notes ?: null), $me['id']]);
                 $id = (int)$pdo->lastInsertId();
             }
 
-            $ins = $pdo->prepare('INSERT INTO ingredients (meal_id, name, quantity, preparation, position, calories, calories_manual) VALUES (?,?,?,?,?,?,?)');
+            $ins = $pdo->prepare('INSERT INTO ingredients (meal_id, name, quantity, preparation, position, calories, calories_manual, protein_g, fiber_g) VALUES (?,?,?,?,?,?,?,?,?)');
             $pos = 0;
             foreach ($rows as $idx => $r) {
-                if ($r['manual_kcal'] !== null) { $cal = $r['manual_kcal'];      $manual = 1; }
-                else                            { $cal = $estByIdx[$idx] ?? null; $manual = 0; }
-                $ins->execute([$id, $r['name'], $r['quantity'], $r['preparation'], $pos++, $cal, $manual]);
+                $est = $nutri[$idx] ?? ['kcal' => null, 'protein' => null, 'fiber' => null];
+                if ($r['manual_kcal'] !== null) { $cal = $r['manual_kcal']; $manual = 1; }
+                else                            { $cal = $est['kcal'];       $manual = 0; }
+                $ins->execute([$id, $r['name'], $r['quantity'], $r['preparation'], $pos++, $cal, $manual, $est['protein'], $est['fiber']]);
             }
             $pdo->commit();
             redirect('index.php');
@@ -101,15 +109,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     // On error, fall through and re-render the form with submitted values.
-    $meal = ['id' => $id, 'dish_name' => $dish, 'location' => $location, 'place' => $place, 'eaten_at' => $eatenAt, 'notes' => $notes];
+    $meal = ['id' => $id, 'dish_name' => $dish, 'location' => $location, 'meal_type' => $mealType, 'place' => $place, 'eaten_at' => $eatenAt, 'notes' => $notes];
     $existingIngredients = [];
     foreach ($names as $i => $n) {
         if (trim((string)$n) === '') continue;
-        $k = trim((string)($kcals[$i] ?? ''));
+        $k    = trim((string)($kcals[$i] ?? ''));
+        $orig = trim((string)($kcalOrig[$i] ?? ''));
+        $wm   = (string)($kcalWasManual[$i] ?? '0') === '1';
+        $isManual = ($k !== '' && is_numeric($k) && ($wm || $k !== $orig));
         $existingIngredients[] = [
             'name' => $n, 'quantity' => $qtys[$i] ?? '', 'preparation' => $preps[$i] ?? '',
             'calories' => ($k !== '' && is_numeric($k)) ? (int)$k : null,
-            'calories_manual' => ($k !== '' && is_numeric($k)) ? 1 : 0,
+            'calories_manual' => $isManual ? 1 : 0,
         ];
     }
 }
@@ -128,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $st->execute([$id]);
         $existingIngredients = $st->fetchAll();
     } else {
-        $meal = ['id' => 0, 'dish_name' => '', 'location' => 'Home', 'place' => '', 'eaten_at' => date('Y-m-d H:i:s'), 'notes' => ''];
+        $meal = ['id' => 0, 'dish_name' => '', 'location' => 'Home', 'meal_type' => '', 'place' => '', 'eaten_at' => date('Y-m-d H:i:s'), 'notes' => ''];
         $existingIngredients = [];
     }
 }
@@ -159,17 +170,27 @@ require __DIR__ . '/header.php';
     <label>When
       <input type="datetime-local" name="eaten_at" value="<?= e($eatenInput) ?>" required>
     </label>
+    <label>Meal type
+      <select name="meal_type" id="mealType">
+        <option value="">—</option>
+        <?php foreach (['Breakfast','Lunch','Dinner','Snack'] as $t): ?>
+          <option value="<?= $t ?>" <?= ($meal['meal_type'] ?? '') === $t ? 'selected' : '' ?>><?= $t ?></option>
+        <?php endforeach; ?>
+      </select>
+    </label>
+  </div>
+
+  <div class="row2">
     <label>Location
       <select name="location">
         <option value="Home"       <?= strcasecmp($meal['location'],'Home')===0?'selected':'' ?>>Home</option>
         <option value="Restaurant" <?= strcasecmp($meal['location'],'Restaurant')===0?'selected':'' ?>>Restaurant</option>
       </select>
     </label>
+    <label>Place <span class="hint">(optional)</span>
+      <input name="place" value="<?= e($meal['place'] ?? '') ?>">
+    </label>
   </div>
-
-  <label>Place <span class="hint">(optional — e.g. restaurant name)</span>
-    <input name="place" value="<?= e($meal['place'] ?? '') ?>">
-  </label>
 
   <div class="ing-head">
     <span>Ingredients</span>
@@ -191,6 +212,8 @@ require __DIR__ . '/header.php';
     <input name="ing_qty[]"   placeholder="Qty (e.g. 200 g)" class="i-qty">
     <input name="ing_prep[]"  placeholder="Prepared (e.g. grilled)" class="i-prep">
     <input name="ing_kcal[]"  placeholder="kcal" class="i-kcal" inputmode="numeric">
+    <input type="hidden" name="ing_kcal_orig[]"       class="i-kcal-orig">
+    <input type="hidden" name="ing_kcal_was_manual[]" class="i-kcal-wasman">
     <button type="button" class="ing-remove" aria-label="Remove">×</button>
   </div>
 </template>
@@ -199,26 +222,52 @@ require __DIR__ . '/header.php';
 const list = document.getElementById('ingList');
 const tpl  = document.getElementById('ingRowTpl');
 
-function addRow(name = '', qty = '', prep = '', kcal = '') {
+function addRow(name = '', qty = '', prep = '', kcal = '', wasManual = false) {
   const node = tpl.content.firstElementChild.cloneNode(true);
   node.querySelector('.i-name').value = name;
   node.querySelector('.i-qty').value  = qty;
   node.querySelector('.i-prep').value = prep;
   node.querySelector('.i-kcal').value = kcal;
+  // Remember what we loaded so save can tell an unchanged AI value (re-estimate)
+  // from one the user actually typed (manual override).
+  node.querySelector('.i-kcal-orig').value   = kcal;
+  node.querySelector('.i-kcal-wasman').value = wasManual ? '1' : '0';
   node.querySelector('.ing-remove').addEventListener('click', () => node.remove());
   list.appendChild(node);
 }
 
-// Only manual kcal values are pre-filled; AI estimates stay blank so they
-// re-resolve (for free, from cache) on the next save.
+// Pre-fill kcal for every ingredient (AI estimate or manual value), so edit
+// mode shows the numbers. The hidden fields track whether each was manual.
 const existing = <?= json_encode(array_map(fn($i) => [
     'name' => $i['name'], 'qty' => $i['quantity'] ?? '', 'prep' => $i['preparation'] ?? '',
-    'kcal' => ((int)($i['calories_manual'] ?? 0) === 1 && $i['calories'] !== null) ? (string)$i['calories'] : ''
+    'kcal' => ($i['calories'] !== null && $i['calories'] !== '') ? (string)(int)$i['calories'] : '',
+    'wasManual' => (int)($i['calories_manual'] ?? 0) === 1,
 ], $existingIngredients), JSON_UNESCAPED_UNICODE) ?>;
 
-if (existing.length) existing.forEach(i => addRow(i.name, i.qty, i.prep, i.kcal));
+if (existing.length) existing.forEach(i => addRow(i.name, i.qty, i.prep, i.kcal, i.wasManual));
 else addRow();
 
 document.getElementById('addIng').addEventListener('click', () => addRow());
+
+// Suggest a meal type from the time, until the user picks one themselves.
+(function () {
+  const whenInput = document.querySelector('input[name=eaten_at]');
+  const mealType  = document.getElementById('mealType');
+  if (!whenInput || !mealType) return;
+  let touched = <?= $isEdit ? 'true' : 'false' ?> || mealType.value !== '';
+  mealType.addEventListener('change', () => { touched = true; });
+  function suggest() {
+    if (touched || !whenInput.value) return;
+    const h = new Date(whenInput.value).getHours();
+    let t = 'Snack';
+    if (h >= 5 && h <= 10)       t = 'Breakfast';
+    else if (h >= 11 && h <= 15) t = 'Lunch';
+    else if (h >= 16 && h <= 21) t = 'Dinner';
+    mealType.value = t;
+  }
+  whenInput.addEventListener('input', suggest);
+  whenInput.addEventListener('change', suggest);
+  suggest();
+})();
 </script>
 <?php require __DIR__ . '/footer.php'; ?>

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "pvs-site",
+      "runtimeExecutable": "/opt/homebrew/bin/python3.12",
+      "runtimeArgs": ["/Users/georgepindaru/Documents/GitHub/PVS_New_Website/server.py"],
+      "port": 3000
+    }
+  ]
+}

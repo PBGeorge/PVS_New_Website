@@ -56,6 +56,7 @@ $blank = [
     'Type'        => '',
     'Date'        => '',
     'Time'        => '',
+    'Meal Type'   => '',
     'Item'        => '',
     'Location'    => '',
     'Place'       => '',
@@ -63,6 +64,9 @@ $blank = [
     'Ingredient'  => '',
     'Quantity'    => '',
     'Preparation' => '',
+    'Calories'    => '',
+    'Protein (g)' => '',
+    'Fiber (g)'   => '',
     'Notes'       => '',
 ];
 
@@ -80,13 +84,14 @@ foreach ($items as $item) {
     if ($item['kind'] === 'meal') {
         $m = $item['row'];
         $base = array_merge($blank, [
-            'Type'     => 'Meal',
-            'Date'     => date('Y-m-d', $item['ts']),
-            'Time'     => date('H:i',   $item['ts']),
-            'Item'     => $m['dish_name'],
-            'Location' => $m['location'],
-            'Place'    => $m['place'] ?? '',
-            'Notes'    => $m['notes'] ?? '',
+            'Type'      => 'Meal',
+            'Date'      => date('Y-m-d', $item['ts']),
+            'Time'      => date('H:i',   $item['ts']),
+            'Meal Type' => $m['meal_type'] ?? '',
+            'Item'      => $m['dish_name'],
+            'Location'  => $m['location'],
+            'Place'     => $m['place'] ?? '',
+            'Notes'     => $m['notes'] ?? '',
         ]);
         $ings = $ingByMeal[$m['id']] ?? [];
         if (!$ings) {
@@ -97,6 +102,9 @@ foreach ($items as $item) {
                 $row['Ingredient']  = $ing['name'];
                 $row['Quantity']    = $ing['quantity'] ?? '';
                 $row['Preparation'] = $ing['preparation'] ?? '';
+                $row['Calories']    = ($ing['calories']  ?? null) === null ? '' : (int)$ing['calories'];
+                $row['Protein (g)'] = ($ing['protein_g'] ?? null) === null ? '' : (float)$ing['protein_g'];
+                $row['Fiber (g)']   = ($ing['fiber_g']   ?? null) === null ? '' : (float)$ing['fiber_g'];
                 $rows[] = $row;
             }
         }
