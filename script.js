@@ -1,14 +1,19 @@
-// ---- FORCE SCROLL TO TOP ON LOAD ----
+/* ============================================================
+   Power Vantage Solutions — interactions
+   scroll reveals · count-up · sticky-nav blur · mobile menu · form
+   ============================================================ */
+
+// ---- Force scroll to top on load ----
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 window.scrollTo(0, 0);
 
-// ---- NAV SCROLL EFFECT ----
+// ---- Sticky-nav blur (toggled past 20px) ----
 const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 40);
-});
+const onNavScroll = () => nav.classList.toggle('scrolled', window.scrollY > 20);
+window.addEventListener('scroll', onNavScroll, { passive: true });
+onNavScroll();
 
-// ---- MOBILE MENU ----
+// ---- Mobile menu ----
 function toggleMenu() {
   document.getElementById('navMobile').classList.toggle('open');
 }
@@ -16,49 +21,62 @@ function closeMenu() {
   document.getElementById('navMobile').classList.remove('open');
 }
 
-// ---- SCROLL REVEAL ----
-const revealEls = document.querySelectorAll(
-  '.service-card, .pillar, .process-step, .about-content, .contact-form, .contact-info, .section-header'
-);
-revealEls.forEach(el => el.classList.add('reveal'));
-
-const observer = new IntersectionObserver(
-  entries => entries.forEach(e => {
+// ---- Scroll reveal ----
+const revealObserver = new IntersectionObserver(
+  (entries) => entries.forEach((e) => {
     if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      observer.unobserve(e.target);
+      e.target.classList.add('is-visible');
+      revealObserver.unobserve(e.target);
     }
   }),
-  { threshold: 0.12 }
+  { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
 );
-revealEls.forEach(el => observer.observe(el));
+document.querySelectorAll('[data-reveal]').forEach((el) => revealObserver.observe(el));
 
-// ---- STAGGER SERVICE CARDS ----
-document.querySelectorAll('.services-grid .service-card, .usecases-grid .service-card').forEach((card, i) => {
-  card.style.transitionDelay = `${i * 0.08}s`;
-});
+// ---- Count-up (runs once when ~60% visible) ----
+function countUp(el) {
+  const target = parseFloat(el.getAttribute('data-count')) || 0;
+  const suffix = el.getAttribute('data-count-suffix') || '';
+  const dur = 1400;
+  const start = performance.now();
+  const step = (now) => {
+    const p = Math.min((now - start) / dur, 1);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(target * eased) + suffix;
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
 
-// ---- STAGGER PROCESS STEPS ----
-document.querySelectorAll('.process-step').forEach((step, i) => {
-  step.style.transitionDelay = `${i * 0.08}s`;
-});
+const countObserver = new IntersectionObserver(
+  (entries) => entries.forEach((e) => {
+    if (e.isIntersecting) {
+      countUp(e.target);
+      countObserver.unobserve(e.target);
+    }
+  }),
+  { threshold: 0.6 }
+);
+document.querySelectorAll('[data-count]').forEach((el) => countObserver.observe(el));
 
-// ---- CONTACT FORM ----
+// ---- Contact form → submit.php ----
 function handleSubmit(e) {
   e.preventDefault();
   const form    = e.target;
   const btn     = form.querySelector('.btn-text');
+  const submit  = form.querySelector('button[type=submit]');
   const success = document.getElementById('formSuccess');
+  const original = btn.textContent;
 
   btn.textContent = 'Sending…';
-  form.querySelector('button[type=submit]').disabled = true;
+  submit.disabled = true;
 
   fetch('submit.php', {
     method: 'POST',
     body: new FormData(form),
   })
-    .then(r => r.json())
-    .then(data => {
+    .then((r) => r.json())
+    .then((data) => {
       if (data.success) {
         form.reset();
         success.classList.add('visible');
@@ -71,21 +89,7 @@ function handleSubmit(e) {
       alert('Network error. Please check your connection and try again.');
     })
     .finally(() => {
-      btn.textContent = 'Send Message';
-      form.querySelector('button[type=submit]').disabled = false;
+      btn.textContent = original;
+      submit.disabled = false;
     });
 }
-
-// ---- SMOOTH ACTIVE NAV LINKS ----
-const sections = document.querySelectorAll('section[id]');
-const navLinks = document.querySelectorAll('.nav-links a, .nav-mobile a');
-
-window.addEventListener('scroll', () => {
-  let current = '';
-  sections.forEach(s => {
-    if (window.scrollY >= s.offsetTop - 120) current = s.id;
-  });
-  navLinks.forEach(a => {
-    a.style.color = a.getAttribute('href') === `#${current}` ? '#E2E8F0' : '';
-  });
-}, { passive: true });
