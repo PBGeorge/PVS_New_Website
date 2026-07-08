@@ -76,6 +76,17 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS ingredients (
     CONSTRAINT fk_ing_meal FOREIGN KEY (meal_id) REFERENCES meals(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
+$pdo->exec("CREATE TABLE IF NOT EXISTS activities (
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    activity   VARCHAR(160) NOT NULL,
+    minutes    INT          NOT NULL,
+    notes      TEXT         NULL,
+    done_at    DATETIME     NOT NULL,
+    created_by INT          NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_activity_user FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
 // Add users.email if it's missing (recovery address for password resets).
 // Guarded via information_schema so it's idempotent across MySQL versions.
 $hasEmail = (int)$pdo->query(

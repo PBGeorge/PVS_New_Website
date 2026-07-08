@@ -111,7 +111,7 @@ require __DIR__ . '/header.php';
 ?>
 <div class="page-head">
   <h1><?= $isEdit ? 'Edit meal' : 'Add meal' ?></h1>
-  <a class="btn-ghost" href="index.php">Cancel</a>
+  <a class="btn-ghost" href="<?= $isEdit ? 'index.php' : 'add.php' ?>">Cancel</a>
 </div>
 
 <?php foreach ($errors as $msg): ?><div class="alert"><?= e($msg) ?></div><?php endforeach; ?>

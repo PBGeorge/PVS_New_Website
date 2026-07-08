@@ -24,6 +24,25 @@ if ($meals) {
     }
 }
 
+// Load this user's activities, newest first.
+$st = $pdo->prepare("SELECT * FROM activities WHERE created_by = ? ORDER BY done_at DESC, id DESC");
+$st->execute([$me['id']]);
+$activities = $st->fetchAll();
+
+// Merge meals and activities into a single timeline, newest first. Each
+// item carries its kind, the row, and a sortable timestamp so the diary
+// can group both by day and render the right card.
+$items = [];
+foreach ($meals as $m) {
+    $items[] = ['kind' => 'meal', 'ts' => strtotime($m['eaten_at']), 'id' => (int)$m['id'], 'row' => $m];
+}
+foreach ($activities as $a) {
+    $items[] = ['kind' => 'activity', 'ts' => strtotime($a['done_at']), 'id' => (int)$a['id'], 'row' => $a];
+}
+usort($items, function ($x, $y) {
+    return $y['ts'] <=> $x['ts'] ?: $y['id'] <=> $x['id'];
+});
+
 function ingredient_line(array $ing): string {
     $parts = [];
     if ($ing['quantity'] !== null && $ing['quantity'] !== '') $parts[] = $ing['quantity'];
@@ -41,26 +60,29 @@ require __DIR__ . '/header.php';
 ?>
 <div class="page-head">
   <h1>Diary</h1>
-  <a class="btn" href="meal.php">Add meal</a>
+  <a class="btn" href="add.php">Add entry</a>
 </div>
 
-<?php if (!$meals): ?>
+<?php if (!$items): ?>
   <div class="empty card">
-    <p>No meals logged yet.</p>
-    <a class="btn" href="meal.php">Log your first meal</a>
+    <p>Nothing logged yet.</p>
+    <a class="btn" href="add.php">Log your first entry</a>
   </div>
 <?php else: ?>
   <?php
   $currentDay = null;
-  foreach ($meals as $m):
-      $day = date('l, j M Y', strtotime($m['eaten_at']));
+  foreach ($items as $item):
+      $day = date('l, j M Y', $item['ts']);
       if ($day !== $currentDay):
           if ($currentDay !== null) echo '</div>'; // close previous .day-group
           $currentDay = $day;
           echo '<div class="day-label">' . e($day) . '</div><div class="day-group">';
       endif;
-      $ings = $ingredientsByMeal[$m['id']] ?? [];
-      $isRestaurant = strcasecmp($m['location'], 'Restaurant') === 0;
+
+      if ($item['kind'] === 'meal'):
+          $m = $item['row'];
+          $ings = $ingredientsByMeal[$m['id']] ?? [];
+          $isRestaurant = strcasecmp($m['location'], 'Restaurant') === 0;
   ?>
     <article class="meal card">
       <div class="meal-top">
@@ -94,10 +116,39 @@ require __DIR__ . '/header.php';
         <p class="notes"><?= nl2br(e($m['notes'])) ?></p>
       <?php endif; ?>
     </article>
+  <?php else:
+          $a = $item['row'];
+          $mins = (int)$a['minutes'];
+  ?>
+    <article class="meal card">
+      <div class="meal-top">
+        <h2 class="dish"><?= e($a['activity']) ?></h2>
+        <div class="meal-actions">
+          <a class="icon-link" href="activity.php?id=<?= (int)$a['id'] ?>" aria-label="Edit">Edit</a>
+          <form method="post" action="activity.php" class="inline" onsubmit="return confirm('Delete this activity?');">
+            <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="id" value="<?= (int)$a['id'] ?>">
+            <button type="submit" class="icon-link danger">Delete</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="meta">
+        <span class="time"><?= e(date('H:i', $item['ts'])) ?></span>
+        <span class="chip chip-activity">Activity</span>
+        <span class="mins"><?= $mins ?> min<?= $mins === 1 ? '' : 's' ?></span>
+      </div>
+
+      <?php if (!empty($a['notes'])): ?>
+        <p class="notes"><?= nl2br(e($a['notes'])) ?></p>
+      <?php endif; ?>
+    </article>
+  <?php endif; ?>
   <?php endforeach; ?>
   </div><!-- close last .day-group -->
 <?php endif; ?>
 
-<a class="fab" href="meal.php" aria-label="Add meal">+</a>
+<a class="fab" href="add.php" aria-label="Add entry">+</a>
 
 <?php require __DIR__ . '/footer.php'; ?>

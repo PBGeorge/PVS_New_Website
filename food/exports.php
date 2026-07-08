@@ -70,7 +70,7 @@ require __DIR__ . '/header.php';
       const res = await fetch('export.php?' + q, { headers: { 'Accept': 'application/json' } });
       if (!res.ok) throw new Error('export failed');
       const rows = await res.json();
-      if (!rows.length) { alert('No meals in that range.'); return; }
+      if (!rows.length) { alert('Nothing logged in that range.'); return; }
       const ws = XLSX.utils.json_to_sheet(rows);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, 'Food Log');

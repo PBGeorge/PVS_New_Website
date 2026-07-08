@@ -35,6 +35,29 @@ if ($meals) {
     }
 }
 
+// Activities over the same range.
+$awhere  = 'a.created_by = ?';
+$aparams = [$me['id']];
+if ($from !== null && $to !== null) {
+    $awhere   .= ' AND a.done_at BETWEEN ? AND ?';
+    $aparams[] = $from;
+    $aparams[] = $to;
+}
+$ast = $pdo->prepare("SELECT a.* FROM activities a WHERE $awhere ORDER BY a.done_at DESC, a.id DESC");
+$ast->execute($aparams);
+$activities = $ast->fetchAll();
+
+// Merge meals and activities into one timeline, newest first, so the
+// document reads chronologically within each day.
+$items = [];
+foreach ($meals as $m) {
+    $items[] = ['ts' => strtotime($m['eaten_at']), 'id' => (int)$m['id'], 'kind' => 'meal', 'row' => $m];
+}
+foreach ($activities as $a) {
+    $items[] = ['ts' => strtotime($a['done_at']), 'id' => (int)$a['id'], 'kind' => 'activity', 'row' => $a];
+}
+usort($items, fn($x, $y) => $y['ts'] <=> $x['ts'] ?: $y['id'] <=> $x['id']);
+
 function ing_line_doc(array $ing): string {
     $parts = [];
     if (($ing['quantity'] ?? '') !== '') $parts[] = $ing['quantity'];
@@ -68,24 +91,30 @@ header('Content-Disposition: attachment; filename="' . $filename . '"');
 </style>
 </head>
 <body>
+<?php
+$mealCount = count($meals);
+$actCount  = count($activities);
+?>
 <h1>Food Log — <?= e($me['display_name']) ?></h1>
-<p class="sub">Exported <?= e(date('j M Y')) ?> · <?= count($meals) ?> meal<?= count($meals) === 1 ? '' : 's' ?></p>
+<p class="sub">Exported <?= e(date('j M Y')) ?> · <?= $mealCount ?> meal<?= $mealCount === 1 ? '' : 's' ?> · <?= $actCount ?> activit<?= $actCount === 1 ? 'y' : 'ies' ?></p>
 
-<?php if (!$meals): ?>
-  <p>No meals logged yet.</p>
+<?php if (!$items): ?>
+  <p>Nothing logged yet.</p>
 <?php else:
     $currentDay = null;
-    foreach ($meals as $m):
-        $day = date('l, j F Y', strtotime($m['eaten_at']));
+    foreach ($items as $item):
+        $day = date('l, j F Y', $item['ts']);
         if ($day !== $currentDay):
             $currentDay = $day; ?>
     <h2 class="day"><?= e($day) ?></h2>
         <?php endif;
-        $ings = $ingredientsByMeal[$m['id']] ?? [];
+        if ($item['kind'] === 'meal'):
+            $m = $item['row'];
+            $ings = $ingredientsByMeal[$m['id']] ?? [];
     ?>
   <div class="meal">
     <p class="dish"><?= e($m['dish_name']) ?></p>
-    <p class="meta"><?= e(date('H:i', strtotime($m['eaten_at']))) ?> · <?= e($m['location']) ?><?php if (!empty($m['place'])): ?> · <?= e($m['place']) ?><?php endif; ?></p>
+    <p class="meta"><?= e(date('H:i', $item['ts'])) ?> · <?= e($m['location']) ?><?php if (!empty($m['place'])): ?> · <?= e($m['place']) ?><?php endif; ?></p>
     <?php if ($ings): ?>
     <ul>
       <?php foreach ($ings as $ing): ?><li><?= ing_line_doc($ing) ?></li><?php endforeach; ?>
@@ -95,6 +124,18 @@ header('Content-Disposition: attachment; filename="' . $filename . '"');
     <p class="notes"><?= nl2br(e($m['notes'])) ?></p>
     <?php endif; ?>
   </div>
+  <?php else:
+            $a = $item['row'];
+            $mins = (int)$a['minutes'];
+  ?>
+  <div class="meal">
+    <p class="dish"><?= e($a['activity']) ?></p>
+    <p class="meta"><?= e(date('H:i', $item['ts'])) ?> · Activity · <?= $mins ?> min<?= $mins === 1 ? '' : 's' ?></p>
+    <?php if (!empty($a['notes'])): ?>
+    <p class="notes"><?= nl2br(e($a['notes'])) ?></p>
+    <?php endif; ?>
+  </div>
+  <?php endif; ?>
 <?php endforeach; endif; ?>
 </body>
 </html>

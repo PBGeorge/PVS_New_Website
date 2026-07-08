@@ -64,20 +64,23 @@ Set it to **PHP 8.0 or newer** if it isn't already.
 
 Go to `https://yourdomain/food/` and sign in.
 
-- **Add meal** → dish, time, location (Home/Restaurant), optional place,
-  an ingredient list (quantity + how it was prepared), and notes.
-- Tap **Edit** / **Delete** on any of your meals.
+- **Add entry** → choose **Meal** or **Activity**:
+  - **Meal** → dish, time, location (Home/Restaurant), optional place,
+    an ingredient list (quantity + how it was prepared), and notes.
+  - **Activity** → what you did, time, how many minutes, and optional notes.
+- Meals and activities share one diary, grouped by day.
+- Tap **Edit** / **Delete** on any of your entries.
 - **Export** (top right) opens a page where you pick a range — last 7 / 30
   / 90 days, all time, or a custom start/end — and download it as:
-  - **Excel** — an `.xlsx`, one row per ingredient, with the dish, time,
-    location and notes alongside.
-  - **Word** — a `.doc` grouped by day with each meal laid out underneath
-    (opens in Word or Google Docs).
+  - **Excel** — an `.xlsx` with a `Type` column; one row per meal ingredient
+    and one row per activity, with time, location, minutes and notes alongside.
+  - **Word** — a `.doc` grouped by day with each meal and activity laid out
+    underneath (opens in Word or Google Docs).
 - **Account** (top right) → set a **recovery email** and change your
   password any time.
 
 Each account keeps its **own private diary** — you only see, edit, and
-export the meals you added.
+export the meals and activities you added.
 
 **Locked out?** On the sign-in screen, use **Forgot password?** → enter
 your recovery email → follow the emailed link (valid 1 hour) to set a new
