@@ -129,6 +129,36 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS nutrition_cache (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
+// Macros: protein + fiber per ingredient (AI-estimated, display-only), plus
+// the same two columns on the cache. Guarded like the columns above.
+$hasProtein = (int)$pdo->query(
+    "SELECT COUNT(*) FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'ingredients' AND COLUMN_NAME = 'protein_g'"
+)->fetchColumn();
+if (!$hasProtein) {
+    $pdo->exec("ALTER TABLE ingredients
+        ADD COLUMN protein_g DECIMAL(6,1) NULL,
+        ADD COLUMN fiber_g   DECIMAL(6,1) NULL");
+}
+$hasCacheProtein = (int)$pdo->query(
+    "SELECT COUNT(*) FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'nutrition_cache' AND COLUMN_NAME = 'protein_g'"
+)->fetchColumn();
+if (!$hasCacheProtein) {
+    $pdo->exec("ALTER TABLE nutrition_cache
+        ADD COLUMN protein_g DECIMAL(6,1) NULL,
+        ADD COLUMN fiber_g   DECIMAL(6,1) NULL");
+}
+
+// Meal type (Breakfast / Lunch / Dinner / Snack) on meals.
+$hasMealType = (int)$pdo->query(
+    "SELECT COUNT(*) FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'meals' AND COLUMN_NAME = 'meal_type'"
+)->fetchColumn();
+if (!$hasMealType) {
+    $pdo->exec("ALTER TABLE meals ADD COLUMN meal_type VARCHAR(20) NULL AFTER location");
+}
+
 // --- Helpers ---
 function e(?string $s): string { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
 
@@ -195,21 +225,23 @@ function export_bounds(): array {
 }
 
 /**
- * Estimate calories for a list of ingredients.
+ * Estimate nutrition (kcal + protein + fiber) for a list of ingredients.
  *
  * Checks the local nutrition_cache first and only sends the cache misses to
  * Gemini — in a single batched call. Results are written back to the cache.
- * Anything the API can't answer (or any failure at all) comes back as null,
+ * Anything the API can't answer (or any failure at all) comes back as nulls,
  * so callers can always save the meal regardless.
  *
  * @param array $items  Each: ['name'=>string, 'quantity'=>?string, 'preparation'=>?string]
- * @return array        Parallel array (keys 0..n-1) of int kcal or null.
+ * @return array        Parallel array (keys 0..n-1) of
+ *                      ['kcal'=>?int, 'protein'=>?float, 'fiber'=>?float].
  */
-function estimate_calories_batch(array $items): array {
+function estimate_nutrition_batch(array $items): array {
     global $pdo;
 
     $items = array_values($items);
-    $out   = array_fill(0, count($items), null);
+    $blank = ['kcal' => null, 'protein' => null, 'fiber' => null];
+    $out   = array_fill(0, count($items), $blank);
     if (!$items) return $out;
 
     // Stable cache key per ingredient (quantity + name + preparation).
@@ -226,43 +258,54 @@ function estimate_calories_batch(array $items): array {
     $uniqueKeys  = array_values(array_unique($keys));
     if ($uniqueKeys) {
         $in = implode(',', array_fill(0, count($uniqueKeys), '?'));
-        $st = $pdo->prepare("SELECT key_hash, kcal FROM nutrition_cache WHERE key_hash IN ($in)");
+        $st = $pdo->prepare("SELECT key_hash, kcal, protein_g, fiber_g FROM nutrition_cache WHERE key_hash IN ($in)");
         $st->execute($uniqueKeys);
-        foreach ($st->fetchAll() as $row) $cached[$row['key_hash']] = (int)$row['kcal'];
+        foreach ($st->fetchAll() as $row) {
+            $cached[$row['key_hash']] = [
+                'kcal'    => $row['kcal']      !== null ? (int)$row['kcal']       : null,
+                'protein' => $row['protein_g'] !== null ? (float)$row['protein_g'] : null,
+                'fiber'   => $row['fiber_g']   !== null ? (float)$row['fiber_g']   : null,
+            ];
+        }
     }
 
     $misses = []; // original index => item
     foreach ($items as $i => $it) {
         if (isset($cached[$keys[$i]])) $out[$i] = $cached[$keys[$i]];
-        else                          $misses[$i] = $it;
+        else                           $misses[$i] = $it;
     }
     if (!$misses) return $out;
 
     // 2) Ask Gemini for the misses (one call).
-    $estimated = gemini_estimate_calories(array_values($misses));
+    $estimated = gemini_estimate_nutrition(array_values($misses));
     if ($estimated === null) return $out; // API unavailable → leave them null
 
     // 3) Map results back and cache them.
     $ins = $pdo->prepare(
-        "INSERT INTO nutrition_cache (key_hash, kcal) VALUES (?, ?)
-         ON DUPLICATE KEY UPDATE kcal = VALUES(kcal)"
+        "INSERT INTO nutrition_cache (key_hash, kcal, protein_g, fiber_g) VALUES (?, ?, ?, ?)
+         ON DUPLICATE KEY UPDATE kcal = VALUES(kcal), protein_g = VALUES(protein_g), fiber_g = VALUES(fiber_g)"
     );
     foreach (array_keys($misses) as $pos => $i) {
-        $kcal = $estimated[$pos] ?? null;
-        if ($kcal === null) continue;
-        $kcal    = max(0, (int)$kcal);
-        $out[$i] = $kcal;
-        try { $ins->execute([$keys[$i], $kcal]); } catch (Throwable $e) { /* cache write is best-effort */ }
+        $m = $estimated[$pos] ?? null;
+        if (!is_array($m)) continue;
+        $kcal    = ($m['kcal']    ?? null) !== null ? max(0, (int)$m['kcal'])      : null;
+        $protein = ($m['protein'] ?? null) !== null ? max(0, (float)$m['protein']) : null;
+        $fiber   = ($m['fiber']   ?? null) !== null ? max(0, (float)$m['fiber'])   : null;
+        if ($kcal === null && $protein === null && $fiber === null) continue;
+        $out[$i] = ['kcal' => $kcal, 'protein' => $protein, 'fiber' => $fiber];
+        if ($kcal !== null) { // cache requires a kcal value
+            try { $ins->execute([$keys[$i], $kcal, $protein, $fiber]); } catch (Throwable $e) { /* best-effort */ }
+        }
     }
     return $out;
 }
 
 /**
  * Low-level Gemini call. Given a list of ingredients, returns a parallel
- * array of integer kcal (same order), or null if the API can't be reached
- * or the response can't be parsed.
+ * array (same order) of ['kcal'=>?int,'protein'=>?float,'fiber'=>?float],
+ * or null if the API can't be reached or the response can't be parsed.
  */
-function gemini_estimate_calories(array $items): ?array {
+function gemini_estimate_nutrition(array $items): ?array {
     if (!defined('GEMINI_API_KEY') || GEMINI_API_KEY === '') return null;
     if (!function_exists('curl_init')) return null;
 
@@ -275,9 +318,12 @@ function gemini_estimate_calories(array $items): ?array {
     }
 
     $prompt =
-        "Estimate the food energy in kilocalories (kcal) for each item below.\n" .
-        "If no quantity is given, assume one typical serving.\n" .
-        "Return ONLY a JSON array of integers — one per item, in the same order, no units, no text.\n\n" .
+        "For each food item below, estimate its nutrition for the quantity given " .
+        "(assume one typical serving if no quantity is stated):\n" .
+        "- kcal: food energy in kilocalories (integer)\n" .
+        "- protein_g: protein in grams\n" .
+        "- fiber_g: dietary fiber in grams\n" .
+        "Return ONLY a JSON array of objects, one per item, in the same order.\n\n" .
         implode("\n", $lines);
 
     $body = json_encode([
@@ -285,7 +331,19 @@ function gemini_estimate_calories(array $items): ?array {
         'generationConfig' => [
             'temperature'      => 0,
             'responseMimeType' => 'application/json',
-            'responseSchema'   => ['type' => 'ARRAY', 'items' => ['type' => 'INTEGER']],
+            'responseSchema'   => [
+                'type'  => 'ARRAY',
+                'items' => [
+                    'type'       => 'OBJECT',
+                    'properties' => [
+                        'kcal'      => ['type' => 'INTEGER'],
+                        'protein_g' => ['type' => 'NUMBER'],
+                        'fiber_g'   => ['type' => 'NUMBER'],
+                    ],
+                    'required'         => ['kcal', 'protein_g', 'fiber_g'],
+                    'propertyOrdering' => ['kcal', 'protein_g', 'fiber_g'],
+                ],
+            ],
         ],
     ]);
 
@@ -319,12 +377,21 @@ function gemini_estimate_calories(array $items): ?array {
     }
     if ($text === '') return null;
 
-    $nums = json_decode($text, true);
-    if (!is_array($nums)) {
-        // Last resort: pull the first [...] array out of the text.
-        if (preg_match('/\[[^\]]*\]/', $text, $m)) $nums = json_decode($m[0], true);
+    $arr = json_decode($text, true);
+    if (!is_array($arr)) {
+        // Last resort: pull the first [...] block out of the text.
+        if (preg_match('/\[.*\]/s', $text, $m)) $arr = json_decode($m[0], true);
     }
-    if (!is_array($nums)) return null;
+    if (!is_array($arr)) return null;
 
-    return array_map(fn($v) => is_numeric($v) ? (int)$v : null, $nums);
+    $result = [];
+    foreach ($arr as $o) {
+        if (!is_array($o)) { $result[] = null; continue; }
+        $result[] = [
+            'kcal'    => isset($o['kcal'])      && is_numeric($o['kcal'])      ? (int)$o['kcal']        : null,
+            'protein' => isset($o['protein_g']) && is_numeric($o['protein_g']) ? (float)$o['protein_g'] : null,
+            'fiber'   => isset($o['fiber_g'])   && is_numeric($o['fiber_g'])   ? (float)$o['fiber_g']   : null,
+        ];
+    }
+    return $result;
 }

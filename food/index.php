@@ -43,24 +43,43 @@ usort($items, function ($x, $y) {
     return $y['ts'] <=> $x['ts'] ?: $y['id'] <=> $x['id'];
 });
 
-// Per-meal kcal total (sum of ingredients that have an estimate), and a
-// running per-day total. Meals with no estimated ingredients stay null so
-// we don't show a misleading "0 kcal".
-$mealKcal = [];
+// Per-meal macro totals (kcal + protein + fiber), summing only ingredients
+// that carry a value, plus a running per-day total. A missing total stays
+// null so we never show a misleading "0".
+$mealMacros = [];
 foreach ($ingredientsByMeal as $mid => $rows) {
-    $sum = 0; $any = false;
+    $t   = ['kcal' => 0, 'protein' => 0, 'fiber' => 0];
+    $has = ['kcal' => false, 'protein' => false, 'fiber' => false];
     foreach ($rows as $r) {
-        if ($r['calories'] !== null && $r['calories'] !== '') { $sum += (int)$r['calories']; $any = true; }
+        foreach (['kcal' => 'calories', 'protein' => 'protein_g', 'fiber' => 'fiber_g'] as $k => $col) {
+            if (isset($r[$col]) && $r[$col] !== null && $r[$col] !== '') { $t[$k] += (float)$r[$col]; $has[$k] = true; }
+        }
     }
-    $mealKcal[$mid] = $any ? $sum : null;
+    $mealMacros[$mid] = [
+        'kcal'    => $has['kcal']    ? (int)round($t['kcal']) : null,
+        'protein' => $has['protein'] ? $t['protein']         : null,
+        'fiber'   => $has['fiber']   ? $t['fiber']           : null,
+    ];
 }
-$dayKcal = [];
+$dayMacros = [];
 foreach ($items as $item) {
     if ($item['kind'] !== 'meal') continue;
-    $mk = $mealKcal[$item['id']] ?? null;
-    if ($mk === null) continue;
+    $mm = $mealMacros[$item['id']] ?? null;
+    if (!$mm) continue;
     $dayKey = date('Y-m-d', $item['ts']);
-    $dayKcal[$dayKey] = ($dayKcal[$dayKey] ?? 0) + $mk;
+    if (!isset($dayMacros[$dayKey])) $dayMacros[$dayKey] = ['kcal' => null, 'protein' => null, 'fiber' => null];
+    foreach (['kcal', 'protein', 'fiber'] as $k) {
+        if ($mm[$k] !== null) $dayMacros[$dayKey][$k] = ($dayMacros[$dayKey][$k] ?? 0) + $mm[$k];
+    }
+}
+
+// "~520 kcal · 31 g protein · 6 g fiber" (skips whichever parts are missing).
+function macro_summary(array $mm): string {
+    $bits = [];
+    if ($mm['kcal']    !== null) $bits[] = '~' . number_format($mm['kcal']) . ' kcal';
+    if ($mm['protein'] !== null) $bits[] = round($mm['protein']) . ' g protein';
+    if ($mm['fiber']   !== null) $bits[] = round($mm['fiber']) . ' g fiber';
+    return implode(' · ', $bits);
 }
 
 function ingredient_line(array $ing): string {
@@ -96,9 +115,11 @@ require __DIR__ . '/header.php';
       if ($day !== $currentDay):
           if ($currentDay !== null) echo '</div>'; // close previous .day-group
           $currentDay = $day;
-          $dayTotal = $dayKcal[date('Y-m-d', $item['ts'])] ?? null;
+          $dt = $dayMacros[date('Y-m-d', $item['ts'])] ?? null;
           $label = e($day);
-          if ($dayTotal !== null) $label .= ' <span class="day-kcal">~' . number_format($dayTotal) . ' kcal</span>';
+          if ($dt && ($dt['kcal'] !== null || $dt['protein'] !== null || $dt['fiber'] !== null)) {
+              $label .= ' <span class="day-kcal">' . e(macro_summary($dt)) . '</span>';
+          }
           echo '<div class="day-label">' . $label . '</div><div class="day-group">';
       endif;
 
@@ -121,11 +142,15 @@ require __DIR__ . '/header.php';
         </div>
       </div>
 
+      <?php $mm = $mealMacros[$m['id']] ?? ['kcal'=>null,'protein'=>null,'fiber'=>null]; ?>
       <div class="meta">
         <span class="time"><?= e(date('H:i', strtotime($m['eaten_at']))) ?></span>
+        <?php if (!empty($m['meal_type'])): ?><span class="chip chip-type"><?= e($m['meal_type']) ?></span><?php endif; ?>
         <span class="chip <?= $isRestaurant ? 'chip-out' : 'chip-home' ?>"><?= e($m['location']) ?></span>
         <?php if (!empty($m['place'])): ?><span class="place"><?= e($m['place']) ?></span><?php endif; ?>
-        <?php if (($mealKcal[$m['id']] ?? null) !== null): ?><span class="kcal">~<?= number_format($mealKcal[$m['id']]) ?> kcal</span><?php endif; ?>
+        <?php if ($mm['kcal'] !== null): ?><span class="kcal">~<?= number_format($mm['kcal']) ?> kcal</span><?php endif; ?>
+        <?php if ($mm['protein'] !== null): ?><span class="macro"><?= round($mm['protein']) ?> g P</span><?php endif; ?>
+        <?php if ($mm['fiber'] !== null): ?><span class="macro"><?= round($mm['fiber']) ?> g fiber</span><?php endif; ?>
       </div>
 
       <?php if ($ings): ?>
