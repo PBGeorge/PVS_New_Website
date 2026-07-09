@@ -50,35 +50,26 @@ require __DIR__ . '/header.php';
 
 <div class="card chart-card">
   <div class="chart-head">
-    <h2>Calories</h2>
-    <span class="chart-target" id="kcalTargetLabel"></span>
+    <h2>Daily nutrition</h2>
   </div>
-  <div class="chart-wrap"><canvas id="kcalChart"></canvas></div>
-</div>
-
-<div class="card chart-card">
-  <div class="chart-head">
-    <h2>Protein</h2>
-    <span class="chart-target" id="proteinTargetLabel"></span>
+  <div class="chart-meta">
+    <span class="chart-meta-item"><span class="chart-dot kcal"></span>Calories target ~<?= number_format($kcalTarget) ?> kcal/day</span>
+    <?php if ($proteinTarget !== null): ?>
+      <span class="chart-meta-item"><span class="chart-dot protein"></span>Protein target <?= e((string)$proteinTarget) ?> g/day</span>
+    <?php endif; ?>
+    <?php if ($fiberTarget !== null): ?>
+      <span class="chart-meta-item"><span class="chart-dot fiber"></span>Fiber target <?= e((string)$fiberTarget) ?> g/day</span>
+    <?php endif; ?>
   </div>
-  <div class="chart-wrap"><canvas id="proteinChart"></canvas></div>
-  <?php if ($proteinTarget === null): ?>
-    <p class="chart-note">Set a protein target on the <a href="password.php">Account</a> page to show a reference line.</p>
+  <div class="chart-wrap"><canvas id="nutritionChart"></canvas></div>
+  <?php if ($proteinTarget === null || $fiberTarget === null): ?>
+    <p class="chart-note">
+      Set a <?= $proteinTarget === null && $fiberTarget === null ? 'protein and fiber target' : ($proteinTarget === null ? 'protein target' : 'fiber target') ?>
+      on the <a href="password.php">Account</a> page to show <?= ($proteinTarget === null && $fiberTarget === null) ? 'their reference lines' : 'its reference line' ?>.
+    </p>
   <?php endif; ?>
+  <p class="chart-note">Shows logged intake only — activity minutes aren't subtracted from calories (yet).</p>
 </div>
-
-<div class="card chart-card">
-  <div class="chart-head">
-    <h2>Fiber</h2>
-    <span class="chart-target" id="fiberTargetLabel"></span>
-  </div>
-  <div class="chart-wrap"><canvas id="fiberChart"></canvas></div>
-  <?php if ($fiberTarget === null): ?>
-    <p class="chart-note">Set a fiber target on the <a href="password.php">Account</a> page to show a reference line.</p>
-  <?php endif; ?>
-</div>
-
-<p class="chart-note">Charts show logged intake only — activity minutes aren't subtracted from calories (yet).</p>
 
 <a class="fab" href="add.php" aria-label="Add entry">+</a>
 
@@ -108,7 +99,6 @@ require __DIR__ . '/header.php';
   const primary = cssVar('--primary', '#1B8DD1');
   const teal    = cssVar('--teal',    '#22B39A');
   const gold    = cssVar('--gold',    '#F3C64B');
-  const ink     = cssVar('--ink',     '#1A1D24');
 
   function fmt(n, unit) {
     if (n === null || n === undefined) return '';
@@ -116,98 +106,115 @@ require __DIR__ . '/header.php';
     return (unit === 'kcal' ? Math.round(r).toLocaleString() : r) + ' ' + unit;
   }
 
-  function buildDatasets(range, key, label, barColor, targetValue, targetColor) {
+  // One chart, two axes: calories as bars on the left (kcal) axis, protein
+  // and fiber as lines sharing the right (grams) axis — the three metrics
+  // live on very different scales, so a single shared axis would flatten
+  // protein/fiber to near-invisible slivers next to calorie bars.
+  function buildDatasets(range) {
     const series = raw.ranges[range];
-    const datasets = [{
-      type: 'bar',
-      label: label,
-      data: series[key],
-      backgroundColor: barColor,
-      borderRadius: 4,
-      maxBarThickness: 26,
-      order: 2,
-    }];
-    if (targetValue !== null && targetValue !== undefined) {
+    const datasets = [
+      {
+        type: 'bar', label: 'Calories', data: series.kcal,
+        backgroundColor: alpha(primary, .75), borderRadius: 4, maxBarThickness: 22,
+        yAxisID: 'y', order: 3,
+      },
+      {
+        type: 'line', label: 'Protein', data: series.protein,
+        borderColor: teal, backgroundColor: teal, borderWidth: 2,
+        pointRadius: 3, pointHoverRadius: 4, tension: .3, fill: false,
+        yAxisID: 'y1', order: 1,
+      },
+      {
+        type: 'line', label: 'Fiber', data: series.fiber,
+        borderColor: gold, backgroundColor: gold, borderWidth: 2,
+        pointRadius: 3, pointHoverRadius: 4, tension: .3, fill: false,
+        yAxisID: 'y1', order: 2,
+      },
+    ];
+    if (targets.kcal !== null && targets.kcal !== undefined) {
       datasets.push({
-        type: 'line',
-        label: 'Target',
-        data: series.labels.map(() => targetValue),
-        borderColor: targetColor,
-        borderDash: [6, 4],
-        borderWidth: 2,
-        pointRadius: 0,
-        pointHoverRadius: 0,
-        fill: false,
-        order: 1,
+        type: 'line', label: 'Calories target', data: series.labels.map(() => targets.kcal),
+        borderColor: alpha(primary, .9), borderDash: [6, 4], borderWidth: 1.5,
+        pointRadius: 0, pointHoverRadius: 0, fill: false, yAxisID: 'y', order: 0,
+      });
+    }
+    if (targets.protein !== null && targets.protein !== undefined) {
+      datasets.push({
+        type: 'line', label: 'Protein target', data: series.labels.map(() => targets.protein),
+        borderColor: teal, borderDash: [6, 4], borderWidth: 1.5,
+        pointRadius: 0, pointHoverRadius: 0, fill: false, yAxisID: 'y1', order: 0,
+      });
+    }
+    if (targets.fiber !== null && targets.fiber !== undefined) {
+      datasets.push({
+        type: 'line', label: 'Fiber target', data: series.labels.map(() => targets.fiber),
+        borderColor: gold, borderDash: [6, 4], borderWidth: 1.5,
+        pointRadius: 0, pointHoverRadius: 0, fill: false, yAxisID: 'y1', order: 0,
       });
     }
     return datasets;
   }
 
-  function makeChart(canvasId, key, label, barColor, targetValue, targetColor, unit) {
-    const el = document.getElementById(canvasId);
-    if (!el) return null;
-    const chart = new Chart(el.getContext('2d'), {
+  const canvas = document.getElementById('nutritionChart');
+  if (canvas) {
+    const chart = new Chart(canvas.getContext('2d'), {
       data: {
         labels: raw.ranges.week.labels,
-        datasets: buildDatasets('week', key, label, barColor, targetValue, targetColor),
+        datasets: buildDatasets('week'),
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
         plugins: {
           legend: {
-            display: targetValue !== null && targetValue !== undefined,
-            labels: { boxWidth: 12, usePointStyle: true },
+            labels: {
+              boxWidth: 12,
+              usePointStyle: true,
+              // Target lines still show in the tooltip; keeping them out of
+              // the legend stops it doubling in size for little benefit.
+              filter: (item) => !item.text.includes('target'),
+            },
           },
           tooltip: {
-            callbacks: { label: (ctx) => `${ctx.dataset.label}: ${fmt(ctx.parsed.y, unit)}` },
+            callbacks: {
+              label: (ctx) => `${ctx.dataset.label}: ${fmt(ctx.parsed.y, ctx.dataset.yAxisID === 'y' ? 'kcal' : 'g')}`,
+            },
           },
         },
         scales: {
           x: { grid: { display: false }, ticks: { autoSkip: true, maxRotation: 0 } },
-          y: { beginAtZero: true, grid: { color: 'rgba(26,29,36,.06)' } },
+          y: {
+            beginAtZero: true,
+            position: 'left',
+            title: { display: true, text: 'kcal' },
+            grid: { color: 'rgba(26,29,36,.06)' },
+          },
+          y1: {
+            beginAtZero: true,
+            position: 'right',
+            title: { display: true, text: 'g' },
+            grid: { display: false },
+          },
         },
       },
     });
-    return {
-      setRange(range) {
-        const series = raw.ranges[range];
-        chart.data.labels   = series.labels;
-        chart.data.datasets = buildDatasets(range, key, label, barColor, targetValue, targetColor);
+
+    document.querySelectorAll('.seg-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.seg-btn').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+        const range = btn.dataset.range;
+        chart.data.labels   = raw.ranges[range].labels;
+        chart.data.datasets = buildDatasets(range);
         chart.update();
-      },
-    };
-  }
-
-  const kcalChart    = makeChart('kcalChart',    'kcal',    'Calories', alpha(primary, .75), targets.kcal,    ink,  'kcal');
-  const proteinChart = makeChart('proteinChart', 'protein', 'Protein',  alpha(teal, .75),    targets.protein, ink,  'g');
-  const fiberChart   = makeChart('fiberChart',   'fiber',   'Fiber',    alpha(gold, .85),    targets.fiber,   ink,  'g');
-
-  const labelEls = {
-    kcalTargetLabel:    targets.kcal    !== null && targets.kcal    !== undefined ? 'Target ~' + fmt(targets.kcal, 'kcal') + '/day'    : '',
-    proteinTargetLabel: targets.protein !== null && targets.protein !== undefined ? 'Target ' + fmt(targets.protein, 'g') + '/day' : '',
-    fiberTargetLabel:   targets.fiber   !== null && targets.fiber   !== undefined ? 'Target ' + fmt(targets.fiber, 'g') + '/day'   : '',
-  };
-  Object.keys(labelEls).forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = labelEls[id];
-  });
-
-  document.querySelectorAll('.seg-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.seg-btn').forEach(b => {
-        b.classList.remove('active');
-        b.setAttribute('aria-selected', 'false');
       });
-      btn.classList.add('active');
-      btn.setAttribute('aria-selected', 'true');
-      const range = btn.dataset.range;
-      if (kcalChart)    kcalChart.setRange(range);
-      if (proteinChart) proteinChart.setRange(range);
-      if (fiberChart)   fiberChart.setRange(range);
     });
-  });
+  }
 })();
 </script>
 <?php require __DIR__ . '/footer.php'; ?>
