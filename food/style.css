@@ -423,6 +423,115 @@ body {
 }
 .fs legend { font-weight: 700; padding: 0 6px; }
 
+/* ---------- Daily meal targets (Account) ---------- */
+/* Meal-type legend with a small colour-coded dot. */
+.mt-legend { display: flex; align-items: center; gap: 8px; font-size: 15px; }
+.mt-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.mt-dot.breakfast { background: var(--gold); }
+.mt-dot.lunch     { background: var(--primary); }
+.mt-dot.dinner    { background: var(--teal); }
+
+.mt-field { max-width: 220px; }
+
+/* Number input with a docked unit suffix (e.g. "kcal") sharing one border. */
+.input-unit {
+  display: flex;
+  align-items: stretch;
+  border: 1.5px solid var(--line);
+  border-radius: 11px;
+  background: var(--card-alt);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.input-unit:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(27,141,209,.14);
+}
+.input-unit input {
+  flex: 1 1 auto;
+  width: 70px;
+  min-width: 0;
+  border: 0;
+  border-radius: 11px 0 0 11px;
+  background: transparent;
+  font-variant-numeric: tabular-nums;
+}
+.input-unit input:focus { box-shadow: none; }
+.input-unit .unit {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--faint);
+  border-left: 1px solid var(--line);
+  border-radius: 0 11px 11px 0;
+}
+
+/* Compact variant of the unit input (right-aligned kcal on a variant card). */
+.input-unit.sm {
+  width: fit-content;
+  border-radius: 9px;
+  background: var(--card);
+}
+.input-unit.sm input {
+  width: 56px;
+  padding: 9px 4px 9px 10px;
+  border-radius: 9px 0 0 9px;
+  text-align: right;
+}
+.input-unit.sm .unit {
+  padding: 0 10px;
+  font-size: 12px;
+  border-radius: 0 9px 9px 0;
+}
+
+.mt-variants { display: grid; gap: 8px; }
+.mt-variants-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.mt-variant {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--card-alt);
+}
+.mt-variant-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.mt-badge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.mt-variant textarea {
+  background: var(--card);
+  border-radius: 10px;
+}
+
 /* ---------- Ingredient editor ---------- */
 .ing-head {
   display: flex;
