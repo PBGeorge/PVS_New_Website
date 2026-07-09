@@ -67,7 +67,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 12px;
+  row-gap: 8px;
   padding: 14px 20px;
   padding-top: max(14px, env(safe-area-inset-top));
   background: color-mix(in srgb, var(--paper) 82%, transparent);
@@ -83,7 +85,7 @@ body {
   color: var(--ink);
   text-decoration: none;
 }
-.topnav { display: flex; align-items: center; gap: 8px; }
+.topnav { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 
 @media (max-width: 430px) {
   .topbar { gap: 8px; padding-left: 14px; padding-right: 14px; }
@@ -153,6 +155,8 @@ body {
 .btn-ghost:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-1px); }
 .btn-ghost.small { min-height: 36px; padding: 0 14px; font-size: 14px; }
 .btn-ghost:disabled { opacity: .55; cursor: default; }
+.btn-ghost.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+.btn-ghost.active:hover { background: var(--primary-d); border-color: var(--primary-d); color: #fff; transform: none; }
 
 /* ---------- Day grouping ---------- */
 .day-label {
@@ -686,6 +690,54 @@ code {
 
 a { color: var(--primary); }
 a:hover { color: var(--teal-d); }
+
+/* ---------- Dashboard ---------- */
+.head-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.seg {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--card-alt);
+  border: 1.5px solid var(--line);
+  border-radius: 100px;
+  margin-bottom: 18px;
+}
+.seg-btn {
+  border: 0;
+  background: transparent;
+  border-radius: 100px;
+  padding: 8px 18px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+}
+.seg-btn.active { background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
+
+.chart-card { display: grid; gap: 14px; margin-bottom: 16px; }
+.chart-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.chart-head h2 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -.01em;
+  margin: 0;
+}
+.chart-target {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.chart-wrap { position: relative; height: 220px; max-width: 100%; }
+.chart-note { margin: 2px 2px 0; font-size: 13px; color: var(--faint); }
+
+@media (max-width: 430px) {
+  .chart-wrap { height: 180px; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *,

@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Only the activity's owner can delete it.
         $st = $pdo->prepare('DELETE FROM activities WHERE id = ? AND created_by = ?');
         $st->execute([$id, $me['id']]);
-        redirect('index.php');
+        redirect('diary.php');
     }
 
     // --- Save (insert or update) ---
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($id > 0) {
         $own = $pdo->prepare('SELECT id FROM activities WHERE id = ? AND created_by = ?');
         $own->execute([$id, $me['id']]);
-        if (!$own->fetch()) redirect('index.php');
+        if (!$own->fetch()) redirect('diary.php');
     }
 
     $errors = [];
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $st = $pdo->prepare('INSERT INTO activities (activity, minutes, notes, done_at, created_by) VALUES (?,?,?,?,?)');
                 $st->execute([$activity, $minutes, ($notes ?: null), $doneAt, $me['id']]);
             }
-            redirect('index.php');
+            redirect('diary.php');
         } catch (Throwable $ex) {
             $errors[] = 'Could not save. Please try again.';
         }
@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $st = $pdo->prepare('SELECT * FROM activities WHERE id = ? AND created_by = ?');
         $st->execute([$id, $me['id']]);
         $act = $st->fetch();
-        if (!$act) redirect('index.php');
+        if (!$act) redirect('diary.php');
     } else {
         $act = ['id' => 0, 'activity' => '', 'minutes' => '', 'notes' => '', 'done_at' => date('Y-m-d H:i:s')];
     }
@@ -78,7 +78,7 @@ require __DIR__ . '/header.php';
 ?>
 <div class="page-head">
   <h1><?= $isEdit ? 'Edit activity' : 'Add activity' ?></h1>
-  <a class="btn-ghost" href="<?= $isEdit ? 'index.php' : 'add.php' ?>">Cancel</a>
+  <a class="btn-ghost" href="<?= $isEdit ? 'diary.php' : 'add.php' ?>">Cancel</a>
 </div>
 
 <?php foreach ($errors as $msg): ?><div class="alert"><?= e($msg) ?></div><?php endforeach; ?>

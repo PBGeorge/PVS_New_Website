@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Only the meal's owner can delete it. ingredients cascade.
         $st = $pdo->prepare('DELETE FROM meals WHERE id = ? AND created_by = ?');
         $st->execute([$id, $me['id']]);
-        redirect('index.php');
+        redirect('diary.php');
     }
 
     // --- Save (insert or update) ---
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($id > 0) {
         $own = $pdo->prepare('SELECT id FROM meals WHERE id = ? AND created_by = ?');
         $own->execute([$id, $me['id']]);
-        if (!$own->fetch()) redirect('index.php');
+        if (!$own->fetch()) redirect('diary.php');
     }
 
     $errors = [];
@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $ins->execute([$id, $r['name'], $r['quantity'], $r['preparation'], $pos++, $cal, $manual, $est['protein'], $est['fiber']]);
             }
             $pdo->commit();
-            redirect('index.php');
+            redirect('diary.php');
         } catch (Throwable $ex) {
             $pdo->rollBack();
             $errors[] = 'Could not save. Please try again.';
@@ -133,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $st = $pdo->prepare('SELECT * FROM meals WHERE id = ? AND created_by = ?');
         $st->execute([$id, $me['id']]);
         $meal = $st->fetch();
-        if (!$meal) redirect('index.php');
+        if (!$meal) redirect('diary.php');
         $st = $pdo->prepare('SELECT * FROM ingredients WHERE meal_id = ? ORDER BY position, id');
         $st->execute([$id]);
         $existingIngredients = $st->fetchAll();
@@ -151,7 +151,7 @@ require __DIR__ . '/header.php';
 ?>
 <div class="page-head">
   <h1><?= $isEdit ? 'Edit meal' : 'Add meal' ?></h1>
-  <a class="btn-ghost" href="<?= $isEdit ? 'index.php' : 'add.php' ?>">Cancel</a>
+  <a class="btn-ghost" href="<?= $isEdit ? 'diary.php' : 'add.php' ?>">Cancel</a>
 </div>
 
 <?php foreach ($errors as $msg): ?><div class="alert"><?= e($msg) ?></div><?php endforeach; ?>

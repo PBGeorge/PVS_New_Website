@@ -97,6 +97,18 @@ if (!$hasEmail) {
     $pdo->exec("ALTER TABLE users ADD COLUMN email VARCHAR(190) NULL AFTER display_name");
 }
 
+// Optional daily macro targets (Dashboard reference lines). Blank/NULL means
+// "no target set" — the dashboard simply omits the reference line.
+$hasMacroTargets = (int)$pdo->query(
+    "SELECT COUNT(*) FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'target_protein_g'"
+)->fetchColumn();
+if (!$hasMacroTargets) {
+    $pdo->exec("ALTER TABLE users
+        ADD COLUMN target_protein_g DECIMAL(6,1) NULL,
+        ADD COLUMN target_fiber_g   DECIMAL(6,1) NULL");
+}
+
 $pdo->exec("CREATE TABLE IF NOT EXISTS password_resets (
     id         INT AUTO_INCREMENT PRIMARY KEY,
     user_id    INT       NOT NULL,
@@ -284,6 +296,84 @@ function save_meal_targets(int $userId, array $post): void {
         }
     }
     $pdo->commit();
+}
+
+/**
+ * Persist the optional daily protein/fiber targets (Dashboard reference
+ * lines) from the same POST shape as save_meal_targets(): protein_target,
+ * fiber_target. A blank or non-numeric value clears the target (NULL),
+ * meaning "no reference line" rather than a target of zero.
+ */
+function save_daily_macro_targets(int $userId, array $post): void {
+    global $pdo;
+    $protein = trim((string)($post['protein_target'] ?? ''));
+    $fiber   = trim((string)($post['fiber_target']   ?? ''));
+    $proteinVal = ($protein !== '' && is_numeric($protein)) ? max(0, (float)$protein) : null;
+    $fiberVal   = ($fiber   !== '' && is_numeric($fiber))   ? max(0, (float)$fiber)   : null;
+    $st = $pdo->prepare('UPDATE users SET target_protein_g = ?, target_fiber_g = ? WHERE id = ?');
+    $st->execute([$proteinVal, $fiberVal, $userId]);
+}
+
+/**
+ * A user's daily calorie target for the Dashboard: the sum of their
+ * Breakfast + Lunch + Dinner targets (the same per-meal-type targets
+ * configured on the Account page). Always a number (falls back to the
+ * meal_target_defaults() sum if the user hasn't saved their own).
+ */
+function daily_kcal_target(int $userId): int {
+    $t = meal_targets_for($userId);
+    return (int)($t['Breakfast']['target'] ?? 0) + (int)($t['Lunch']['target'] ?? 0) + (int)($t['Dinner']['target'] ?? 0);
+}
+
+/**
+ * Daily kcal/protein/fiber totals for a user across [$from, $to] (inclusive,
+ * 'Y-m-d' strings), one entry per calendar day — days with nothing logged
+ * come back as 0 rather than being skipped, so the Dashboard charts never
+ * have to guess at a missing day.
+ *
+ * Sums whatever is already stored per ingredient (calories/protein_g/
+ * fiber_g — manual or AI-estimated, set when the meal was saved); this
+ * never re-estimates anything, it only totals existing values. Activities
+ * are intentionally not part of this — the Dashboard charts intake only.
+ *
+ * @return array{labels: string[], dates: string[], kcal: int[], protein: float[], fiber: float[]}
+ */
+function daily_nutrition_series(int $userId, string $from, string $to): array {
+    global $pdo;
+
+    $st = $pdo->prepare("
+        SELECT DATE(m.eaten_at) AS day,
+               SUM(i.calories)  AS kcal,
+               SUM(i.protein_g) AS protein,
+               SUM(i.fiber_g)   AS fiber
+        FROM meals m
+        JOIN ingredients i ON i.meal_id = m.id
+        WHERE m.created_by = ? AND DATE(m.eaten_at) BETWEEN ? AND ?
+        GROUP BY DATE(m.eaten_at)
+    ");
+    $st->execute([$userId, $from, $to]);
+    $byDay = [];
+    foreach ($st->fetchAll() as $row) {
+        $byDay[$row['day']] = [
+            'kcal'    => $row['kcal']    !== null ? (int)round((float)$row['kcal'])   : 0,
+            'protein' => $row['protein'] !== null ? round((float)$row['protein'], 1)  : 0,
+            'fiber'   => $row['fiber']   !== null ? round((float)$row['fiber'], 1)    : 0,
+        ];
+    }
+
+    $labels = []; $dates = []; $kcal = []; $protein = []; $fiber = [];
+    $cursor = strtotime($from);
+    $end    = strtotime($to);
+    while ($cursor <= $end) {
+        $day = date('Y-m-d', $cursor);
+        $labels[]  = date('D j M', $cursor);
+        $dates[]   = $day;
+        $kcal[]    = $byDay[$day]['kcal']    ?? 0;
+        $protein[] = $byDay[$day]['protein'] ?? 0;
+        $fiber[]   = $byDay[$day]['fiber']   ?? 0;
+        $cursor    = strtotime('+1 day', $cursor);
+    }
+    return ['labels' => $labels, 'dates' => $dates, 'kcal' => $kcal, 'protein' => $protein, 'fiber' => $fiber];
 }
 
 function redirect(string $path): void { header('Location: ' . $path); exit; }

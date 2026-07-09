@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'targets') {
         save_meal_targets((int)$me['id'], $_POST);
+        save_daily_macro_targets((int)$me['id'], $_POST);
         redirect('password.php?saved=targets');
     } elseif ($action === 'email') {
         $email = trim($_POST['email'] ?? '');
@@ -46,8 +47,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$mealTargets = meal_targets_for((int)$me['id']);
-$dotClass    = ['gold' => 'breakfast', 'blue' => 'lunch', 'teal' => 'dinner'];
+$mealTargets   = meal_targets_for((int)$me['id']);
+$dotClass      = ['gold' => 'breakfast', 'blue' => 'lunch', 'teal' => 'dinner'];
+$proteinTarget = $me['target_protein_g'] !== null ? (float)$me['target_protein_g'] : null;
+$fiberTarget   = $me['target_fiber_g']   !== null ? (float)$me['target_fiber_g']   : null;
 
 $PAGE_TITLE = 'Account';
 $SHOW_NAV   = true;
@@ -103,6 +106,26 @@ require __DIR__ . '/header.php';
     </div>
   </fieldset>
   <?php endforeach; ?>
+
+  <fieldset class="fs">
+    <legend class="mt-legend">Daily macros <span class="hint">(optional)</span></legend>
+    <label class="mt-field">Protein target
+      <span class="input-unit">
+        <input type="text" inputmode="numeric" pattern="[0-9]*" name="protein_target"
+               value="<?= $proteinTarget !== null ? e((string)$proteinTarget) : '' ?>" placeholder="e.g. 120">
+        <span class="unit">g</span>
+      </span>
+    </label>
+    <label class="mt-field">Fiber target
+      <span class="input-unit">
+        <input type="text" inputmode="numeric" pattern="[0-9]*" name="fiber_target"
+               value="<?= $fiberTarget !== null ? e((string)$fiberTarget) : '' ?>" placeholder="e.g. 30">
+        <span class="unit">g</span>
+      </span>
+    </label>
+    <p class="hint">Leave blank to hide that chart's reference line on the Dashboard.</p>
+  </fieldset>
+
   <button class="btn" type="submit">Save targets</button>
 </form>
 
