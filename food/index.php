@@ -73,6 +73,26 @@ foreach ($items as $item) {
     }
 }
 
+// Group each day's items by meal type so the diary can render proper
+// sub-sections (Breakfast / Lunch / …), with untyped meals under "Other"
+// and activities in their own group. Days and items keep their newest-first
+// order; the types themselves follow the natural meal order below.
+$typeOrder = ['Breakfast', 'Lunch', 'Dinner', 'Snack', 'Other', 'Activity'];
+$byDay = [];
+foreach ($items as $item) {
+    $dayKey = date('Y-m-d', $item['ts']);
+    if (!isset($byDay[$dayKey])) {
+        $byDay[$dayKey] = ['label' => date('l, j M Y', $item['ts']), 'types' => []];
+    }
+    if ($item['kind'] === 'meal') {
+        $type = $item['row']['meal_type'] ?: 'Other';
+        if (!in_array($type, $typeOrder, true)) $type = 'Other';
+    } else {
+        $type = 'Activity';
+    }
+    $byDay[$dayKey]['types'][$type][] = $item;
+}
+
 // "~520 kcal · 31 g protein · 6 g fiber" (skips whichever parts are missing).
 function macro_summary(array $mm): string {
     $bits = [];
@@ -116,94 +136,107 @@ require __DIR__ . '/header.php';
     <a class="btn" href="add.php">Log your first entry</a>
   </div>
 <?php else: ?>
-  <?php
-  $currentDay = null;
-  foreach ($items as $item):
-      $day = date('l, j M Y', $item['ts']);
-      if ($day !== $currentDay):
-          if ($currentDay !== null) echo '</div>'; // close previous .day-group
-          $currentDay = $day;
-          $dt = $dayMacros[date('Y-m-d', $item['ts'])] ?? null;
-          $label = e($day);
-          if ($dt && ($dt['kcal'] !== null || $dt['protein'] !== null || $dt['fiber'] !== null)) {
-              $label .= ' <span class="day-kcal">' . e(macro_summary($dt)) . '</span>';
-          }
-          echo '<div class="day-label">' . $label . '</div><div class="day-group">';
-      endif;
+  <?php foreach ($byDay as $dayKey => $day): ?>
+    <?php
+      $dt = $dayMacros[$dayKey] ?? null;
+      $dayLabel = e($day['label']);
+      if ($dt && ($dt['kcal'] !== null || $dt['protein'] !== null || $dt['fiber'] !== null)) {
+          $dayLabel .= ' <span class="day-kcal">' . e(macro_summary($dt)) . '</span>';
+      }
+    ?>
+    <div class="day-label"><?= $dayLabel ?></div>
 
-      if ($item['kind'] === 'meal'):
-          $m = $item['row'];
-          $ings = $ingredientsByMeal[$m['id']] ?? [];
-          $isRestaurant = strcasecmp($m['location'], 'Restaurant') === 0;
-  ?>
-    <article class="meal card">
-      <div class="meal-top">
-        <h2 class="dish"><?= e($m['dish_name']) ?></h2>
-        <div class="meal-actions">
-          <a class="icon-link" href="meal.php?id=<?= (int)$m['id'] ?>" aria-label="Edit">Edit</a>
-          <form method="post" action="meal.php" class="inline" onsubmit="return confirm('Delete this meal?');">
-            <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
-            <input type="hidden" name="action" value="delete">
-            <input type="hidden" name="id" value="<?= (int)$m['id'] ?>">
-            <button type="submit" class="icon-link danger">Delete</button>
-          </form>
-        </div>
-      </div>
+    <?php foreach ($typeOrder as $type):
+        if (empty($day['types'][$type])) continue;
+        $group = $day['types'][$type];
+        // kcal subtotal for the group heading (meals only).
+        $sub = 0; $hasSub = false;
+        foreach ($group as $it) {
+            if ($it['kind'] !== 'meal') continue;
+            $k = $mealMacros[$it['id']]['kcal'] ?? null;
+            if ($k !== null) { $sub += $k; $hasSub = true; }
+        }
+    ?>
+    <div class="type-head">
+      <span class="type-name"><?= e($type) ?></span>
+      <?php if ($hasSub): ?><span class="type-kcal">~<?= number_format($sub) ?> kcal</span><?php endif; ?>
+    </div>
+    <div class="day-group">
+      <?php foreach ($group as $item): ?>
+        <?php if ($item['kind'] === 'meal'):
+            $m = $item['row'];
+            $ings = $ingredientsByMeal[$m['id']] ?? [];
+            $isRestaurant = strcasecmp($m['location'], 'Restaurant') === 0;
+            $mm = $mealMacros[$m['id']] ?? ['kcal'=>null,'protein'=>null,'fiber'=>null];
+        ?>
+        <article class="meal card">
+          <div class="meal-top">
+            <h2 class="dish"><?= e($m['dish_name']) ?></h2>
+            <div class="meal-actions">
+              <a class="icon-link" href="meal.php?id=<?= (int)$m['id'] ?>" aria-label="Edit">Edit</a>
+              <form method="post" action="meal.php" class="inline" onsubmit="return confirm('Delete this meal?');">
+                <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="id" value="<?= (int)$m['id'] ?>">
+                <button type="submit" class="icon-link danger">Delete</button>
+              </form>
+            </div>
+          </div>
 
-      <?php $mm = $mealMacros[$m['id']] ?? ['kcal'=>null,'protein'=>null,'fiber'=>null]; ?>
-      <div class="meta">
-        <span class="time"><?= e(date('H:i', strtotime($m['eaten_at']))) ?></span>
-        <?php if (!empty($m['meal_type'])): ?><span class="chip chip-type"><?= e($m['meal_type']) ?></span><?php endif; ?>
-        <span class="chip <?= $isRestaurant ? 'chip-out' : 'chip-home' ?>"><?= e($m['location']) ?></span>
-        <?php if (!empty($m['place'])): ?><span class="place"><?= e($m['place']) ?></span><?php endif; ?>
-        <?php if ($mm['kcal'] !== null): ?><span class="kcal">~<?= number_format($mm['kcal']) ?> kcal</span><?php endif; ?>
-        <?php if ($mm['protein'] !== null): ?><span class="macro"><?= round($mm['protein']) ?> g P</span><?php endif; ?>
-        <?php if ($mm['fiber'] !== null): ?><span class="macro"><?= round($mm['fiber']) ?> g fiber</span><?php endif; ?>
-      </div>
+          <div class="meta">
+            <span class="time"><?= e(date('H:i', strtotime($m['eaten_at']))) ?></span>
+            <span class="chip <?= $isRestaurant ? 'chip-out' : 'chip-home' ?>"><?= e($m['location']) ?></span>
+            <?php if (!empty($m['place'])): ?><span class="place"><?= e($m['place']) ?></span><?php endif; ?>
+            <?php if ($mm['kcal'] !== null): ?><span class="kcal">~<?= number_format($mm['kcal']) ?> kcal</span><?php endif; ?>
+            <?php if ($mm['protein'] !== null): ?><span class="macro"><?= round($mm['protein']) ?> g P</span><?php endif; ?>
+            <?php if ($mm['fiber'] !== null): ?><span class="macro"><?= round($mm['fiber']) ?> g fiber</span><?php endif; ?>
+          </div>
 
-      <?php if ($ings): ?>
-        <ul class="ings">
-          <?php foreach ($ings as $ing): ?>
-            <li><?= ingredient_line($ing) ?></li>
-          <?php endforeach; ?>
-        </ul>
-      <?php endif; ?>
+          <?php if ($ings): ?>
+            <ul class="ings">
+              <?php foreach ($ings as $ing): ?>
+                <li><?= ingredient_line($ing) ?></li>
+              <?php endforeach; ?>
+            </ul>
+          <?php endif; ?>
 
-      <?php if (!empty($m['notes'])): ?>
-        <p class="notes"><?= nl2br(e($m['notes'])) ?></p>
-      <?php endif; ?>
-    </article>
-  <?php else:
-          $a = $item['row'];
-          $mins = (int)$a['minutes'];
-  ?>
-    <article class="meal card">
-      <div class="meal-top">
-        <h2 class="dish"><?= e($a['activity']) ?></h2>
-        <div class="meal-actions">
-          <a class="icon-link" href="activity.php?id=<?= (int)$a['id'] ?>" aria-label="Edit">Edit</a>
-          <form method="post" action="activity.php" class="inline" onsubmit="return confirm('Delete this activity?');">
-            <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
-            <input type="hidden" name="action" value="delete">
-            <input type="hidden" name="id" value="<?= (int)$a['id'] ?>">
-            <button type="submit" class="icon-link danger">Delete</button>
-          </form>
-        </div>
-      </div>
+          <?php if (!empty($m['notes'])): ?>
+            <p class="notes"><?= nl2br(e($m['notes'])) ?></p>
+          <?php endif; ?>
+        </article>
+        <?php else:
+            $a = $item['row'];
+            $mins = (int)$a['minutes'];
+        ?>
+        <article class="meal card">
+          <div class="meal-top">
+            <h2 class="dish"><?= e($a['activity']) ?></h2>
+            <div class="meal-actions">
+              <a class="icon-link" href="activity.php?id=<?= (int)$a['id'] ?>" aria-label="Edit">Edit</a>
+              <form method="post" action="activity.php" class="inline" onsubmit="return confirm('Delete this activity?');">
+                <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="id" value="<?= (int)$a['id'] ?>">
+                <button type="submit" class="icon-link danger">Delete</button>
+              </form>
+            </div>
+          </div>
 
-      <div class="meta">
-        <span class="time"><?= e(date('H:i', $item['ts'])) ?></span>
-        <span class="chip chip-activity">Activity</span>
-        <span class="mins"><?= $mins ?> min<?= $mins === 1 ? '' : 's' ?></span>
-      </div>
+          <div class="meta">
+            <span class="time"><?= e(date('H:i', $item['ts'])) ?></span>
+            <span class="chip chip-activity">Activity</span>
+            <span class="mins"><?= $mins ?> min<?= $mins === 1 ? '' : 's' ?></span>
+          </div>
 
-      <?php if (!empty($a['notes'])): ?>
-        <p class="notes"><?= nl2br(e($a['notes'])) ?></p>
-      <?php endif; ?>
-    </article>
-  <?php endif; ?>
+          <?php if (!empty($a['notes'])): ?>
+            <p class="notes"><?= nl2br(e($a['notes'])) ?></p>
+          <?php endif; ?>
+        </article>
+        <?php endif; ?>
+      <?php endforeach; ?>
+    </div>
+    <?php endforeach; ?>
   <?php endforeach; ?>
-  </div><!-- close last .day-group -->
 <?php endif; ?>
 
 <a class="fab" href="add.php" aria-label="Add entry">+</a>

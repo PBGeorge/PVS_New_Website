@@ -170,6 +170,29 @@ body {
 }
 .day-group { display: grid; gap: 14px; }
 
+/* Meal-type sub-section within a day */
+.type-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 18px 4px 9px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.type-name {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  color: var(--ink);
+}
+.type-kcal {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
 /* ---------- Cards / meals ---------- */
 .card {
   background: var(--card);
