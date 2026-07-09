@@ -164,6 +164,27 @@ if (!$hasMealType) {
 // Idempotent (matches nothing once done), so it's harmless on every load.
 $pdo->exec("UPDATE meals SET meal_type = 'Morning Snack' WHERE meal_type = 'Snack'");
 
+// Daily meal targets: a per-user calorie target for Breakfast/Lunch/Dinner,
+// plus two named "go-to" variants (A/B) per meal used as quick presets when
+// logging. One row per user+meal_type, and per user+meal_type+variant.
+$pdo->exec("CREATE TABLE IF NOT EXISTS meal_targets (
+    user_id     INT         NOT NULL,
+    meal_type   VARCHAR(20) NOT NULL,
+    target_kcal INT         NOT NULL DEFAULT 0,
+    PRIMARY KEY (user_id, meal_type),
+    CONSTRAINT fk_mt_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+$pdo->exec("CREATE TABLE IF NOT EXISTS meal_variants (
+    user_id        INT          NOT NULL,
+    meal_type      VARCHAR(20)  NOT NULL,
+    variant_letter CHAR(1)      NOT NULL,
+    name           VARCHAR(255) NULL,
+    kcal           INT          NULL,
+    PRIMARY KEY (user_id, meal_type, variant_letter),
+    CONSTRAINT fk_mv_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
 // --- Helpers ---
 function e(?string $s): string { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
 
@@ -179,6 +200,90 @@ function meal_type_rank(?string $type): int {
         'Midday Snack' => 4, 'Dinner' => 5, 'Other' => 6, 'Activity' => 7,
     ];
     return $rank[$type] ?? 6;
+}
+
+/**
+ * Meal types that carry a daily calorie target, each with its legend dot
+ * colour (CSS custom property) and the default target/variants shown until a
+ * user saves their own. Order here is the display order on the Account page.
+ */
+function meal_target_defaults(): array {
+    return [
+        'Breakfast' => ['dot' => 'gold', 'target' => 450, 'variants' => [
+            'A' => ['name' => 'Greek yogurt & granola',      'kcal' => 420],
+            'B' => ['name' => 'Veggie omelette & toast',      'kcal' => 480],
+        ]],
+        'Lunch' => ['dot' => 'blue', 'target' => 650, 'variants' => [
+            'A' => ['name' => 'Grilled chicken & rice bowl',  'kcal' => 620],
+            'B' => ['name' => 'Lentil soup & flatbread',      'kcal' => 580],
+        ]],
+        'Dinner' => ['dot' => 'teal', 'target' => 600, 'variants' => [
+            'A' => ['name' => 'Salmon, greens & sweet potato', 'kcal' => 610],
+            'B' => ['name' => 'Veggie stir-fry & tofu',        'kcal' => 540],
+        ]],
+    ];
+}
+
+/**
+ * A user's saved meal targets + variants, merged over meal_target_defaults()
+ * so the Account form is always fully populated. Any meal/variant the user
+ * hasn't saved yet falls back to the default; a saved row (even a blank name)
+ * overrides it. Returns the same shape as meal_target_defaults().
+ */
+function meal_targets_for(int $userId): array {
+    global $pdo;
+    $data = meal_target_defaults();
+
+    $st = $pdo->prepare('SELECT meal_type, target_kcal FROM meal_targets WHERE user_id = ?');
+    $st->execute([$userId]);
+    foreach ($st->fetchAll() as $row) {
+        if (isset($data[$row['meal_type']])) {
+            $data[$row['meal_type']]['target'] = (int)$row['target_kcal'];
+        }
+    }
+
+    $st = $pdo->prepare('SELECT meal_type, variant_letter, name, kcal FROM meal_variants WHERE user_id = ?');
+    $st->execute([$userId]);
+    foreach ($st->fetchAll() as $row) {
+        $type = $row['meal_type'];
+        $letter = $row['variant_letter'];
+        if (isset($data[$type]['variants'][$letter])) {
+            $data[$type]['variants'][$letter] = [
+                'name' => (string)($row['name'] ?? ''),
+                'kcal' => $row['kcal'] !== null ? (int)$row['kcal'] : null,
+            ];
+        }
+    }
+    return $data;
+}
+
+/**
+ * Persist all three targets + six variants for a user in one transaction,
+ * reading the flat POST shape target[Type] and variant[Type][Letter][name|kcal].
+ * Values are clamped to >= 0; a blank kcal is stored as NULL.
+ */
+function save_meal_targets(int $userId, array $post): void {
+    global $pdo;
+    $pdo->beginTransaction();
+    $upTarget = $pdo->prepare(
+        'INSERT INTO meal_targets (user_id, meal_type, target_kcal) VALUES (?, ?, ?)
+         ON DUPLICATE KEY UPDATE target_kcal = VALUES(target_kcal)'
+    );
+    $upVariant = $pdo->prepare(
+        'INSERT INTO meal_variants (user_id, meal_type, variant_letter, name, kcal) VALUES (?, ?, ?, ?, ?)
+         ON DUPLICATE KEY UPDATE name = VALUES(name), kcal = VALUES(kcal)'
+    );
+    foreach (meal_target_defaults() as $type => $info) {
+        $target = max(0, (int)($post['target'][$type] ?? 0));
+        $upTarget->execute([$userId, $type, $target]);
+        foreach ($info['variants'] as $letter => $_) {
+            $name    = trim((string)($post['variant'][$type][$letter]['name'] ?? ''));
+            $kcalRaw = $post['variant'][$type][$letter]['kcal'] ?? '';
+            $kcal    = ($kcalRaw === '' ? null : max(0, (int)$kcalRaw));
+            $upVariant->execute([$userId, $type, $letter, $name, $kcal]);
+        }
+    }
+    $pdo->commit();
 }
 
 function redirect(string $path): void { header('Location: ' . $path); exit; }
