@@ -149,17 +149,21 @@ require __DIR__ . '/header.php';
     <?php foreach ($typeOrder as $type):
         if (empty($day['types'][$type])) continue;
         $group = $day['types'][$type];
-        // kcal subtotal for the group heading (meals only).
-        $sub = 0; $hasSub = false;
+        // Macro subtotal for the group heading (meals only).
+        $sub = ['kcal' => null, 'protein' => null, 'fiber' => null];
         foreach ($group as $it) {
             if ($it['kind'] !== 'meal') continue;
-            $k = $mealMacros[$it['id']]['kcal'] ?? null;
-            if ($k !== null) { $sub += $k; $hasSub = true; }
+            $gm = $mealMacros[$it['id']] ?? null;
+            if (!$gm) continue;
+            foreach (['kcal', 'protein', 'fiber'] as $k) {
+                if ($gm[$k] !== null) $sub[$k] = ($sub[$k] ?? 0) + $gm[$k];
+            }
         }
+        $subLabel = macro_summary($sub);
     ?>
     <div class="type-head">
       <span class="type-name"><?= e($type) ?></span>
-      <?php if ($hasSub): ?><span class="type-kcal">~<?= number_format($sub) ?> kcal</span><?php endif; ?>
+      <?php if ($subLabel !== ''): ?><span class="type-kcal"><?= e($subLabel) ?></span><?php endif; ?>
     </div>
     <div class="day-group">
       <?php foreach ($group as $item): ?>
