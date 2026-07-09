@@ -2,6 +2,7 @@
 // Shared <head> + top bar. Set $PAGE_TITLE and optionally $SHOW_NAV before including.
 $PAGE_TITLE = $PAGE_TITLE ?? APP_NAME;
 $SHOW_NAV   = $SHOW_NAV   ?? false;
+$ACTIVE_NAV = $ACTIVE_NAV ?? '';
 $me         = $SHOW_NAV ? current_user() : null;
 ?>
 <!doctype html>
@@ -21,6 +22,8 @@ $me         = $SHOW_NAV ? current_user() : null;
 <header class="topbar">
   <a class="brand" href="index.php"><?= e(APP_NAME) ?></a>
   <nav class="topnav">
+    <a class="btn-ghost<?= $ACTIVE_NAV === 'dashboard' ? ' active' : '' ?>" href="index.php">Dashboard</a>
+    <a class="btn-ghost<?= $ACTIVE_NAV === 'diary'     ? ' active' : '' ?>" href="diary.php">Diary</a>
     <a class="btn-ghost" href="exports.php">Export</a>
     <a class="btn-ghost" href="password.php">Account</a>
     <a class="btn-ghost" href="logout.php">Sign out</a>
