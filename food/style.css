@@ -424,6 +424,7 @@ body {
 .form label {
   display: grid;
   gap: 7px;
+  min-width: 0;
   font-size: 14px;
   font-weight: 600;
   color: var(--ink);
@@ -434,6 +435,7 @@ body {
 .form textarea {
   font: inherit;
   width: 100%;
+  min-width: 0;
   padding: 12px 14px;
   border: 1.5px solid var(--line);
   border-radius: 11px;
