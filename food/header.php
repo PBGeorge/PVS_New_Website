@@ -21,7 +21,10 @@ $me         = $SHOW_NAV ? current_user() : null;
 <?php if ($SHOW_NAV): ?>
 <header class="topbar">
   <a class="brand" href="index.php"><?= e(APP_NAME) ?></a>
-  <nav class="topnav">
+  <button type="button" class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="topnav">
+    <span></span><span></span><span></span>
+  </button>
+  <nav class="topnav" id="topnav">
     <a class="btn-ghost<?= $ACTIVE_NAV === 'dashboard' ? ' active' : '' ?>" href="index.php">Dashboard</a>
     <a class="btn-ghost<?= $ACTIVE_NAV === 'diary'     ? ' active' : '' ?>" href="diary.php">Diary</a>
     <a class="btn-ghost" href="exports.php">Export</a>
