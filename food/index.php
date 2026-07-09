@@ -39,8 +39,13 @@ foreach ($meals as $m) {
 foreach ($activities as $a) {
     $items[] = ['kind' => 'activity', 'ts' => strtotime($a['done_at']), 'id' => (int)$a['id'], 'row' => $a];
 }
+// Day descending (newest first); within a day, time ascending so each day
+// reads morning -> evening once grouped by meal type.
 usort($items, function ($x, $y) {
-    return $y['ts'] <=> $x['ts'] ?: $y['id'] <=> $x['id'];
+    $dx = date('Y-m-d', $x['ts']);
+    $dy = date('Y-m-d', $y['ts']);
+    if ($dx !== $dy) return $dy <=> $dx;                  // day descending
+    return $x['ts'] <=> $y['ts'] ?: $x['id'] <=> $y['id']; // within day: ascending
 });
 
 // Per-meal macro totals (kcal + protein + fiber), summing only ingredients
@@ -77,7 +82,7 @@ foreach ($items as $item) {
 // sub-sections (Breakfast / Lunch / …), with untyped meals under "Other"
 // and activities in their own group. Days and items keep their newest-first
 // order; the types themselves follow the natural meal order below.
-$typeOrder = ['Breakfast', 'Lunch', 'Dinner', 'Snack', 'Other', 'Activity'];
+$typeOrder = array_merge(meal_type_order(), ['Other', 'Activity']);
 $byDay = [];
 foreach ($items as $item) {
     $dayKey = date('Y-m-d', $item['ts']);

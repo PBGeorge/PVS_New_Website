@@ -56,7 +56,8 @@ foreach ($meals as $m) {
 foreach ($activities as $a) {
     $items[] = ['ts' => strtotime($a['done_at']), 'id' => (int)$a['id'], 'kind' => 'activity', 'row' => $a];
 }
-usort($items, fn($x, $y) => $y['ts'] <=> $x['ts'] ?: $y['id'] <=> $x['id']);
+// Export order: day ascending, then (grouped) meal type, then time ascending.
+usort($items, fn($x, $y) => $x['ts'] <=> $y['ts'] ?: $x['id'] <=> $y['id']);
 
 function ing_line_doc(array $ing): string {
     $parts = [];
@@ -128,7 +129,7 @@ $actCount  = count($activities);
 // Group by day → meal type → dish. Days stay newest-first (as encountered);
 // within a day, types follow the natural meal order and items run earliest
 // to latest. Day macro totals accumulate as we go.
-$typeOrder = ['Breakfast', 'Lunch', 'Dinner', 'Snack', 'Other', 'Activity'];
+$typeOrder = array_merge(meal_type_order(), ['Other', 'Activity']);
 $byDay = [];
 foreach ($items as $item) {
     $dayKey = date('Y-m-d', $item['ts']);
