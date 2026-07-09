@@ -20,8 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id        = (int)($_POST['id'] ?? 0);
     $dish      = trim($_POST['dish_name'] ?? '');
     $location  = ($_POST['location'] ?? 'Home') === 'Restaurant' ? 'Restaurant' : 'Home';
-    $allowedTypes = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
-    $mealType  = in_array(($_POST['meal_type'] ?? ''), $allowedTypes, true) ? $_POST['meal_type'] : null;
+    $mealType  = in_array(($_POST['meal_type'] ?? ''), meal_type_order(), true) ? $_POST['meal_type'] : null;
     $place     = trim($_POST['place'] ?? '');
     $notes     = trim($_POST['notes'] ?? '');
     $rawWhen   = $_POST['eaten_at'] ?? '';
@@ -173,8 +172,8 @@ require __DIR__ . '/header.php';
     <label>Meal type
       <select name="meal_type" id="mealType">
         <option value="">—</option>
-        <?php foreach (['Breakfast','Lunch','Dinner','Snack'] as $t): ?>
-          <option value="<?= $t ?>" <?= ($meal['meal_type'] ?? '') === $t ? 'selected' : '' ?>><?= $t ?></option>
+        <?php foreach (meal_type_order() as $t): ?>
+          <option value="<?= e($t) ?>" <?= ($meal['meal_type'] ?? '') === $t ? 'selected' : '' ?>><?= e($t) ?></option>
         <?php endforeach; ?>
       </select>
     </label>
@@ -259,11 +258,13 @@ document.getElementById('addIng').addEventListener('click', () => addRow());
   function suggest() {
     if (touched || !whenInput.value) return;
     const h = new Date(whenInput.value).getHours();
-    let t = 'Snack';
-    if (h >= 5 && h <= 10)       t = 'Breakfast';
-    else if (h >= 11 && h <= 15) t = 'Lunch';
-    else if (h >= 16 && h <= 21) t = 'Dinner';
-    mealType.value = t;
+    let t = '';
+    if      (h >= 5  && h <= 9)  t = 'Breakfast';
+    else if (h >= 10 && h <= 11) t = 'Morning Snack';
+    else if (h >= 12 && h <= 14) t = 'Lunch';
+    else if (h >= 15 && h <= 16) t = 'Midday Snack';
+    else if (h >= 17 && h <= 21) t = 'Dinner';
+    if (t) mealType.value = t;
   }
   whenInput.addEventListener('input', suggest);
   whenInput.addEventListener('change', suggest);

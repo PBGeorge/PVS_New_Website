@@ -78,7 +78,16 @@ foreach ($meals as $m) {
 foreach ($activities as $a) {
     $items[] = ['ts' => strtotime($a['done_at']), 'id' => (int)$a['id'], 'kind' => 'activity', 'row' => $a];
 }
-usort($items, fn($x, $y) => $y['ts'] <=> $x['ts'] ?: $y['id'] <=> $x['id']);
+// Sort: day ascending, then meal-type order (activities last), then time.
+usort($items, function ($x, $y) {
+    $dx = date('Y-m-d', $x['ts']);
+    $dy = date('Y-m-d', $y['ts']);
+    if ($dx !== $dy) return $dx <=> $dy;                                    // day ascending
+    $rx = $x['kind'] === 'meal' ? meal_type_rank($x['row']['meal_type'] ?? null) : 7;
+    $ry = $y['kind'] === 'meal' ? meal_type_rank($y['row']['meal_type'] ?? null) : 7;
+    if ($rx !== $ry) return $rx <=> $ry;                                    // meal-type order
+    return $x['ts'] <=> $y['ts'] ?: $x['id'] <=> $y['id'];                  // time ascending
+});
 
 foreach ($items as $item) {
     if ($item['kind'] === 'meal') {

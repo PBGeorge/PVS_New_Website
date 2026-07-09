@@ -150,7 +150,8 @@ if (!$hasCacheProtein) {
         ADD COLUMN fiber_g   DECIMAL(6,1) NULL");
 }
 
-// Meal type (Breakfast / Lunch / Dinner / Snack) on meals.
+// Meal type (see meal_type_order(): Breakfast / Morning Snack / Lunch /
+// Midday Snack / Dinner) on meals.
 $hasMealType = (int)$pdo->query(
     "SELECT COUNT(*) FROM information_schema.COLUMNS
      WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'meals' AND COLUMN_NAME = 'meal_type'"
@@ -159,8 +160,26 @@ if (!$hasMealType) {
     $pdo->exec("ALTER TABLE meals ADD COLUMN meal_type VARCHAR(20) NULL AFTER location");
 }
 
+// The "Snack" meal type was renamed to "Morning Snack"; backfill old rows.
+// Idempotent (matches nothing once done), so it's harmless on every load.
+$pdo->exec("UPDATE meals SET meal_type = 'Morning Snack' WHERE meal_type = 'Snack'");
+
 // --- Helpers ---
 function e(?string $s): string { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
+
+/** Meal types in canonical order — used for the dropdown and for sorting. */
+function meal_type_order(): array {
+    return ['Breakfast', 'Morning Snack', 'Lunch', 'Midday Snack', 'Dinner'];
+}
+
+/** Sort rank for a meal type; untyped meals rank as "Other", activities last. */
+function meal_type_rank(?string $type): int {
+    static $rank = [
+        'Breakfast' => 1, 'Morning Snack' => 2, 'Lunch' => 3,
+        'Midday Snack' => 4, 'Dinner' => 5, 'Other' => 6, 'Activity' => 7,
+    ];
+    return $rank[$type] ?? 6;
+}
 
 function redirect(string $path): void { header('Location: ' . $path); exit; }
 
