@@ -178,6 +178,7 @@ input, select, textarea, button { font-family: inherit; }
   max-width: var(--maxw); margin: 0 auto;
   display: grid; grid-template-columns: 1.05fr 1fr; gap: 40px; align-items: center;
 }
+.hero-copy, .hero-visual { min-width: 0; }
 
 .hero-badge {
   display: inline-flex; align-items: center; gap: 8px;
@@ -225,7 +226,7 @@ input, select, textarea, button { font-family: inherit; }
 
 /* ---------- orbit constellation ---------- */
 .hero-visual {
-  position: relative; height: 500px;
+  position: relative; height: 500px; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
 }
 .orbit { position: relative; width: 480px; height: 480px; }
