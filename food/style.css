@@ -271,6 +271,14 @@ body {
   background: var(--teal);
 }
 .prep { color: var(--muted); }
+.ing-macros {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  white-space: nowrap;
+}
 
 .notes {
   margin: 14px 0 0;

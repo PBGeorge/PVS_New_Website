@@ -90,6 +90,14 @@ function ingredient_line(array $ing): string {
     if ($ing['preparation'] !== null && $ing['preparation'] !== '') {
         $line .= ' <span class="prep">— ' . e($ing['preparation']) . '</span>';
     }
+    // Per-ingredient nutrition, in a smaller muted note (skips missing parts).
+    $bits = [];
+    if (isset($ing['calories'])  && $ing['calories']  !== null && $ing['calories']  !== '') $bits[] = '~' . number_format((int)$ing['calories']) . ' kcal';
+    if (isset($ing['protein_g']) && $ing['protein_g'] !== null && $ing['protein_g'] !== '') $bits[] = round((float)$ing['protein_g']) . ' g P';
+    if (isset($ing['fiber_g'])   && $ing['fiber_g']   !== null && $ing['fiber_g']   !== '') $bits[] = round((float)$ing['fiber_g']) . ' g fiber';
+    if ($bits) {
+        $line .= ' <span class="ing-macros">' . e(implode(' · ', $bits)) . '</span>';
+    }
     return $line;
 }
 
