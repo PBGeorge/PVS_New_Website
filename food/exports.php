@@ -31,7 +31,7 @@ require __DIR__ . '/header.php';
 
   <div class="export-actions">
     <button type="button" class="btn" id="xlsxBtn">Download Excel</button>
-    <button type="button" class="btn btn-word" id="wordBtn">Download Word</button>
+    <button type="button" class="btn btn-pdf" id="pdfBtn">Download PDF</button>
   </div>
 </form>
 
@@ -54,10 +54,10 @@ require __DIR__ . '/header.php';
     return params.toString();
   }
 
-  document.getElementById('wordBtn').addEventListener('click', function () {
+  document.getElementById('pdfBtn').addEventListener('click', function () {
     const q = query();
     if (q === null) return;
-    window.location = 'word.php?' + q;
+    window.open('print.php?' + q, '_blank');
   });
 
   document.getElementById('xlsxBtn').addEventListener('click', async function () {
