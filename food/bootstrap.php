@@ -532,12 +532,24 @@ function gemini_estimate_nutrition(array $items): ?array {
     }
 
     $prompt =
-        "For each food item below, estimate its nutrition for the quantity given " .
-        "(assume one typical serving if no quantity is stated):\n" .
+        "You are a nutrition estimation assistant. For each food item below, estimate its " .
+        "nutrition for the quantity given (assume one typical serving if no quantity is stated).\n" .
+        "Item descriptions may be written in English or Romanian, and may mix both languages " .
+        "in the same line. Quantities may use abbreviated units in either language, e.g. " .
+        "\"g\", \"gr\", \"gram\", \"grame\" all mean grams; \"kg\"/\"kilograme\" kilograms; " .
+        "\"ml\" milliliters; \"l\"/\"litri\" liters; \"buc\"/\"bucata\"/\"bucati\" pieces; " .
+        "\"lingura\"/\"lingurita\" tablespoon/teaspoon; \"felie\"/\"felii\" slice(s). If the " .
+        "quantity is a count (e.g. \"2 oua\", \"3 felii\"), convert using a typical weight for " .
+        "a single unit of that food.\n" .
+        "Base estimates on standard nutrition reference data (e.g. USDA) for the form described, " .
+        "and factor in the stated preparation method (e.g. fried vs. boiled) when it meaningfully " .
+        "changes calories, protein, or fiber.\n" .
+        "Treat each numbered line as one independent item; do not merge or split items.\n" .
+        "For every item, always return all three fields, even when a value is zero:\n" .
         "- kcal: food energy in kilocalories (integer)\n" .
-        "- protein_g: protein in grams\n" .
-        "- fiber_g: dietary fiber in grams\n" .
-        "Return ONLY a JSON array of objects, one per item, in the same order.\n\n" .
+        "- protein_g: protein in grams, rounded to 1 decimal place (use 0 if the food has none or a negligible amount, never omit)\n" .
+        "- fiber_g: dietary fiber in grams, rounded to 1 decimal place (use 0 if the food has none or a negligible amount, never omit)\n" .
+        "Return ONLY a JSON array of objects, one per item, in the same order, with no explanation or markdown.\n\n" .
         implode("\n", $lines);
 
     $body = json_encode([
