@@ -193,10 +193,10 @@ require __DIR__ . '/header.php';
 
   <div class="ing-head">
     <span>Ingredients</span>
-    <button type="button" class="btn-ghost small" id="addIng">+ Add ingredient</button>
   </div>
   <p class="hint ing-hint">Leave <strong>kcal</strong> blank to have it estimated for you. Type a value to override.</p>
   <div id="ingList" class="ing-list"></div>
+  <button type="button" class="btn-ghost small" id="addIng">+ Add ingredient</button>
 
   <label>Notes <span class="hint">(optional)</span>
     <textarea name="notes" rows="2"><?= e($meal['notes'] ?? '') ?></textarea>

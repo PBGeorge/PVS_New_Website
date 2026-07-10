@@ -581,6 +581,7 @@ body {
   margin-top: 2px;
 }
 .ing-list { display: grid; gap: 8px; }
+#addIng { margin-top: 4px; }
 .ing-hint { margin: -4px 2px 2px; }
 .ing-row {
   display: grid;
