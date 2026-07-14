@@ -133,16 +133,13 @@ if (!$hasCalories) {
         ADD COLUMN calories_manual TINYINT   NOT NULL DEFAULT 0");
 }
 
-// Cache of estimates, keyed by a hash of the ingredient description, so the
-// same ingredient is never sent to the API twice and totals never drift.
-$pdo->exec("CREATE TABLE IF NOT EXISTS nutrition_cache (
-    key_hash   CHAR(64) PRIMARY KEY,
-    kcal       INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+// The nutrition_cache table used to memoise Gemini estimates, but stale
+// (sometimes wrong) values would then be served forever — estimates now
+// always come fresh from the API, so the table is retired.
+$pdo->exec("DROP TABLE IF EXISTS nutrition_cache");
 
-// Macros: protein + fiber per ingredient (AI-estimated, display-only), plus
-// the same two columns on the cache. Guarded like the columns above.
+// Macros: protein + fiber per ingredient (AI-estimated, display-only).
+// Guarded like the columns above.
 $hasProtein = (int)$pdo->query(
     "SELECT COUNT(*) FROM information_schema.COLUMNS
      WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'ingredients' AND COLUMN_NAME = 'protein_g'"
@@ -152,16 +149,6 @@ if (!$hasProtein) {
         ADD COLUMN protein_g DECIMAL(6,1) NULL,
         ADD COLUMN fiber_g   DECIMAL(6,1) NULL");
 }
-$hasCacheProtein = (int)$pdo->query(
-    "SELECT COUNT(*) FROM information_schema.COLUMNS
-     WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'nutrition_cache' AND COLUMN_NAME = 'protein_g'"
-)->fetchColumn();
-if (!$hasCacheProtein) {
-    $pdo->exec("ALTER TABLE nutrition_cache
-        ADD COLUMN protein_g DECIMAL(6,1) NULL,
-        ADD COLUMN fiber_g   DECIMAL(6,1) NULL");
-}
-
 // Meal type (see meal_type_order(): Breakfast / Morning Snack / Lunch /
 // Midday Snack / Dinner) on meals.
 $hasMealType = (int)$pdo->query(
@@ -554,75 +541,32 @@ function ingredient_line(array $ing): string {
 /**
  * Estimate nutrition (kcal + protein + fiber) for a list of ingredients.
  *
- * Checks the local nutrition_cache first and only sends the cache misses to
- * Gemini — in a single batched call. Results are written back to the cache.
- * Anything the API can't answer (or any failure at all) comes back as nulls,
- * so callers can always save the meal regardless.
+ * Sends everything to Gemini in a single batched call, every time — no
+ * local caching, so saves always reflect the latest estimates. Anything
+ * the API can't answer (or any failure at all) comes back as nulls, so
+ * callers can always save the meal regardless.
  *
  * @param array $items  Each: ['name'=>string, 'quantity'=>?string, 'preparation'=>?string]
  * @return array        Parallel array (keys 0..n-1) of
  *                      ['kcal'=>?int, 'protein'=>?float, 'fiber'=>?float].
  */
 function estimate_nutrition_batch(array $items): array {
-    global $pdo;
-
     $items = array_values($items);
     $blank = ['kcal' => null, 'protein' => null, 'fiber' => null];
     $out   = array_fill(0, count($items), $blank);
     if (!$items) return $out;
 
-    // Stable cache key per ingredient (quantity + name + preparation).
-    $keys = [];
-    foreach ($items as $i => $it) {
-        $norm = strtolower(trim(
-            ($it['quantity'] ?? '') . '|' . ($it['name'] ?? '') . '|' . ($it['preparation'] ?? '')
-        ));
-        $keys[$i] = hash('sha256', $norm);
-    }
-
-    // 1) Look up what we already know.
-    $cached      = [];
-    $uniqueKeys  = array_values(array_unique($keys));
-    if ($uniqueKeys) {
-        $in = implode(',', array_fill(0, count($uniqueKeys), '?'));
-        $st = $pdo->prepare("SELECT key_hash, kcal, protein_g, fiber_g FROM nutrition_cache WHERE key_hash IN ($in)");
-        $st->execute($uniqueKeys);
-        foreach ($st->fetchAll() as $row) {
-            $cached[$row['key_hash']] = [
-                'kcal'    => $row['kcal']      !== null ? (int)$row['kcal']       : null,
-                'protein' => $row['protein_g'] !== null ? (float)$row['protein_g'] : null,
-                'fiber'   => $row['fiber_g']   !== null ? (float)$row['fiber_g']   : null,
-            ];
-        }
-    }
-
-    $misses = []; // original index => item
-    foreach ($items as $i => $it) {
-        if (isset($cached[$keys[$i]])) $out[$i] = $cached[$keys[$i]];
-        else                           $misses[$i] = $it;
-    }
-    if (!$misses) return $out;
-
-    // 2) Ask Gemini for the misses (one call).
-    $estimated = gemini_estimate_nutrition(array_values($misses));
+    $estimated = gemini_estimate_nutrition($items);
     if ($estimated === null) return $out; // API unavailable → leave them null
 
-    // 3) Map results back and cache them.
-    $ins = $pdo->prepare(
-        "INSERT INTO nutrition_cache (key_hash, kcal, protein_g, fiber_g) VALUES (?, ?, ?, ?)
-         ON DUPLICATE KEY UPDATE kcal = VALUES(kcal), protein_g = VALUES(protein_g), fiber_g = VALUES(fiber_g)"
-    );
-    foreach (array_keys($misses) as $pos => $i) {
-        $m = $estimated[$pos] ?? null;
+    foreach ($items as $i => $it) {
+        $m = $estimated[$i] ?? null;
         if (!is_array($m)) continue;
-        $kcal    = ($m['kcal']    ?? null) !== null ? max(0, (int)$m['kcal'])      : null;
-        $protein = ($m['protein'] ?? null) !== null ? max(0, (float)$m['protein']) : null;
-        $fiber   = ($m['fiber']   ?? null) !== null ? max(0, (float)$m['fiber'])   : null;
-        if ($kcal === null && $protein === null && $fiber === null) continue;
-        $out[$i] = ['kcal' => $kcal, 'protein' => $protein, 'fiber' => $fiber];
-        if ($kcal !== null) { // cache requires a kcal value
-            try { $ins->execute([$keys[$i], $kcal, $protein, $fiber]); } catch (Throwable $e) { /* best-effort */ }
-        }
+        $out[$i] = [
+            'kcal'    => ($m['kcal']    ?? null) !== null ? max(0, (int)$m['kcal'])      : null,
+            'protein' => ($m['protein'] ?? null) !== null ? max(0, (float)$m['protein']) : null,
+            'fiber'   => ($m['fiber']   ?? null) !== null ? max(0, (float)$m['fiber'])   : null,
+        ];
     }
     return $out;
 }
