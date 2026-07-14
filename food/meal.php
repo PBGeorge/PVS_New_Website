@@ -73,8 +73,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Estimate nutrition for every row (protein + fiber are always
         // AI-estimated; kcal too unless the user set it manually). One
-        // batched, cache-backed call, before the transaction so a slow API
-        // never holds a DB lock.
+        // batched API call, before the transaction so a slow API never
+        // holds a DB lock.
         $nutri = $rows ? estimate_nutrition_batch(array_map(fn($r) => [
             'name' => $r['name'], 'quantity' => $r['quantity'], 'preparation' => $r['preparation'],
         ], $rows)) : [];
