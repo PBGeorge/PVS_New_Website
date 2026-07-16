@@ -50,7 +50,10 @@ $activities = $ast->fetchAll();
 
 $view       = build_diary_view($meals, $activities, $ingredientsByMeal);
 $items      = $view['items'];
-$byDay      = $view['byDay'];
+// The shared diary view lists days newest-first (matching the on-screen
+// Diary). The printable export reads better oldest-first, so flip just the
+// day order here; each day's internal ordering (meal type, then time) stays.
+$byDay      = array_reverse($view['byDay'], true);
 $mealMacros = $view['mealMacros'];
 $dayMacros  = $view['dayMacros'];
 $typeOrder  = $view['typeOrder'];
