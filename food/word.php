@@ -56,8 +56,14 @@ foreach ($meals as $m) {
 foreach ($activities as $a) {
     $items[] = ['ts' => strtotime($a['done_at']), 'id' => (int)$a['id'], 'kind' => 'activity', 'row' => $a];
 }
-// Export order: day ascending, then (grouped) meal type, then time ascending.
-usort($items, fn($x, $y) => $x['ts'] <=> $y['ts'] ?: $x['id'] <=> $y['id']);
+// Export order: day descending (newest first), then time ascending within
+// the day; per-type grouping and re-sorting happens below.
+usort($items, function ($x, $y) {
+    $dx = date('Y-m-d', $x['ts']);
+    $dy = date('Y-m-d', $y['ts']);
+    if ($dx !== $dy) return $dy <=> $dx;
+    return $x['ts'] <=> $y['ts'] ?: $x['id'] <=> $y['id'];
+});
 
 function ing_line_doc(array $ing): string {
     $parts = [];
