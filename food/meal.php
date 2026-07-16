@@ -73,8 +73,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Estimate nutrition for every row (protein + fiber are always
         // AI-estimated; kcal too unless the user set it manually). One
-        // batched, cache-backed call, before the transaction so a slow API
-        // never holds a DB lock.
+        // batched API call, before the transaction so a slow API never
+        // holds a DB lock.
         $nutri = $rows ? estimate_nutrition_batch(array_map(fn($r) => [
             'name' => $r['name'], 'quantity' => $r['quantity'], 'preparation' => $r['preparation'],
         ], $rows)) : [];
@@ -193,10 +193,10 @@ require __DIR__ . '/header.php';
 
   <div class="ing-head">
     <span>Ingredients</span>
-    <button type="button" class="btn-ghost small" id="addIng">+ Add ingredient</button>
   </div>
   <p class="hint ing-hint">Leave <strong>kcal</strong> blank to have it estimated for you. Type a value to override.</p>
   <div id="ingList" class="ing-list"></div>
+  <button type="button" class="btn-ghost small" id="addIng">+ Add ingredient</button>
 
   <label>Notes <span class="hint">(optional)</span>
     <textarea name="notes" rows="2"><?= e($meal['notes'] ?? '') ?></textarea>

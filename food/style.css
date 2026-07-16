@@ -581,6 +581,7 @@ body {
   margin-top: 2px;
 }
 .ing-list { display: grid; gap: 8px; }
+#addIng { margin-top: 4px; }
 .ing-hint { margin: -4px 2px 2px; }
 .ing-row {
   display: grid;
@@ -711,8 +712,32 @@ body {
   margin-top: 4px;
 }
 .export-actions .btn { flex: 1; min-width: 150px; }
-.btn-word { background: var(--gold); color: #4A3A08; box-shadow: 0 12px 28px rgba(243,198,75,.34); }
-.btn-word:hover { box-shadow: 0 16px 34px rgba(243,198,75,.4); }
+.btn-pdf { background: var(--gold); color: #4A3A08; box-shadow: 0 12px 28px rgba(243,198,75,.34); }
+.btn-pdf:hover { box-shadow: 0 16px 34px rgba(243,198,75,.4); }
+
+/* ---------- Print export ---------- */
+.print-export .print-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 22px;
+}
+.print-export .page-head { margin-bottom: 4px; }
+.print-export .export-meta {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0 0 22px;
+}
+@media print {
+  .topbar, .fab, .print-export .print-toolbar { display: none !important; }
+  body { background: #fff; }
+  .wrap { max-width: 100%; padding: 0; }
+  .print-export .card { box-shadow: none; border: 1px solid var(--line); break-inside: avoid; }
+  .print-export .meal:hover { transform: none; box-shadow: none; }
+  .print-export .icon-link { display: none; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
 
 code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
