@@ -219,7 +219,7 @@ if (chatBody) {
   }
   function validateName() { return validateField(nameInput, errName, (v) => v.length > 0, 'contact.form.errName'); }
   function validateEmail() { return validateField(emailInput, errEmail, (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), 'contact.form.errEmail'); }
-  function validateMessage() { return validateField(msgInput, errMessage, (v) => v.length >= 10, 'contact.form.errMessage'); }
+  function validateMessage() { return validateField(msgInput, errMessage, (v) => v.length > 0, 'contact.form.errMessage'); }
 
   nameInput.addEventListener('blur', validateName);
   emailInput.addEventListener('blur', validateEmail);
