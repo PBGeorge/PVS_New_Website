@@ -206,8 +206,7 @@ if (chatBody) {
   const msgInput = document.getElementById('pv-msg');
 
   function t(key) {
-    const lang = localStorage.getItem('pvs-lang') || 'en';
-    return (typeof translations !== 'undefined' && translations[lang] && translations[lang][key]) || key;
+    return (typeof strings !== 'undefined' && strings[key]) || key;
   }
 
   function validateField(input, errEl, test, key) {
