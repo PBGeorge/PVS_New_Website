@@ -27,8 +27,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=5" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=6" />
 
   <script type="application/ld+json">
   {
@@ -51,425 +51,364 @@
   }
   </script>
 </head>
-<body class="labels-static">
+<body>
 
-  <!-- ================= NAV ================= -->
-  <nav class="nav" id="nav">
-    <div class="nav-inner">
-      <a href="#hero" class="nav-logo">
-        <img src="logo.png" alt="Power Vantage Solutions logo" class="nav-logo-img" />
-        <span class="logo-text">Power Vantage Solutions</span>
+  <!-- ================= HEADER / NAV ================= -->
+  <header class="site-header" id="siteHeader">
+    <nav class="nav">
+      <a href="#top" class="nav-brand">
+        <span class="brand-dot"></span>
+        <span>Power Vantage</span>
       </a>
-      <ul class="nav-links">
-        <li><a href="#services" data-i18n="nav.services">Services</a></li>
-        <li><a href="#use-cases" data-i18n="nav.useCases">Use Cases</a></li>
-        <li><a href="#process" data-i18n="nav.process">How It Works</a></li>
-        <li><a href="#about" data-i18n="nav.about">About</a></li>
-        <li><a href="#contact" class="btn-sm" data-i18n="nav.contact">Contact</a></li>
-        <li>
-          <button class="lang-toggle" id="langToggle" onclick="toggleLang()" aria-label="Switch language">
-            <span class="lang-active" id="langLabel">EN</span>
-            <span class="lang-sep">/</span>
-            <span class="lang-other" id="langOther">RO</span>
-          </button>
-        </li>
-      </ul>
-      <div class="nav-right-mobile">
-        <button class="lang-toggle lang-toggle--mobile" onclick="toggleLang()" aria-label="Switch language">
-          <span id="langLabelMobile">EN</span>
+      <div class="nav-links">
+        <a href="#services" data-i18n="nav.services">Services</a>
+        <a href="#use-cases" data-i18n="nav.useCases">Use Cases</a>
+        <a href="#process" data-i18n="nav.process">Process</a>
+        <a href="#about" data-i18n="nav.about">About</a>
+      </div>
+      <div class="nav-actions">
+        <button class="lang-toggle" id="langToggle" onclick="toggleLang()" aria-label="Switch language">
+          <span class="lang-active">EN</span><span class="lang-sep">/</span><span class="lang-other">RO</span>
         </button>
+        <a href="#contact" class="btn-pill-dark" data-i18n="nav.contact">Get in touch</a>
         <button class="nav-toggle" aria-label="Toggle menu" onclick="toggleMenu()">
           <span></span><span></span><span></span>
         </button>
       </div>
-    </div>
+    </nav>
     <div class="nav-mobile" id="navMobile">
       <a href="#services" onclick="closeMenu()" data-i18n="nav.services">Services</a>
       <a href="#use-cases" onclick="closeMenu()" data-i18n="nav.useCases">Use Cases</a>
-      <a href="#process" onclick="closeMenu()" data-i18n="nav.process">How It Works</a>
+      <a href="#process" onclick="closeMenu()" data-i18n="nav.process">Process</a>
       <a href="#about" onclick="closeMenu()" data-i18n="nav.about">About</a>
-      <a href="#contact" onclick="closeMenu()" data-i18n="nav.contactLong">Get in Touch</a>
+      <a href="#contact" onclick="closeMenu()" data-i18n="nav.contact">Get in touch</a>
     </div>
-  </nav>
+    <div class="nav-progress" id="navProgress"></div>
+  </header>
 
-  <!-- ================= HERO ================= -->
-  <section class="hero" id="hero">
-    <div class="hero-grid">
-      <div class="hero-copy">
-        <div class="hero-badge">
-          <span class="dot"></span>
-          <span data-i18n="hero.badge">AI Agents &amp; Copilot Studio Specialists</span>
-        </div>
-        <h1 class="hero-title">
-          <span data-i18n="hero.title1">Bring the Power of</span>
-          <span class="grad-text" data-i18n="hero.title2">AI Into Your Business</span>
-        </h1>
-        <p class="hero-sub" data-i18n="hero.sub">We build AI agents with Microsoft Copilot Studio and integrate generative AI directly into your workflows — backed by Power Apps and Power Automate — so your business runs smarter, not just faster.</p>
-        <div class="hero-actions">
-          <a href="#use-cases" class="btn btn-primary"><span data-i18n="hero.cta1">See AI in Action</span> <span class="btn-icon">→</span></a>
-          <a href="#contact" class="btn btn-outline" data-i18n="hero.cta2">Start a Project</a>
-        </div>
-        <div class="hero-stats">
-          <div class="hero-stat">
-            <div class="stat-num">Copilot Studio</div>
-            <div class="stat-label" data-i18n="hero.stat1">AI Agents &amp; Assistants</div>
+  <main id="top">
+
+    <!-- ================= HERO ================= -->
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <h1 class="hero-title">
+            <span class="line-mask"><span class="line" data-line="1" data-i18n="hero.titleLine1">AI agents,</span></span>
+            <span class="line-mask"><span class="line line--light" data-line="2" data-i18n="hero.titleLine2">built into the</span></span>
+            <span class="line-mask"><span class="line" data-line="3"><span class="line--light" data-i18n="hero.titleLine3">way you </span><span class="accent" data-i18n="hero.titleAccent">work.</span></span></span>
+          </h1>
+          <p class="hero-sub" data-fade="1" data-i18n="hero.sub">We design Microsoft Copilot Studio agents and bring generative AI into the systems you already use — backed by Power Apps and Power Automate.</p>
+          <div class="hero-actions" data-fade="2">
+            <a href="#contact" class="btn btn-primary"><span data-i18n="hero.cta1">Start a project</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#use-cases" class="btn btn-outline" data-i18n="hero.cta2">See it in action</a>
           </div>
-          <div class="divider"></div>
-          <div class="hero-stat">
-            <div class="stat-num">Generative AI</div>
-            <div class="stat-label" data-i18n="hero.stat2">Business Integrations</div>
+          <div class="hero-stats" data-fade="3">
+            <div class="hero-stat"><span class="stat-title">Copilot Studio</span><span class="stat-caption" data-i18n="hero.stat1">Agents &amp; assistants</span></div>
+            <div class="hero-stat"><span class="stat-title">Generative AI</span><span class="stat-caption" data-i18n="hero.stat2">Business integrations</span></div>
+            <div class="hero-stat"><span class="stat-title">Power Platform</span><span class="stat-caption" data-i18n="hero.stat3">Apps &amp; automation</span></div>
           </div>
-          <div class="divider"></div>
-          <div class="hero-stat">
-            <div class="stat-num">Power Platform</div>
-            <div class="stat-label" data-i18n="hero.stat3">Apps &amp; Automation</div>
+        </div>
+
+        <div class="chat-card" data-fade="2" aria-hidden="true">
+          <div class="chat-head">
+            <span class="chat-dot" id="chatDot"></span>
+            <span class="chat-title">Copilot agent</span>
+            <span class="chat-channel" id="chatChannel"></span>
+          </div>
+          <div class="chat-body" id="chatBody"></div>
+          <div class="chat-foot">
+            <span>Simulated conversation</span>
+            <span id="chatScenario">1 / 3</span>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- orbit constellation -->
-      <div class="hero-visual" aria-hidden="true">
-        <div class="orbit">
-          <div class="ring ring-blue"></div>
-          <div class="ring ring-teal"></div>
-          <div class="ring ring-gold"></div>
-
-          <div class="dot-layer blue"><span class="dot"></span></div>
-          <div class="dot-layer teal"><span class="dot"></span></div>
-          <div class="dot-layer gold"><span class="dot"></span></div>
-
-          <div class="label-layer l1">
-            <div class="label-anchor"><div class="orbit-anti">
-              <span class="orbit-pill"><span class="dot blue"></span>Copilot Studio</span>
-            </div></div>
-          </div>
-          <div class="label-layer l2">
-            <div class="label-anchor"><div class="orbit-anti">
-              <span class="orbit-pill"><span class="dot gold"></span>Power Apps</span>
-            </div></div>
-          </div>
-          <div class="label-layer l3">
-            <div class="label-anchor"><div class="orbit-anti">
-              <span class="orbit-pill"><span class="dot teal"></span>Power Automate</span>
-            </div></div>
-          </div>
-
-          <div class="orbit-halo"></div>
-          <div class="orbit-node"><img src="logo.png" alt="" /></div>
+    <!-- ================= SERVICES ================= -->
+    <section class="section" id="services">
+      <div class="section-head">
+        <div data-reveal>
+          <span class="tag" data-i18n="services.tag">What we do</span>
+          <h2 class="h-title" data-i18n="services.title">One partner for AI agents and the platform behind them.</h2>
         </div>
+        <p class="section-sub" data-reveal="80" data-i18n="services.sub">From Copilot Studio agents to generative AI inside your daily workflows — end-to-end AI and Power Platform delivery.</p>
       </div>
-    </div>
-    <div class="scroll-hint">
-      <span data-i18n="hero.scroll">Scroll to explore</span>
-      <div class="scroll-bar"></div>
-    </div>
-  </section>
 
-  <!-- ================= SERVICES ================= -->
-  <section class="section section--white" id="services">
-    <div class="container">
-      <div class="section-header" data-reveal>
-        <span class="section-tag blue" data-i18n="services.tag">What We Do</span>
-        <h2 class="section-title" data-i18n="services.title">AI Agents and Integrations Built for Business</h2>
-        <p class="section-sub" data-i18n="services.sub">From Copilot Studio agents to generative AI embedded in your daily workflows, we deliver end-to-end AI and Power Platform expertise.</p>
-      </div>
-      <div class="grid-3">
-
-        <div class="card card--warm service-card lift" data-reveal>
-          <div class="icon-tile t52 teal">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16a1 1 0 011 1v10a1 1 0 01-1 1H9l-5 4v-4H4a1 1 0 01-1-1V6a1 1 0 011-1z"/><path d="M12 8.4l.85 1.75L14.6 11l-1.75.85L12 13.6l-.85-1.75L9.4 11l1.75-.85z"/></svg>
+      <div class="services-grid">
+        <article class="card" data-reveal>
+          <span class="card-num">01</span>
+          <h3 data-i18n="services.copilot.title">Copilot agents</h3>
+          <p data-i18n="services.copilot.desc">AI agents built in Microsoft Copilot Studio that handle customer queries, internal support and multi-step decisions on their own.</p>
+          <div class="chips">
+            <span data-i18n="services.copilot.f1">Conversational AI</span>
+            <span data-i18n="services.copilot.f2">Knowledge bases</span>
+            <span data-i18n="services.copilot.f3">Multi-channel</span>
           </div>
-          <h3 data-i18n="services.copilot.title">Copilot Agents</h3>
-          <p data-i18n="services.copilot.desc">Purpose-built AI agents using Microsoft Copilot Studio that handle customer queries, internal support, and complex decision flows autonomously.</p>
-          <ul class="feature-list">
-            <li><span class="bullet teal"></span><span data-i18n="services.copilot.f1">Conversational AI bots</span></li>
-            <li><span class="bullet teal"></span><span data-i18n="services.copilot.f2">Knowledge base integration</span></li>
-            <li><span class="bullet teal"></span><span data-i18n="services.copilot.f3">Multi-channel deployment</span></li>
-          </ul>
-        </div>
-
-        <div class="card card--warm service-card lift" data-reveal>
-          <div class="icon-tile t52 blue">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="2.5"/><path d="M10 3v3M14 3v3M10 18v3M14 18v3M3 10h3M3 14h3M18 10h3M18 14h3"/></svg>
+        </article>
+        <article class="card" data-reveal="70">
+          <span class="card-num">02</span>
+          <h3 data-i18n="services.ai.title">AI integrations</h3>
+          <p data-i18n="services.ai.desc">Generative AI and machine learning embedded in the systems you already run, using Azure OpenAI and AI Builder.</p>
+          <div class="chips">
+            <span data-i18n="services.ai.f1">Azure OpenAI</span>
+            <span data-i18n="services.ai.f2">AI Builder</span>
+            <span data-i18n="services.ai.f3">Document processing</span>
           </div>
-          <h3 data-i18n="services.ai.title">AI Integrations</h3>
-          <p data-i18n="services.ai.desc">Embed generative AI and machine learning capabilities directly into your existing systems using Azure OpenAI and the Power Platform AI Builder.</p>
-          <ul class="feature-list">
-            <li><span class="bullet blue"></span><span data-i18n="services.ai.f1">Azure OpenAI &amp; GPT integration</span></li>
-            <li><span class="bullet blue"></span><span data-i18n="services.ai.f2">AI Builder models &amp; forms</span></li>
-            <li><span class="bullet blue"></span><span data-i18n="services.ai.f3">Intelligent document processing</span></li>
-          </ul>
-        </div>
-
-        <div class="card card--warm service-card lift" data-reveal>
-          <div class="icon-tile t52 gold">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L5 13h6l-1 9 9-12h-6l1-8z"/></svg>
-          </div>
+        </article>
+        <article class="card" data-reveal="140">
+          <span class="card-num">03</span>
           <h3 data-i18n="services.automate.title">Power Automate</h3>
-          <p data-i18n="services.automate.desc">Intelligent workflow automation that eliminates repetitive tasks, reduces errors, and frees your team to focus on high-value work.</p>
-          <ul class="feature-list">
-            <li><span class="bullet gold"></span><span data-i18n="services.automate.f1">Cloud &amp; desktop flows</span></li>
-            <li><span class="bullet gold"></span><span data-i18n="services.automate.f2">Approval workflows &amp; notifications</span></li>
-            <li><span class="bullet gold"></span><span data-i18n="services.automate.f3">Cross-platform integrations</span></li>
-          </ul>
-        </div>
-
-        <div class="card card--warm service-card lift" data-reveal>
-          <div class="icon-tile t52 blue">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg>
+          <p data-i18n="services.automate.desc">Workflow automation that removes repetitive work and errors, so your team can focus on what matters.</p>
+          <div class="chips">
+            <span data-i18n="services.automate.f1">Cloud &amp; desktop flows</span>
+            <span data-i18n="services.automate.f2">Approvals</span>
+            <span data-i18n="services.automate.f3">Integrations</span>
           </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">04</span>
           <h3 data-i18n="services.apps.title">Power Apps</h3>
-          <p data-i18n="services.apps.desc">Custom low-code and pro-code applications tailored to your business processes. Mobile-ready, integrated, and scalable from day one.</p>
-          <ul class="feature-list">
-            <li><span class="bullet blue"></span><span data-i18n="services.apps.f1">Canvas &amp; Model-Driven Apps</span></li>
-            <li><span class="bullet blue"></span><span data-i18n="services.apps.f2">Custom connectors &amp; data sources</span></li>
-            <li><span class="bullet blue"></span><span data-i18n="services.apps.f3">Responsive mobile experiences</span></li>
-          </ul>
-        </div>
-
-        <div class="card card--warm service-card lift" data-reveal>
-          <div class="icon-tile t52 teal">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2.2 4.8-4.8 2.2 2.2-4.8z"/></svg>
+          <p data-i18n="services.apps.desc">Low-code and pro-code apps shaped around your processes — mobile-ready, connected and scalable from day one.</p>
+          <div class="chips">
+            <span data-i18n="services.apps.f1">Canvas &amp; model-driven</span>
+            <span data-i18n="services.apps.f2">Custom connectors</span>
+            <span data-i18n="services.apps.f3">Mobile</span>
           </div>
-          <h3 data-i18n="services.strategy.title">Power Platform Strategy</h3>
-          <p data-i18n="services.strategy.desc">From governance frameworks to Centre of Excellence (CoE) setups, we help you build a sustainable, scalable Power Platform practice.</p>
-          <ul class="feature-list">
-            <li><span class="bullet teal"></span><span data-i18n="services.strategy.f1">CoE Starter Kit implementation</span></li>
-            <li><span class="bullet teal"></span><span data-i18n="services.strategy.f2">Governance &amp; ALM setup</span></li>
-            <li><span class="bullet teal"></span><span data-i18n="services.strategy.f3">Training &amp; enablement</span></li>
-          </ul>
-        </div>
-
-        <div class="cta-card" data-reveal>
+        </article>
+        <article class="card" data-reveal="70">
+          <span class="card-num">05</span>
+          <h3 data-i18n="services.strategy.title">Platform strategy</h3>
+          <p data-i18n="services.strategy.desc">Governance and a Centre of Excellence that keep your Power Platform practice sustainable as it grows.</p>
+          <div class="chips">
+            <span data-i18n="services.strategy.f1">CoE Starter Kit</span>
+            <span data-i18n="services.strategy.f2">Governance &amp; ALM</span>
+            <span data-i18n="services.strategy.f3">Training</span>
+          </div>
+        </article>
+        <a href="#contact" class="card card--dark" data-reveal="140">
+          <span class="card-flag" data-i18n="services.cta.tag">Free</span>
           <h3 data-i18n="services.cta.title">Not sure where to start?</h3>
-          <p data-i18n="services.cta.desc">We'll assess your current processes and identify the highest-impact automation opportunities — at no cost.</p>
-          <a href="#contact" class="cta-btn"><span data-i18n="services.cta.btn">Book a Free Discovery Call</span> →</a>
-        </div>
-
+          <p data-i18n="services.cta.desc">We'll look at your current processes and point to the highest-impact automation — at no cost.</p>
+          <span class="card-cta">
+            <span data-i18n="services.cta.btn">Book a discovery call</span>
+            <span class="card-cta-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </span>
+          </span>
+        </a>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ================= USE CASES ================= -->
-  <section class="section" id="use-cases">
-    <div class="container">
-      <div class="section-header" data-reveal>
-        <span class="section-tag teal" data-i18n="usecases.tag">AI In Practice</span>
-        <h2 class="section-title" data-i18n="usecases.title">What AI Integration Looks Like in Your Business</h2>
-        <p class="section-sub" data-i18n="usecases.sub">Real ways Copilot Studio agents and generative AI slot into the systems you already use.</p>
-      </div>
-      <div class="grid-3">
-
-        <div class="card card--white usecase-card lift" data-reveal>
-          <div class="icon-tile t50 teal">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16a1 1 0 011 1v10a1 1 0 01-1 1H9l-5 4v-4H4a1 1 0 01-1-1V6a1 1 0 011-1z"/><circle cx="8.5" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="11" r="1" fill="currentColor" stroke="none"/></svg>
+    <!-- ================= USE CASES ================= -->
+    <section class="section" id="use-cases">
+      <div class="section-head section-head--split">
+        <div data-reveal>
+          <span class="tag" data-i18n="usecases.tag">AI in practice</span>
+          <h2 class="h-title" data-i18n="usecases.title">What an AI agent does in your business.</h2>
+        </div>
+        <div class="section-head-right" data-reveal="80">
+          <p class="section-sub section-sub--sm" data-i18n="usecases.sub">Six ways Copilot Studio agents slot into the tools you already use.</p>
+          <div class="carousel-nav">
+            <button class="round-btn" id="ucPrev" aria-label="Previous">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+            </button>
+            <button class="round-btn round-btn--dark" id="ucNext" aria-label="Next">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </button>
           </div>
-          <h3 data-i18n="usecases.support.title">Customer Support Agent</h3>
-          <p data-i18n="usecases.support.desc">A Copilot Studio agent answers customer questions and resolves common tickets 24/7 on your website, Teams, or WhatsApp — escalating to a human only when it needs to.</p>
-        </div>
-
-        <div class="card card--white usecase-card lift" data-reveal>
-          <div class="icon-tile t50 blue">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-          </div>
-          <h3 data-i18n="usecases.knowledge.title">Internal Knowledge Assistant</h3>
-          <p data-i18n="usecases.knowledge.desc">Employees ask HR, IT, and policy questions in Teams and get instant, accurate answers pulled directly from your SharePoint, Dataverse, and internal documents.</p>
-        </div>
-
-        <div class="card card--white usecase-card lift" data-reveal>
-          <div class="icon-tile t50 gold">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 7-8"/><path d="M15 6h5v5"/></svg>
-          </div>
-          <h3 data-i18n="usecases.sales.title">Sales &amp; CRM Assistant</h3>
-          <p data-i18n="usecases.sales.desc">AI qualifies inbound leads, drafts personalised follow-ups, and keeps Dynamics 365 or your CRM updated automatically — so your sales team spends time selling, not typing.</p>
-        </div>
-
-        <div class="card card--white usecase-card lift" data-reveal>
-          <div class="icon-tile t50 blue">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l4 4v14a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M9 13l2 2 4-4"/></svg>
-          </div>
-          <h3 data-i18n="usecases.documents.title">Document &amp; Invoice Processing</h3>
-          <p data-i18n="usecases.documents.desc">AI Builder and generative AI read invoices, contracts, and forms, extract the data you need, and route it into your finance or ERP system automatically.</p>
-        </div>
-
-        <div class="card card--white usecase-card lift" data-reveal>
-          <div class="icon-tile t50 teal">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 14v-3M12 14V8M17 14v-5"/><path d="M8 21h8"/></svg>
-          </div>
-          <h3 data-i18n="usecases.insights.title">Meeting &amp; Reporting Insights</h3>
-          <p data-i18n="usecases.insights.desc">Generative AI summarises meetings and turns raw Power BI data into plain-language reports and dashboards your team can act on without a data analyst.</p>
-        </div>
-
-        <div class="card card--white usecase-card lift" data-reveal>
-          <div class="icon-tile t50 blue">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M18 8v6M15 11h6"/></svg>
-          </div>
-          <h3 data-i18n="usecases.onboarding.title">Employee Onboarding Agent</h3>
-          <p data-i18n="usecases.onboarding.desc">New hires get guided through setup and policy questions by a Copilot agent, while Power Automate quietly provisions accounts, access, and equipment in the background.</p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= HOW IT WORKS ================= -->
-  <section class="section section--white" id="process">
-    <div class="container">
-      <div class="section-header" data-reveal>
-        <span class="section-tag gold" data-i18n="process.tag">How We Work</span>
-        <h2 class="section-title" data-i18n="process.title">From Idea to AI Agent in Weeks, Not Months</h2>
-        <p class="section-sub" data-i18n="process.sub">A clear, low-risk path from first conversation to a live AI agent integrated into your business.</p>
-      </div>
-      <div class="grid-4">
-        <div class="card card--warm step-card lift" data-reveal>
-          <div class="step-num">01</div>
-          <strong data-i18n="process.s1.title">Discover</strong>
-          <span data-i18n="process.s1.desc">We map your processes, systems, and data to find the highest-impact place for an AI agent to plug in.</span>
-        </div>
-        <div class="card card--warm step-card lift" data-reveal>
-          <div class="step-num">02</div>
-          <strong data-i18n="process.s2.title">Design</strong>
-          <span data-i18n="process.s2.desc">We design the agent's conversation flows, guardrails, and data connections around how your team actually works.</span>
-        </div>
-        <div class="card card--warm step-card lift" data-reveal>
-          <div class="step-num">03</div>
-          <strong data-i18n="process.s3.title">Build &amp; Integrate</strong>
-          <span data-i18n="process.s3.desc">We build the Copilot Studio agent and connect it to your Power Platform, Microsoft 365, and business systems.</span>
-        </div>
-        <div class="card card--warm step-card lift" data-reveal>
-          <div class="step-num">04</div>
-          <strong data-i18n="process.s4.title">Support &amp; Scale</strong>
-          <span data-i18n="process.s4.desc">We monitor performance, refine responses, and extend the agent to new use cases as your business grows.</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= ABOUT ================= -->
-  <section class="section" id="about">
-    <div class="container">
-      <div class="section-header wide" data-reveal>
-        <span class="section-tag blue" data-i18n="about.tag">Who We Are</span>
-        <h2 class="section-title" data-i18n="about.title">Your Trusted AI &amp; Copilot Studio Partner</h2>
-        <p class="about-lead" data-i18n="about.lead">Power Vantage Solutions is a specialist consultancy focused on building AI agents with Microsoft Copilot Studio and integrating generative AI into real business workflows, backed by the wider Microsoft Power Platform. We partner with organisations of all sizes to design, build, and scale intelligent solutions that drive real business outcomes. Our team combines deep technical expertise with a business-first mindset — we don't just deliver technology, we deliver transformation.</p>
-      </div>
-
-      <div class="stats-bar" data-reveal>
-        <div class="stat">
-          <div class="about-stat-big" data-count="50" data-count-suffix="+">0+</div>
-          <div class="about-stat-label" data-i18n="about.stat1">Projects Delivered</div>
-        </div>
-        <div class="divider"></div>
-        <div class="stat">
-          <div class="about-stat-num" data-i18n="about.stat2num">AI &amp; Power Platform</div>
-          <div class="about-stat-label" data-i18n="about.stat2">Specialists</div>
-        </div>
-        <div class="divider"></div>
-        <div class="stat">
-          <div class="about-stat-num" data-i18n="about.stat3num">End-to-End</div>
-          <div class="about-stat-label" data-i18n="about.stat3">Delivery Approach</div>
-        </div>
-        <div class="divider"></div>
-        <div class="stat">
-          <div class="about-stat-num" data-i18n="about.stat4num">Europe &amp; Remote</div>
-          <div class="about-stat-label" data-i18n="about.stat4">Available Globally</div>
         </div>
       </div>
 
-      <div class="grid-3">
-        <div class="card card--white pillar-card lift" data-reveal>
-          <div class="icon-tile t46 gold">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L5 13h6l-1 9 9-12h-6l1-8z"/></svg>
-          </div>
-          <strong data-i18n="about.p1.title">Fast Delivery</strong>
-          <span data-i18n="about.p1.desc">Rapid prototyping and iterative deployments that get value into your hands quickly.</span>
-        </div>
-        <div class="card card--white pillar-card lift" data-reveal>
-          <div class="icon-tile t46 blue">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9.5 12l1.8 1.8L15 10"/></svg>
-          </div>
-          <strong data-i18n="about.p2.title">Enterprise Grade</strong>
-          <span data-i18n="about.p2.desc">Security, governance, and scalability built in from the start — not bolted on later.</span>
-        </div>
-        <div class="card card--white pillar-card lift" data-reveal>
-          <div class="icon-tile t46 teal">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2.5 20c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M15 15c2.5 0 5 1.6 5 5"/></svg>
-          </div>
-          <strong data-i18n="about.p3.title">True Partnership</strong>
-          <span data-i18n="about.p3.desc">We work alongside your team, transfer knowledge, and set you up for long-term success.</span>
+      <div class="carousel" id="ucCarousel" data-reveal>
+        <div class="carousel-track" id="ucTrack">
+          <article class="uc-card">
+            <span class="card-num">01 / 06</span>
+            <h3 data-i18n="usecases.support.title">Customer support agent</h3>
+            <p data-i18n="usecases.support.desc">Answers questions and resolves common tickets around the clock — handing over to a person only when it should.</p>
+            <div class="flow"><span>Web · Teams · WhatsApp</span><span class="flow-arrow">→</span><span class="flow-mid">Agent</span><span class="flow-arrow">→</span><span>Human handoff</span></div>
+          </article>
+          <article class="uc-card">
+            <span class="card-num">02 / 06</span>
+            <h3 data-i18n="usecases.knowledge.title">Internal knowledge assistant</h3>
+            <p data-i18n="usecases.knowledge.desc">Staff ask HR, IT and policy questions in Teams and get accurate answers from your own documents.</p>
+            <div class="flow"><span>Teams</span><span class="flow-arrow">→</span><span class="flow-mid">Agent</span><span class="flow-arrow">→</span><span>SharePoint · Dataverse</span></div>
+          </article>
+          <article class="uc-card">
+            <span class="card-num">03 / 06</span>
+            <h3 data-i18n="usecases.sales.title">Sales &amp; CRM assistant</h3>
+            <p data-i18n="usecases.sales.desc">Qualifies inbound leads, drafts personal follow-ups and keeps your CRM current — so sales can sell, not type.</p>
+            <div class="flow"><span>Inbound lead</span><span class="flow-arrow">→</span><span class="flow-mid">Agent</span><span class="flow-arrow">→</span><span>Dynamics 365</span></div>
+          </article>
+          <article class="uc-card">
+            <span class="card-num">04 / 06</span>
+            <h3 data-i18n="usecases.documents.title">Document &amp; invoice processing</h3>
+            <p data-i18n="usecases.documents.desc">Reads invoices, contracts and forms, extracts what matters and routes it into finance or ERP automatically.</p>
+            <div class="flow"><span>PDF · Email</span><span class="flow-arrow">→</span><span class="flow-mid">AI Builder</span><span class="flow-arrow">→</span><span>ERP</span></div>
+          </article>
+          <article class="uc-card">
+            <span class="card-num">05 / 06</span>
+            <h3 data-i18n="usecases.insights.title">Meeting &amp; reporting insights</h3>
+            <p data-i18n="usecases.insights.desc">Summarises meetings and turns Power BI data into plain-language reports your team can act on — no analyst needed.</p>
+            <div class="flow"><span>Meetings · Power BI</span><span class="flow-arrow">→</span><span class="flow-mid">Gen AI</span><span class="flow-arrow">→</span><span>Clear report</span></div>
+          </article>
+          <article class="uc-card">
+            <span class="card-num">06 / 06</span>
+            <h3 data-i18n="usecases.onboarding.title">Employee onboarding agent</h3>
+            <p data-i18n="usecases.onboarding.desc">Guides new hires through setup and policy questions while Power Automate provisions accounts, access and equipment.</p>
+            <div class="flow"><span>New hire</span><span class="flow-arrow">→</span><span class="flow-mid">Agent</span><span class="flow-arrow">→</span><span>Accounts · Access</span></div>
+          </article>
         </div>
       </div>
-    </div>
-  </section>
+      <div class="carousel-rail"><div class="carousel-thumb" id="ucThumb"></div></div>
+    </section>
 
-  <!-- ================= CONTACT ================= -->
-  <section class="section section--white contact" id="contact">
-    <div class="contact-glow g1"></div>
-    <div class="contact-glow g2"></div>
-    <div class="contact-inner">
-      <div class="contact-info" data-reveal>
-        <span class="section-tag blue" data-i18n="contact.tag">Get In Touch</span>
-        <h2 class="section-title">
-          <span data-i18n="contact.title">Let's Build Something </span><span class="grad-text" data-i18n="contact.titleGrad">Powerful</span>
-        </h2>
-        <p data-i18n="contact.sub">Ready to automate, innovate, and accelerate? Drop us a message and we'll get back to you within one business day.</p>
-        <div class="contact-details">
-          <div class="contact-item">
-            <div class="contact-icon blue">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+    <!-- ================= PROCESS ================= -->
+    <section class="section" id="process">
+      <div class="process-grid">
+        <div class="process-intro">
+          <span class="tag" data-reveal data-i18n="process.tag">How we work</span>
+          <h2 class="h-title" data-reveal="60" data-i18n="process.title">From idea to live agent in weeks, not months.</h2>
+          <p class="section-sub" data-reveal="120" data-i18n="process.sub">A clear, low-risk path from the first conversation to an AI agent running inside your business.</p>
+        </div>
+        <ol class="process-steps" id="processSteps">
+          <span class="process-line"></span>
+          <span class="process-line-fill" id="processFill"></span>
+          <li data-reveal>
+            <span class="step-num" data-step="1">01</span>
+            <h3 data-i18n="process.s1.title">Discover</h3>
+            <p data-i18n="process.s1.desc">We map your processes, systems and data to find where an AI agent will have the most impact.</p>
+          </li>
+          <li data-reveal>
+            <span class="step-num" data-step="2">02</span>
+            <h3 data-i18n="process.s2.title">Design</h3>
+            <p data-i18n="process.s2.desc">We shape the agent's conversations, guardrails and data connections around how your team actually works.</p>
+          </li>
+          <li data-reveal>
+            <span class="step-num" data-step="3">03</span>
+            <h3 data-i18n="process.s3.title">Build &amp; integrate</h3>
+            <p data-i18n="process.s3.desc">We build the Copilot Studio agent and connect it to Power Platform, Microsoft 365 and your business systems.</p>
+          </li>
+          <li data-reveal>
+            <span class="step-num" data-step="4">04</span>
+            <h3 data-i18n="process.s4.title">Support &amp; scale</h3>
+            <p data-i18n="process.s4.desc">We monitor performance, refine answers and extend the agent to new use cases as you grow.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ================= ABOUT ================= -->
+    <section class="section" id="about">
+      <div class="about-grid">
+        <div class="about-intro">
+          <span class="tag" data-reveal data-i18n="about.tag">Who we are</span>
+          <h2 class="h-title" data-reveal="60" data-i18n="about.title">Your AI &amp; Copilot Studio partner.</h2>
+          <p class="section-sub" data-reveal="120" data-i18n="about.lead1">Power Vantage Solutions is a specialist consultancy building AI agents with Microsoft Copilot Studio and bringing generative AI into real business workflows, backed by the wider Power Platform.</p>
+          <p class="section-sub" data-reveal="160" data-i18n="about.lead2">We pair deep technical skill with a business-first mindset — and leave your team able to run what we build.</p>
+        </div>
+        <div class="about-side">
+          <div class="about-pillars" data-reveal="100">
+            <div class="about-pillar"><strong data-i18n="about.p1.title">Fast delivery</strong><span data-i18n="about.p1.desc">Rapid prototypes and iterative releases put value in your hands quickly.</span></div>
+            <div class="about-pillar"><strong data-i18n="about.p2.title">Enterprise grade</strong><span data-i18n="about.p2.desc">Security, governance and scale designed in from the start.</span></div>
+            <div class="about-pillar"><strong data-i18n="about.p3.title">True partnership</strong><span data-i18n="about.p3.desc">We work alongside your team and transfer knowledge for the long run.</span></div>
+          </div>
+          <div class="about-chips" data-reveal="240">
+            <span data-i18n="about.chip1">End-to-end delivery</span>
+            <span data-i18n="about.chip2">AI &amp; Power Platform specialists</span>
+            <span data-i18n="about.chip3">Europe &amp; remote</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CTA BANNER ================= -->
+    <section class="section">
+      <div class="cta-banner" data-reveal>
+        <h2><span data-i18n="cta.title">Not sure where AI fits? Let's find out — </span><span class="accent" data-i18n="cta.titleAccent">free.</span></h2>
+        <div class="cta-banner-row">
+          <p data-i18n="cta.sub">A short discovery call to map your processes and spot the highest-impact place for an agent.</p>
+          <a href="#contact" class="btn btn-primary">
+            <span data-i18n="cta.btn">Book a discovery call</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CONTACT ================= -->
+    <section class="section" id="contact">
+      <div class="contact-grid">
+        <div class="contact-info">
+          <span class="tag" data-reveal data-i18n="contact.tag">Get in touch</span>
+          <h2 class="h-title" data-reveal="60" data-i18n="contact.title">Let's build something useful.</h2>
+          <p class="section-sub" data-reveal="120" data-i18n="contact.sub">Tell us what you'd like to automate. We reply within one business day.</p>
+          <div class="contact-rows" data-reveal="160">
+            <a href="mailto:hello@powervantagesolutions.com" class="contact-row">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <span>hello@powervantagesolutions.com</span>
+            </a>
+            <div class="contact-row contact-row--static">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-5.5 10.2-7.4 11.8a1 1 0 0 1-1.2 0C9.5 20.2 4 15 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
+              <span data-i18n="contact.location">Europe &amp; remote</span>
             </div>
-            <span>hello@powervantagesolutions.com</span>
           </div>
-          <div class="contact-item">
-            <div class="contact-icon teal">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+
+        <div class="contact-card" data-reveal="100">
+          <form class="contact-form" id="contactForm" onsubmit="return handleSubmit(event)" novalidate>
+            <div class="form-row">
+              <div class="field">
+                <label for="pv-name" data-i18n="contact.form.name">Your name</label>
+                <input id="pv-name" name="name" class="input" type="text" autocomplete="name" required />
+                <span class="field-err" id="errName"></span>
+              </div>
+              <div class="field">
+                <label for="pv-company" data-i18n="contact.form.company">Company</label>
+                <input id="pv-company" name="company" class="input" type="text" autocomplete="organization" />
+              </div>
             </div>
-            <span data-i18n="contact.location">Europe &amp; Remote</span>
+            <div class="field">
+              <label for="pv-email" data-i18n="contact.form.email">Email address</label>
+              <input id="pv-email" name="email" class="input" type="email" autocomplete="email" required />
+              <span class="field-err" id="errEmail"></span>
+            </div>
+            <div class="field">
+              <label data-i18n="contact.form.service">What are you interested in?</label>
+              <div class="seg-group" id="serviceGroup">
+                <label class="seg-opt"><input type="radio" name="service" value="Copilot agents"><span data-i18n="contact.form.service.copilot">Copilot agents</span></label>
+                <label class="seg-opt"><input type="radio" name="service" value="AI integrations"><span data-i18n="contact.form.service.ai">AI integrations</span></label>
+                <label class="seg-opt"><input type="radio" name="service" value="Automation"><span data-i18n="contact.form.service.automate">Automation</span></label>
+                <label class="seg-opt"><input type="radio" name="service" value="Power Apps"><span data-i18n="contact.form.service.apps">Power Apps</span></label>
+                <label class="seg-opt"><input type="radio" name="service" value="Strategy"><span data-i18n="contact.form.service.strategy">Strategy</span></label>
+                <label class="seg-opt"><input type="radio" name="service" value="Not sure yet"><span data-i18n="contact.form.service.notSure">Not sure yet</span></label>
+              </div>
+            </div>
+            <div class="field">
+              <label for="pv-msg" data-i18n="contact.form.message">Message</label>
+              <textarea id="pv-msg" name="message" class="input" rows="5" required></textarea>
+              <span class="field-err" id="errMessage"></span>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">
+              <span class="btn-text" data-i18n="contact.form.send">Send message</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </button>
+          </form>
+
+          <div class="contact-success" id="contactSuccess" hidden>
+            <span class="success-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            </span>
+            <h3><span data-i18n="contact.form.thanks">Thanks,</span> <span id="successName"></span></h3>
+            <p data-i18n="contact.form.successMsg">We've got your message and will reply within one business day.</p>
+            <button type="button" class="btn btn-outline" id="contactReset" data-i18n="contact.form.another">Send another message</button>
           </div>
         </div>
       </div>
+    </section>
 
-      <form class="contact-form" id="contactForm" data-reveal onsubmit="handleSubmit(event)">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="name" data-i18n="contact.form.name">Your Name</label>
-            <input type="text" id="name" name="name" placeholder="Jane Smith" required />
-          </div>
-          <div class="form-group">
-            <label for="company" data-i18n="contact.form.company">Company</label>
-            <input type="text" id="company" name="company" placeholder="Acme Corp" />
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="email" data-i18n="contact.form.email">Email Address</label>
-          <input type="email" id="email" name="email" placeholder="jane@acme.com" required />
-        </div>
-        <div class="form-group">
-          <label for="service" data-i18n="contact.form.service">Service of Interest</label>
-          <select id="service" name="service">
-            <option value="" data-i18n="contact.form.selectDefault">Select a service...</option>
-            <option data-i18n="services.copilot.title">Copilot Agents</option>
-            <option data-i18n="services.ai.title">AI Integrations</option>
-            <option data-i18n="services.automate.title">Power Automate</option>
-            <option data-i18n="services.apps.title">Power Apps</option>
-            <option data-i18n="services.strategy.title">Power Platform Strategy</option>
-            <option data-i18n="contact.form.notSure">Not sure yet</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="message" data-i18n="contact.form.message">Message</label>
-          <textarea id="message" name="message" rows="4" placeholder="Tell us about your project or challenge..." required></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary btn-full">
-          <span class="btn-text" data-i18n="contact.form.send">Send Message</span>
-          <span class="btn-icon">→</span>
-        </button>
-        <div class="form-success" id="formSuccess">
-          <span>✓</span> <span data-i18n="contact.form.success">Thanks! We'll be in touch within one business day.</span>
-        </div>
-      </form>
-    </div>
-  </section>
+  </main>
 
   <!-- ================= FOOTER ================= -->
   <footer class="footer">
@@ -478,13 +417,11 @@
         <img src="logo.png" alt="Power Vantage Solutions logo" />
         <span>Power Vantage Solutions</span>
       </div>
-      <p class="footer-copy" data-i18n="footer.copy">© 2026 Power Vantage Solutions. All rights reserved.</p>
-      <div class="footer-links">
-        <a href="#services" data-i18n="nav.services">Services</a>
-        <a href="#use-cases" data-i18n="nav.useCases">Use Cases</a>
-        <a href="#about" data-i18n="nav.about">About</a>
-        <a href="#contact" data-i18n="nav.contact">Contact</a>
-      </div>
+      <a href="#services" data-i18n="nav.services">Services</a>
+      <a href="#use-cases" data-i18n="nav.useCases">Use Cases</a>
+      <a href="#about" data-i18n="nav.about">About</a>
+      <a href="#contact" data-i18n="nav.contact">Get in touch</a>
+      <span class="footer-copy" data-i18n="footer.copy">© 2026 Power Vantage Solutions. All rights reserved.</span>
     </div>
   </footer>
 
