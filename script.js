@@ -160,12 +160,6 @@ if (chatBody) {
   const thumb = document.getElementById('ucThumb');
   if (!view || !track) return;
 
-  view.style.overflowX = 'auto';
-  view.style.scrollSnapType = 'x proximity';
-  view.style.scrollBehavior = 'smooth';
-  view.style.scrollbarWidth = 'none';
-  track.querySelectorAll('.uc-card').forEach((c) => (c.style.scrollSnapAlign = 'start'));
-
   function cardStep() {
     const c = track.children[0];
     if (!c) return 400;

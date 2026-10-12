@@ -304,12 +304,20 @@ body.animated [data-reveal="240"].is-visible { transition-delay: .24s; }
 /* ============================================================
    USE CASES / CAROUSEL
    ============================================================ */
-.carousel { overflow: hidden; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; margin: -24px; padding: 24px; -ms-overflow-style: none; }
-.carousel:active { cursor: grabbing; }
+.carousel {
+  /* full-bleed to the page gutter so cards swipe edge-to-edge on mobile */
+  margin: -24px calc(-1 * var(--pad)); padding: 24px var(--pad);
+  overflow-x: auto; overflow-y: hidden;
+  overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
+  scroll-snap-type: x mandatory; scroll-padding-inline: var(--pad);
+  scrollbar-width: none; -ms-overflow-style: none;
+}
 .carousel::-webkit-scrollbar { display: none; }
-.carousel-track { display: flex; gap: 16px; }
+.carousel-track { display: flex; gap: 16px; width: max-content; }
 .uc-card {
-  flex: none; width: clamp(290px, 30vw, 390px); min-height: 380px;
+  flex: none; width: min(clamp(290px, 30vw, 390px), calc(100vw - 2 * var(--pad) - 24px)); min-height: 380px;
+  scroll-snap-align: start;
   background: var(--neutral-100); border: 1px solid color-mix(in srgb, var(--text) 6%, transparent);
   border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 14px;
 }
@@ -449,4 +457,29 @@ textarea.input { min-height: 140px; resize: vertical; padding: 12px 14px; }
   .footer-inner { justify-content: flex-start; }
   .footer-brand { width: 100%; margin-right: 0; }
   .footer-copy { margin-left: 0; width: 100%; }
+}
+
+/* ============================================================
+   MOBILE REFINEMENTS
+   ============================================================ */
+@media (max-width: 760px) {
+  .nav { flex-wrap: nowrap; gap: 12px; padding-block: 10px; }
+  .nav-brand { min-width: 0; font-size: 15px; }
+  .nav-brand span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nav-logo-img { width: 40px; height: 40px; }
+  .nav-actions { flex: none; gap: 8px; }
+  .nav-toggle { width: 44px; height: 44px; }
+  .chat-body { min-height: 300px; }
+  .process-steps li { padding-bottom: 48px; }
+  .process-steps h3 { font-size: 28px; }
+  /* 16px stops iOS Safari from zooming in when a field gets focus */
+  .input { font-size: 16px; }
+}
+@media (max-width: 520px) {
+  .nav-actions .btn-pill-dark { display: none; } /* still available in the mobile menu */
+  .hero-stats { gap: 16px; }
+  .about-pillar { grid-template-columns: 1fr; gap: 4px; }
+  .uc-card { padding: 28px 24px; min-height: 340px; }
+  .uc-card h3 { font-size: 24px; }
+  .card { padding: 28px 24px; min-height: 0; }
 }
